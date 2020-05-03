@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1011591554481",
+    "firebase_url": "https://cobansut-74a33.firebaseio.com",
+    "project_id": "cobansut-74a33",
+    "storage_bucket": "cobansut-74a33.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1011591554481:android:5863ff1a51ad393b53c990",
+        "android_client_info": {
+          "package_name": "com.creativeoffice.cobansut"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1011591554481-9eqv1b2fspohq160o7mnbpgbda2507ib.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUKZLB72ljAUAFyS_08BQJYQNDUbBbx4c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1011591554481-9eqv1b2fspohq160o7mnbpgbda2507ib.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

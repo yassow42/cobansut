@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/popTeslim"
+        android:title="Teslim Edildi" />
+    <item
+        android:id="@+id/popDüzenle"
+        android:title="Düzenle" />
+    <item
+        android:id="@+id/popSil"
+        android:title="Sil" />
+</menu>

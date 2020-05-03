@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/ic_siparisler"
+        android:icon="@drawable/ic_siparisler"
+        android:title="Siparişler" />
+    <item
+        android:id="@+id/ic_maps"
+        android:icon="@drawable/map"
+        android:title="Harita" />
+    <item
+        android:id="@+id/ic_teslimedildi"
+        android:icon="@drawable/ic_teslim"
+        android:title="Teslim Edildi" />
+    <item
+        android:id="@+id/ic_musteri"
+        android:icon="@drawable/ic_musteriler"
+        android:title="Müşteriler" />
+</menu>

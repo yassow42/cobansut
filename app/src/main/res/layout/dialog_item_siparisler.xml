@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:layout_margin="4dp"
+    android:background="@drawable/bg_siparisler_kenarli">
+
+
+    <ImageView
+        android:id="@+id/btnTeslim"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+
+        android:background="@drawable/check2"
+
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/tumLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnTeslim">
+
+
+        <TextView
+            android:id="@+id/tvSiparisVeren"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Yasin İNCE"
+            android:textColor="@color/beyaz"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/tvSiparisTel"
+            app:layout_constraintHorizontal_bias="0.58"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvSiparisAdres"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="8dp"
+            android:text="Kurtuluş Mahallesi Topuz Siteleri Sokak no 5"
+            android:textColor="@color/beyaz"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvSiparisVeren" />
+
+        <TextView
+            android:id="@+id/tv5lt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="0"
+            android:textColor="@color/beyaz"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/tv5litre"
+            app:layout_constraintTop_toTopOf="@+id/tv5litre" />
+
+        <TextView
+            android:id="@+id/tv3lt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="0"
+            android:textColor="@color/beyaz"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/tv3litre"
+            app:layout_constraintTop_toTopOf="@+id/tv3litre" />
+
+        <TextView
+            android:id="@+id/tvYumurta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="0"
+            android:textColor="@color/beyaz"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/tvYumurtaYazisi"
+            app:layout_constraintTop_toTopOf="@+id/tvYumurtaYazisi" />
+
+        <TextView
+            android:id="@+id/tvSiparisTel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="05419617054"
+            android:textColor="@color/beyaz"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvSiparisVeren" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="4dp"
+            android:background="#000"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvSiparisAdres" />
+
+        <TextView
+            android:id="@+id/tv3litre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:text="3 Litre Süt:"
+            android:textColor="@color/beyaz"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tv5litre"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view" />
+
+        <TextView
+            android:id="@+id/tv5litre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="5 Litre Süt:"
+            android:textColor="@color/beyaz"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tvYumurtaYazisi"
+            app:layout_constraintEnd_toEndOf="@+id/tv3litre"
+            app:layout_constraintTop_toBottomOf="@+id/tv3litre" />
+
+        <TextView
+            android:id="@+id/tvYumurtaYazisi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Yumurta:"
+            android:textColor="@color/beyaz"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/tv5litre"
+            app:layout_constraintTop_toBottomOf="@+id/tv5litre" />
+
+
+        <TextView
+            android:id="@+id/tvNot"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:maxWidth="200dp"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textColor="@color/beyaz"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tvFiyat"
+            app:layout_constraintTop_toBottomOf="@+id/view" />
+
+        <TextView
+            android:id="@+id/tvFiyat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="8dp"
+            android:text="22 tl"
+
+            android:textColor="@color/beyaz"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tvYumurtaYazisi"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.2"
+            app:layout_constraintStart_toEndOf="@+id/tv5lt"
+            app:layout_constraintTop_toTopOf="@+id/tv3litre" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

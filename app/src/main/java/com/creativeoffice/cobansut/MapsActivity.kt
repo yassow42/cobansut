@@ -1,0 +1,346 @@
+package com.creativeoffice.cobansut
+
+import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
+import android.location.Address
+import android.location.Geocoder
+import android.net.Uri
+import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.view.WindowManager
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import com.creativeoffice.cobansut.Datalar.SiparisData
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.activity_maps.*
+import kotlinx.android.synthetic.main.dialog_item_siparisler.view.*
+import java.io.IOException
+
+
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+
+    private lateinit var mMap: GoogleMap
+    private lateinit var bottomSheetDialog: BottomSheetDialog
+    private val ACTIVITY_NO = 1
+
+
+    var aracAdi = "Araç2"
+    var konum: Boolean = false
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_maps)
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+
+
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+
+
+
+        setupNavigationView()
+        veriler()
+
+        val sharedPreferences = getPreferences(Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+        konum = sharedPreferences.getBoolean("Konum", false)
+        switch1.isChecked = konum
+
+        Toast.makeText(this, "Bazı Siparişler Adres Bulunamadığından gösterilmeyebilir. Dikkatli Ol.!!!", Toast.LENGTH_LONG).show()
+
+    }
+
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        mMap = googleMap
+        //     mMap.mapType = GoogleMap.MAP_TYPE_SATELLITE
+        mMap.isMyLocationEnabled = konum
+        // Add a marker in Sydney and move the camera
+        val burgaz = LatLng(41.401897, 27.356983)
+        //   mMap.addMarker(MarkerOptions().position(burgaz).title("Lüleburgaz"))
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(burgaz))
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(burgaz, 13.5f))
+
+
+    }
+
+
+    fun veriler() {
+
+
+        var gelenData: SiparisData
+
+        val ref = FirebaseDatabase.getInstance().reference
+        ref.child("Siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {}
+            override fun onDataChange(p0: DataSnapshot) {
+
+                if (p0.hasChildren()) {
+
+                    for (ds in p0.children) {
+
+                        gelenData = ds.getValue(SiparisData::class.java)!!
+
+                        if (gelenData.siparis_adres.toString() != "Adres") {
+                            if (gelenData.siparis_teslim_tarihi!!.compareTo(System.currentTimeMillis()) == -1) {
+
+
+                                try {
+                                    //  mMap.isMyLocationEnabled = false
+                                    var lat = convertAddressLat(gelenData.siparis_mah + " mahallesi " + gelenData.siparis_adres + " Lüleburgaz 39750")!!.toDouble()
+                                    var lng = convertAddressLng(gelenData.siparis_mah + " mahallesi " + gelenData.siparis_adres + " Lüleburgaz 39750")!!.toDouble()
+                                    val adres = LatLng(lat, lng)
+                                    var myMarker = mMap.addMarker(MarkerOptions().position(adres).title(gelenData.siparis_veren).snippet(gelenData.siparis_adres + " / " + gelenData.siparis_apartman))
+
+                                    myMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.order_map))
+                                    myMarker.tag = gelenData.siparis_key
+
+
+                                    mMap.setOnMarkerClickListener {
+                                        it.tag
+
+                                        Log.e("sad", it.tag.toString())
+
+                                        var bottomSheetDialog = BottomSheetDialog(this@MapsActivity)
+
+                                        var view = bottomSheetDialog.layoutInflater.inflate(R.layout.dialog_item_siparisler, null)
+                                        bottomSheetDialog.setContentView(view)
+                                        var ref = FirebaseDatabase.getInstance().reference
+                                        ref.child("Siparisler").child(it.tag.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
+                                            override fun onCancelled(p0: DatabaseError) {
+                                            }
+
+                                            override fun onDataChange(p0: DataSnapshot) {
+                                                var gelenData = p0.getValue(SiparisData::class.java)!!
+                                                view.tvSiparisVeren.text = gelenData!!.siparis_veren
+                                                view.tvSiparisAdres.text = gelenData!!.siparis_mah + " mah. " + gelenData!!.siparis_adres + " " + gelenData!!.siparis_apartman
+                                                view.tvSiparisTel.text = gelenData.siparis_tel
+                                                view.tvNot.text = gelenData.siparis_notu
+
+
+                                                view.tv5lt.text = gelenData!!.sut5lt
+                                                view.tv3lt.text = gelenData!!.sut3lt
+                                                view.tvYumurta.text = gelenData!!.yumurta
+
+                                                var sut3ltFiyat = gelenData.sut3lt.toString().toInt()
+                                                var sut5ltFiyat = gelenData.sut5lt.toString().toInt()
+                                                var yumurtaFiyat = gelenData.yumurta.toString().toInt()
+
+                                                view.tvFiyat.text = ((sut3ltFiyat * 16) + (sut5ltFiyat * 22) + yumurtaFiyat).toString() + " tl"
+
+
+                                                view.tvSiparisTel.setOnClickListener {
+                                                    val arama =
+                                                        Intent(Intent.ACTION_DIAL)//Bu kod satırımız bizi rehbere telefon numarası ile yönlendiri.
+                                                    arama.data = Uri.parse("tel:" + gelenData.siparis_tel)
+                                                    startActivity(arama)
+                                                }
+                                                view.btnTeslim.setOnClickListener {
+                                                    var alert = AlertDialog.Builder(this@MapsActivity)
+                                                        .setTitle("Sipariş Teslim Edildi")
+                                                        .setMessage("Emin Misin ?")
+                                                        .setPositiveButton("Onayla", object : DialogInterface.OnClickListener {
+                                                            override fun onClick(p0: DialogInterface?, p1: Int) {
+
+
+                                                                var siparisData = SiparisData(
+                                                                    gelenData.siparis_zamani,
+                                                                    gelenData.siparis_teslim_zamani,
+                                                                    gelenData.siparis_teslim_tarihi,
+                                                                    gelenData.siparis_adres,
+                                                                    gelenData.siparis_apartman,
+                                                                    gelenData.siparis_tel,
+                                                                    gelenData.siparis_veren,
+                                                                    gelenData.siparis_mah,
+                                                                    gelenData.siparis_notu,
+                                                                    gelenData.siparis_key,
+                                                                    gelenData.yumurta,
+                                                                    gelenData.sut3lt,
+                                                                    gelenData.sut5lt
+                                                                )
+
+                                                                FirebaseDatabase.getInstance().reference.child("Musteriler")
+                                                                    .child(gelenData.siparis_veren.toString())
+                                                                    .child("siparisleri")
+                                                                    .child(gelenData.siparis_key.toString())
+                                                                    .setValue(siparisData)
+
+                                                                FirebaseDatabase.getInstance().reference.child("Teslim_siparisler")
+                                                                    .child(gelenData.siparis_key.toString())
+                                                                    .setValue(siparisData)
+                                                                    .addOnCompleteListener {
+
+                                                                        startActivity(Intent(this@MapsActivity, SiparislerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+                                                                        Toast.makeText(this@MapsActivity, "Sipariş Teslim Edildi", Toast.LENGTH_LONG).show()
+                                                                        FirebaseDatabase.getInstance().reference.child("Siparisler").child(gelenData.siparis_key.toString()).removeValue()
+                                                                        FirebaseDatabase.getInstance().reference.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
+                                                                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(gelenData.siparis_veren.toString()).child("siparis_son_zaman").setValue(
+                                                                            ServerValue.TIMESTAMP
+                                                                        )
+                                                                    }
+
+
+                                                            }
+                                                        })
+                                                        .setNegativeButton("İptal", object : DialogInterface.OnClickListener {
+                                                            override fun onClick(p0: DialogInterface?, p1: Int) {
+                                                                p0!!.dismiss()
+                                                            }
+                                                        }).create()
+
+                                                    alert.show()
+
+
+                                                }
+
+                                            }
+
+                                        })
+
+
+
+
+
+
+                                        bottomSheetDialog.show()
+
+
+                                        it.isVisible
+                                    }
+
+
+                                } catch (ex: IOException) {
+                                    Log.e("Harita Veri Hatası", ex.toString())
+                                }
+
+
+                            }
+
+
+                        }
+
+
+                    }
+
+
+                }
+            }
+        })
+
+
+        switch1.setOnClickListener {
+            val sharedPreferences = getPreferences(Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+
+
+            if (switch1.isChecked) {
+                editor.putBoolean("Konum", true)
+                editor.apply()
+                mMap.isMyLocationEnabled = true
+                Toast.makeText(this, "Konum açıldı", Toast.LENGTH_SHORT).show()
+            } else {
+                editor.putBoolean("Konum", false)
+                editor.apply()
+                mMap.isMyLocationEnabled = false
+                Toast.makeText(this, "Konum kapalı", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    /*
+        @SuppressLint("MissingPermission")
+        fun getLocation() {
+            var locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 0f, object : LocationListener {
+                override fun onLocationChanged(location: Location?) {
+                    var arac1Lat = location!!.latitude
+                    var arac1Long = location!!.longitude
+                    Log.e("sad", arac1Lat.toString() + "  " + arac1Long.toString())
+
+                    FirebaseDatabase.getInstance().reference.child("Konum").child(aracAdi).child("lat").setValue(arac1Lat)
+                    FirebaseDatabase.getInstance().reference.child("Konum").child(aracAdi).child("long").setValue(arac1Long)
+
+
+                }
+
+                override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onProviderEnabled(provider: String?) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onProviderDisabled(provider: String?) {
+                    TODO("Not yet implemented")
+                }
+            })
+
+        }
+    */
+    fun convertAddressLat(adres: String): Double? {
+
+        try {
+            var geoCoder = Geocoder(this)
+
+            val addressList: List<Address> =
+                geoCoder.getFromLocationName(adres.toString(), 1)
+            if (addressList != null && addressList.size > 0) {
+                val lat: Double = addressList[0].getLatitude()
+                val lng: Double = addressList[0].getLongitude()
+
+
+
+                return lat
+            }
+        } catch (ex: Exception) {
+            Log.e("Harita Verilerini Conve", ex.toString())
+
+        }
+        return null
+    }
+
+    fun convertAddressLng(adres: String): Double? {
+
+        try {
+            var geoCoder = Geocoder(this)
+
+            val addressList: List<Address> =
+                geoCoder.getFromLocationName(adres.toString(), 1)
+            if (addressList != null && addressList.size > 0) {
+                val lat: Double = addressList[0].getLatitude()
+                val lng: Double = addressList[0].getLongitude()
+
+                return lng
+
+            }
+        } catch (ex: Exception) {
+            Log.e("Harita Verilerini Conve", ex.toString())
+        }
+        return null
+    }
+
+    fun setupNavigationView() {
+
+        BottomNavigationViewHelper.setupBottomNavigationView(bottomNav)
+        BottomNavigationViewHelper.setupNavigation(this, bottomNav) // Bottomnavhelper içinde setupNavigationda context ve nav istiyordu verdik...
+        var menu = bottomNav.menu
+        var menuItem = menu.getItem(ACTIVITY_NO)
+        menuItem.setChecked(true)
+    }
+
+}
