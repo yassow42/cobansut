@@ -176,11 +176,12 @@
 
     <TextView
         android:id="@+id/tvFiyat"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:text="22 tl"
+        android:gravity = "center"
         android:textColor="@color/beyaz"
 
         android:textStyle="bold"

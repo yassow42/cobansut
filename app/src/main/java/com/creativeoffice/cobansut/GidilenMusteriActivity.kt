@@ -13,7 +13,7 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_gidilen_musteri.*
 
 class GidilenMusteriActivity : AppCompatActivity() {
-    private val ACTIVITY_NO = 2
+    private val ACTIVITY_NO = 3
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gidilen_musteri)

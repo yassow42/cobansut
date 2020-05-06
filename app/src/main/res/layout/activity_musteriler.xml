@@ -74,12 +74,46 @@
     <Spinner
         android:id="@+id/spinner"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="38dp"
         android:layout_marginTop="2dp"
-        android:layout_marginEnd="16dp"
-        android:padding="5dp"
+        android:layout_marginEnd="8dp"
+        android:paddingLeft="2dp"
+        android:textSize="12sp"
+
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+
+    <AutoCompleteTextView
+        android:id="@+id/searchMs"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_edittext2"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="4dp"
+        android:hint="Müşteri Adı"
+
+        android:textColor="@color/beyaz"
+        android:textSize="13sp"
+        android:textColorHint="@color/beyaz"
+        android:paddingLeft="8dp"
+        android:paddingBottom="6dp"
+        android:paddingTop="6dp"
+
+
+
+        app:layout_constraintBottom_toBottomOf="@+id/imgMusteriAra"
+        app:layout_constraintEnd_toStartOf="@+id/imgMusteriAra"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imgMusteriAra" />
+
+    <ImageView
+        android:id="@+id/imgMusteriAra"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:background="@drawable/right"
+        app:layout_constraintBottom_toBottomOf="@+id/spinner"
+        app:layout_constraintEnd_toStartOf="@+id/spinner"
+        app:layout_constraintTop_toTopOf="@+id/spinner"
+        app:srcCompat="@drawable/right" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

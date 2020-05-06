@@ -74,7 +74,11 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
                                         siparisler[position].siparis_key,
                                         siparisler[position].yumurta,
                                         siparisler[position].sut3lt,
-                                        siparisler[position].sut5lt
+                                        siparisler[position].sut5lt,
+                                        siparisler[position].musteri_zkonum,
+                                        siparisler[position].musteri_zlat,
+                                        siparisler[position].musteri_zlong
+
                                     )
 
                                     FirebaseDatabase.getInstance().reference.child("Musteriler")

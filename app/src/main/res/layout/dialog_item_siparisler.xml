@@ -26,7 +26,7 @@
         android:id="@+id/tumLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,31 +34,17 @@
 
 
         <TextView
-            android:id="@+id/tvSiparisVeren"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Yasin İNCE"
-            android:textColor="@color/beyaz"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/tvSiparisTel"
-            app:layout_constraintHorizontal_bias="0.58"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
             android:id="@+id/tvSiparisAdres"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="6dp"
             android:layout_marginEnd="8dp"
-            android:text="Kurtuluş Mahallesi Topuz Siteleri Sokak no 5"
+            android:text="Adres"
             android:textColor="@color/beyaz"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvSiparisVeren" />
+            app:layout_constraintTop_toBottomOf="@+id/tvSiparisTel" />
 
         <TextView
             android:id="@+id/tv5lt"
@@ -101,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:text="05419617054"
+            android:text="Numara"
             android:textColor="@color/beyaz"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -181,7 +167,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="8dp"
-            android:text="22 tl"
+            android:text="00 tl"
 
             android:textColor="@color/beyaz"
             android:textStyle="bold"
@@ -191,5 +177,18 @@
             app:layout_constraintStart_toEndOf="@+id/tv5lt"
             app:layout_constraintTop_toTopOf="@+id/tv3litre" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tvSiparisVeren"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Müşteri Adı"
+        android:textColor="@color/beyaz"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/btnTeslim"
+        app:layout_constraintEnd_toStartOf="@+id/btnTeslim"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btnTeslim" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

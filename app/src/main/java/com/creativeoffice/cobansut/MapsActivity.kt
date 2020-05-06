@@ -8,7 +8,6 @@ import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -20,7 +19,6 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.database.*
@@ -58,7 +56,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val editor = sharedPreferences.edit()
 
         konum = sharedPreferences.getBoolean("Konum", false)
-        switch1.isChecked = konum
+        swKonum.isChecked = konum
 
         Toast.makeText(this, "Bazı Siparişler Adres Bulunamadığından gösterilmeyebilir. Dikkatli Ol.!!!", Toast.LENGTH_LONG).show()
 
@@ -100,20 +98,35 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
                                 try {
-                                    //  mMap.isMyLocationEnabled = false
-                                    var lat = convertAddressLat(gelenData.siparis_mah + " mahallesi " + gelenData.siparis_adres + " Lüleburgaz 39750")!!.toDouble()
-                                    var lng = convertAddressLng(gelenData.siparis_mah + " mahallesi " + gelenData.siparis_adres + " Lüleburgaz 39750")!!.toDouble()
-                                    val adres = LatLng(lat, lng)
-                                    var myMarker = mMap.addMarker(MarkerOptions().position(adres).title(gelenData.siparis_veren).snippet(gelenData.siparis_adres + " / " + gelenData.siparis_apartman))
+                                    var konumVarMi = gelenData.musteri_zkonum.toString().toBoolean()
+                                    Log.e("konumVarmı",konumVarMi.toString())
+                                          if (konumVarMi){
 
-                                    myMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.order_map))
-                                    myMarker.tag = gelenData.siparis_key
+                                               var lat = gelenData.musteri_zlat!!.toDouble()
+                                               var long = gelenData.musteri_zlong!!.toDouble()
+                                               val adres = LatLng(lat, long)
+                                               var myMarker = mMap.addMarker(MarkerOptions().position(adres).title(gelenData.siparis_veren).snippet(gelenData.siparis_adres + " / " + gelenData.siparis_apartman))
+
+                                               myMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.order_map))
+                                               myMarker.tag = gelenData.siparis_key
+                                           }else{
+                                              var lat = convertAddressLat(gelenData.siparis_mah + " mahallesi " + gelenData.siparis_adres + " Lüleburgaz 39750")!!.toDouble()
+                                              var long = convertAddressLng(gelenData.siparis_mah + " mahallesi " + gelenData.siparis_adres + " Lüleburgaz 39750")!!.toDouble()
+                                              val adres = LatLng(lat, long)
+                                              var myMarker = mMap.addMarker(MarkerOptions().position(adres).title(gelenData.siparis_veren).snippet(gelenData.siparis_adres + " / " + gelenData.siparis_apartman))
+
+                                              myMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.order_map))
+                                              myMarker.tag = gelenData.siparis_key
+                                          }
+
+
+
+
+
 
 
                                     mMap.setOnMarkerClickListener {
                                         it.tag
-
-                                        Log.e("sad", it.tag.toString())
 
                                         var bottomSheetDialog = BottomSheetDialog(this@MapsActivity)
 
@@ -170,7 +183,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                                                     gelenData.siparis_key,
                                                                     gelenData.yumurta,
                                                                     gelenData.sut3lt,
-                                                                    gelenData.sut5lt
+                                                                    gelenData.sut5lt,
+                                                                    gelenData.musteri_zkonum,gelenData.musteri_zlat,gelenData.musteri_zlong
                                                                 )
 
                                                                 FirebaseDatabase.getInstance().reference.child("Musteriler")
@@ -192,62 +206,34 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                                                             ServerValue.TIMESTAMP
                                                                         )
                                                                     }
-
-
                                                             }
                                                         })
-                                                        .setNegativeButton("İptal", object : DialogInterface.OnClickListener {
-                                                            override fun onClick(p0: DialogInterface?, p1: Int) {
-                                                                p0!!.dismiss()
-                                                            }
-                                                        }).create()
-
+                                                        .setNegativeButton("İptal", object : DialogInterface.OnClickListener { override fun onClick(p0: DialogInterface?, p1: Int) { p0!!.dismiss() } }).create()
                                                     alert.show()
-
-
                                                 }
-
                                             }
-
                                         })
 
-
-
-
-
-
                                         bottomSheetDialog.show()
-
-
                                         it.isVisible
                                     }
-
-
                                 } catch (ex: IOException) {
                                     Log.e("Harita Veri Hatası", ex.toString())
                                 }
-
-
                             }
-
-
                         }
-
-
                     }
-
-
                 }
             }
         })
 
 
-        switch1.setOnClickListener {
+        swKonum.setOnClickListener {
             val sharedPreferences = getPreferences(Context.MODE_PRIVATE)
             val editor = sharedPreferences.edit()
 
 
-            if (switch1.isChecked) {
+            if (swKonum.isChecked) {
                 editor.putBoolean("Konum", true)
                 editor.apply()
                 mMap.isMyLocationEnabled = true
@@ -261,37 +247,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    /*
-        @SuppressLint("MissingPermission")
-        fun getLocation() {
-            var locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 0f, object : LocationListener {
-                override fun onLocationChanged(location: Location?) {
-                    var arac1Lat = location!!.latitude
-                    var arac1Long = location!!.longitude
-                    Log.e("sad", arac1Lat.toString() + "  " + arac1Long.toString())
 
-                    FirebaseDatabase.getInstance().reference.child("Konum").child(aracAdi).child("lat").setValue(arac1Lat)
-                    FirebaseDatabase.getInstance().reference.child("Konum").child(aracAdi).child("long").setValue(arac1Long)
-
-
-                }
-
-                override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onProviderEnabled(provider: String?) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onProviderDisabled(provider: String?) {
-                    TODO("Not yet implemented")
-                }
-            })
-
-        }
-    */
     fun convertAddressLat(adres: String): Double? {
 
         try {

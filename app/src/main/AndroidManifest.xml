@@ -32,6 +32,7 @@
         </activity>
 
 
+
         <service
             android:name=".Services.MyFirebaseMessagingService"
             android:exported="false">
@@ -40,5 +41,6 @@
             </intent-filter>
         </service>
     </application>
+
 
 </manifest>

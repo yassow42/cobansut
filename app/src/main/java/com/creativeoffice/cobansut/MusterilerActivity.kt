@@ -1,14 +1,17 @@
 package com.creativeoffice.cobansut
 
+import android.app.DatePickerDialog
 import android.app.Dialog
+import android.app.TimePickerDialog
 import android.content.DialogInterface
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.inflate
 import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -17,11 +20,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.creativeoffice.cobansut.Adapter.MusteriAdapter
 import com.creativeoffice.cobansut.Datalar.MusteriData
+import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_musteriler.*
-import kotlinx.android.synthetic.main.dialog_musteri_ekle.*
 import kotlinx.android.synthetic.main.dialog_musteri_ekle.view.*
 import kotlinx.android.synthetic.main.dialog_musteri_ekle.view.tvAdresTam
+import kotlinx.android.synthetic.main.dialog_siparis_ekle.view.*
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -31,6 +36,8 @@ class MusterilerActivity : AppCompatActivity() {
     private val ACTIVITY_NO = 3
     var secilenMah: String? = null
     lateinit var musteriList: ArrayList<MusteriData>
+    lateinit var musteriAdList: ArrayList<String>
+    lateinit var dialogViewSpArama: View
 
     lateinit var dialogView: View
 
@@ -44,10 +51,16 @@ class MusterilerActivity : AppCompatActivity() {
         )
 
         musteriList = ArrayList()
+        musteriAdList = ArrayList()
 
         setupVeri()
         setupBtn()
         setupSpinner()
+
+
+        FirebaseDatabase.getInstance().reference.child("Musteriler").keepSynced(true)
+
+
     }
 
 
@@ -63,10 +76,18 @@ class MusterilerActivity : AppCompatActivity() {
 
                     for (ds in p0.children) {
                         var gelenData = ds.getValue(MusteriData::class.java)!!
+                        var musteriAdlari = gelenData.musteri_ad_soyad
                         musteriList.add(gelenData)
+                        musteriAdList.add(musteriAdlari.toString())
                     }
-                    tvMusteri.text = "Müşteriler " + "(" + (musteriList.size + 49) + ")"
+                    var adapterSearch = ArrayAdapter<String>(this@MusterilerActivity, android.R.layout.simple_expandable_list_item_1, musteriAdList)
+                    searchMs.setAdapter(adapterSearch)
+                    tvMusteri.text = "Müşteriler " + "(" + (musteriList.size + 69) + ")"
                     setupRecyclerViewMusteriler()
+
+
+
+                    Log.e("ass", musteriAdList.size.toString() + " " + musteriAdList[1].toString())
                 } else {
                     Toast.makeText(this@MusterilerActivity, "Müşteri Bilgisi Alınamadı.", Toast.LENGTH_SHORT).show()
                 }
@@ -80,15 +101,15 @@ class MusterilerActivity : AppCompatActivity() {
 
 
     private fun setupSpinner() {
-        var markaList = ArrayList<String>()
-        markaList.add("İsme göre sırala A -> Z")
-        markaList.add("İsme göre sırala Z -> A")
-        markaList.add("Zamana göre sırala")
-        markaList.add("Zamana göre ters sırala")
+        var siraList = ArrayList<String>()
+        siraList.add("İsme A -> Z")
+        siraList.add("İsme Z -> A")
+        siraList.add("Zamana")
+        siraList.add("Zamana ters")
 
 
 
-        spinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, markaList)
+        spinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, siraList)
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -96,28 +117,28 @@ class MusterilerActivity : AppCompatActivity() {
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                var secilenMarka = markaList[position]
-                if (secilenMarka == "İsme göre sırala A -> Z") {
+                var secilenMarka = siraList[position]
+                if (secilenMarka == "İsme A -> Z") {
 
                     musteriList.sortBy { it.musteri_ad_soyad }
                     rcMusteri.layoutManager = LinearLayoutManager(this@MusterilerActivity, LinearLayoutManager.VERTICAL, false)
                     val Adapter = MusteriAdapter(this@MusterilerActivity, musteriList)
                     rcMusteri.adapter = Adapter
                     rcMusteri.setHasFixedSize(true)
-                } else if (secilenMarka == "İsme göre sırala Z -> A") {
+                } else if (secilenMarka == "İsme Z -> A") {
                     musteriList.sortByDescending { it.musteri_ad_soyad }
                     rcMusteri.layoutManager = LinearLayoutManager(this@MusterilerActivity, LinearLayoutManager.VERTICAL, false)
                     val Adapter = MusteriAdapter(this@MusterilerActivity, musteriList)
                     rcMusteri.adapter = Adapter
                     rcMusteri.setHasFixedSize(true)
 
-                } else if (secilenMarka == "Zamana göre sırala") {
+                } else if (secilenMarka == "Zamana") {
                     musteriList.sortByDescending { it.siparis_son_zaman }
                     rcMusteri.layoutManager = LinearLayoutManager(this@MusterilerActivity, LinearLayoutManager.VERTICAL, false)
                     val Adapter = MusteriAdapter(this@MusterilerActivity, musteriList)
                     rcMusteri.adapter = Adapter
                     rcMusteri.setHasFixedSize(true)
-                } else if (secilenMarka == "Zamana göre ters sırala") {
+                } else if (secilenMarka == "Zamana ters") {
                     musteriList.sortBy { it.siparis_son_zaman }
                     rcMusteri.layoutManager = LinearLayoutManager(this@MusterilerActivity, LinearLayoutManager.VERTICAL, false)
                     val Adapter = MusteriAdapter(this@MusterilerActivity, musteriList)
@@ -205,7 +226,7 @@ class MusterilerActivity : AppCompatActivity() {
 
                     var musteriAdi = "Müşteri"
                     if (!dialogView.etMusteriAdSoyad.text.toString().isNullOrEmpty()) {
-                        musteriAdi = dialogView.etMusteriAdSoyad.text.toString().trim()
+                        musteriAdi = dialogView.etMusteriAdSoyad.text.toString().trim().capitalize()
                     } else if (musteriAdi == "Müşteri") {
                         Toast.makeText(this@MusterilerActivity, "Müşteri Adı Girmedin", Toast.LENGTH_LONG).show()
                     }
@@ -232,7 +253,7 @@ class MusterilerActivity : AppCompatActivity() {
                     }
 
 
-                    var musteriBilgileri = MusteriData(musteriAdi, secilenMah, musteriAdres, musteriApt, musteriTel, null)
+                    var musteriBilgileri = MusteriData(musteriAdi, secilenMah, musteriAdres, musteriApt, musteriTel, null, false, null, null)
 
                     FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi.toString()).setValue(musteriBilgileri).addOnCompleteListener {
                         FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi.toString()).child("siparis_son_zaman").setValue(ServerValue.TIMESTAMP)
@@ -244,6 +265,142 @@ class MusterilerActivity : AppCompatActivity() {
 
             var dialog: Dialog = builder.create()
             dialog.show()
+
+        }
+
+        imgMusteriAra.setOnClickListener {
+            var arananMusteriAdi = searchMs.text.toString()
+            //  Log.e("ass1",arananMusteriAdi)
+            val arananMusteriVarMi = musteriAdList.containsAll(listOf(arananMusteriAdi))
+
+            if (arananMusteriVarMi) {
+                var ref = FirebaseDatabase.getInstance().reference
+                ref.child("Musteriler").child(arananMusteriAdi).addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+
+                        if (p0.hasChildren()) {
+                            var musteriData = p0.getValue(MusteriData::class.java)!!
+
+                        //    Log.e("ass", musteriData.musteri_apartman)
+
+
+                            var builder: AlertDialog.Builder = AlertDialog.Builder(this@MusterilerActivity)
+                            dialogViewSpArama = inflate(this@MusterilerActivity, R.layout.dialog_siparis_ekle, null)
+
+
+                            dialogViewSpArama.tvZamanEkleDialog.text = SimpleDateFormat("HH:mm dd.MM.yyyy").format(System.currentTimeMillis())
+                            var cal = Calendar.getInstance()
+                            val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                                cal.set(Calendar.YEAR, year)
+                                cal.set(Calendar.MONTH, monthOfYear)
+                                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+
+                                val myFormat = "HH:mm dd.MM.yyyy" // mention the format you need
+                                val sdf = SimpleDateFormat(myFormat, Locale("tr"))
+                                dialogViewSpArama.tvZamanEkleDialog.text = sdf.format(cal.time)
+                            }
+
+                            val timeSetListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+                                cal.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                                cal.set(Calendar.MINUTE, minute)
+                            }
+
+                            dialogViewSpArama.tvZamanEkleDialog.setOnClickListener {
+                                DatePickerDialog(this@MusterilerActivity, dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
+                                TimePickerDialog(this@MusterilerActivity, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
+                            }
+
+                            dialogViewSpArama.et3lt.addTextChangedListener(watcherFiyat3lt)
+                            dialogViewSpArama.et5lt.addTextChangedListener(watcherFiyat5lt)
+                            dialogViewSpArama.etYumurta.addTextChangedListener(watcherFiyatYumurta)
+                            dialogViewSpArama.imgFiyatRefresh.setOnClickListener {
+                                var fiyat3 = 0
+                                if (dialogViewSpArama.et3lt.text.isNotEmpty()) {
+                                    fiyat3 = dialogViewSpArama.et3lt.text.toString().toInt() * 16
+                                }
+
+
+                                var fiyat5 = 0
+                                if (dialogViewSpArama.et5lt.text.isNotEmpty()) {
+                                    fiyat5 = dialogViewSpArama.et5lt.text.toString().toInt() * 22
+                                }
+                                var fiyatYum = 0
+                                if (dialogViewSpArama.etYumurta.text.isNotEmpty()) {
+                                    fiyatYum = dialogViewSpArama.etYumurta.text.toString().toInt() * 1
+                                }
+                                dialogViewSpArama.tvFiyatSp.text = (fiyat3 + fiyat5 + fiyatYum).toString()
+                            }
+
+                            builder.setNegativeButton("İptal", object : DialogInterface.OnClickListener {
+                                override fun onClick(dialog: DialogInterface?, which: Int) {
+                                    dialog!!.dismiss()
+                                }
+
+                            })
+                            builder.setPositiveButton("Sipariş Ekle", object : DialogInterface.OnClickListener {
+                                override fun onClick(dialog: DialogInterface?, which: Int) {
+
+                                    var sut3lt = "0"
+                                    if (dialogViewSpArama.et3lt.text.toString().isNotEmpty()) {
+                                        sut3lt = dialogViewSpArama.et3lt.text.toString()
+                                    }
+                                    var sut5lt = "0"
+
+                                    if (dialogViewSpArama.et5lt.text.toString().isNotEmpty()) {
+                                        sut5lt = dialogViewSpArama.et5lt.text.toString()
+                                    }
+                                    var yumurta = "0"
+                                    if (dialogViewSpArama.etYumurta.text.toString().isNotEmpty()) {
+                                        yumurta = dialogViewSpArama.etYumurta.text.toString()
+                                    }
+
+                                    var siparisNotu = dialogViewSpArama.etSiparisNotu.text.toString()
+
+                                    var siparisKey = FirebaseDatabase.getInstance().reference.child("Siparisler").push().key.toString()
+
+
+                                    var siparisData = SiparisData(
+                                        null, null, cal.timeInMillis, musteriData.musteri_adres, musteriData.musteri_apartman, musteriData.musteri_tel, musteriData.musteri_ad_soyad,
+                                        musteriData.musteri_mah, siparisNotu, siparisKey, yumurta, sut3lt, sut5lt, musteriData.musteri_zkonum, musteriData.musteri_zlat, musteriData.musteri_zlong
+                                    )
+                                    FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisKey).setValue(siparisData)
+                                    FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisKey).child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
+                                    FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisKey).child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
+                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey).setValue(siparisData)
+                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey)
+                                        .child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
+                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey)
+                                        .child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
+
+
+                                }
+                            })
+
+                            builder.setTitle(musteriData.musteri_ad_soyad)
+                            builder.setIcon(R.drawable.cow)
+
+                            builder.setView(dialogViewSpArama)
+                            var dialog: Dialog = builder.create()
+                            dialog.show()
+
+                        }
+
+
+                    }
+
+                })
+
+
+                //  Log.e("ass2","true")
+            } else {
+                Toast.makeText(this, "Böyle Bir Müşteri Yok", Toast.LENGTH_SHORT).show()
+              //  Log.e("ass2", "Böyle Bir Müşteri Yok")
+            }
+
 
         }
     }
@@ -270,6 +427,73 @@ class MusterilerActivity : AppCompatActivity() {
         }
 
     }
+
+
+    var watcherFiyat3lt = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            if (s!!.length > 0) {
+
+                dialogViewSpArama.tvFiyatSp.text = (dialogViewSpArama.tvFiyatSp.text.toString().toInt() + (s.toString().toInt() * 16)).toString()
+
+            } else {
+
+                dialogViewSpArama.tvFiyatSp.text = dialogViewSpArama.tvFiyatSp.text.toString()
+            }
+        }
+
+    }
+
+    var watcherFiyat5lt = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            if (s!!.length > 0) {
+
+                dialogViewSpArama.tvFiyatSp.text = (dialogViewSpArama.tvFiyatSp.text.toString().toInt() + (s.toString().toInt() * 22)).toString()
+
+            } else {
+
+                dialogViewSpArama.tvFiyatSp.text = dialogViewSpArama.tvFiyatSp.text.toString()
+            }
+        }
+
+    }
+
+    var watcherFiyatYumurta = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            if (s!!.length > 0) {
+
+                dialogViewSpArama.tvFiyatSp.text = (dialogViewSpArama.tvFiyatSp.text.toString().toInt() + (s.toString().toInt() * 1)).toString()
+
+            } else {
+                dialogViewSpArama.tvFiyatSp.text = dialogViewSpArama.tvFiyatSp.text.toString()
+            }
+        }
+
+    }
+
 
     fun setupNavigationView() {
 

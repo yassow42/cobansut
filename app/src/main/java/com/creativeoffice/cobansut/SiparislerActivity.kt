@@ -115,6 +115,7 @@ class SiparislerActivity : AppCompatActivity() {
                 }
             }
         })
+
     }
 
 
@@ -742,7 +743,7 @@ class SiparislerActivity : AppCompatActivity() {
 
                     if (report!!.isAnyPermissionPermanentlyDenied) {
 
-
+                        Toast.makeText(this@SiparislerActivity,"İzinleri kontrol et",Toast.LENGTH_SHORT).show()
                     }
 
                 }
