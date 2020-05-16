@@ -21,6 +21,7 @@ class MusteriSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
         view.tvSiparisVeren.visibility = View.GONE
         view.tvSiparisTel.visibility = View.GONE
         view.tvSiparisAdres.visibility = View.GONE
+        view.swSiparisPro.visibility = View.GONE
         view.tvNot.textSize = 12f
         view.view.visibility = View.GONE
 

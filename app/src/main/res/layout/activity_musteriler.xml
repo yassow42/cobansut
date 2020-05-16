@@ -86,11 +86,11 @@
     <AutoCompleteTextView
         android:id="@+id/searchMs"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:background="@drawable/bg_edittext2"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="4dp"
-        android:hint="Müşteri Adı"
+        android:hint="Müşteri Ara"
 
         android:textColor="@color/beyaz"
         android:textSize="13sp"

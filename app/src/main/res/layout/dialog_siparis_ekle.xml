@@ -155,4 +155,14 @@
         app:layout_constraintTop_toTopOf="@+id/tvFiyatSp"
         app:srcCompat="@drawable/refresh" />
 
+    <Switch
+        android:id="@+id/swPromosyon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="41dp"
+        app:layout_constraintBottom_toTopOf="@+id/etSiparisNotu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvZamanEkleDialog"
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

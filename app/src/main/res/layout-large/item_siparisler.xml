@@ -189,4 +189,26 @@
         app:layout_constraintEnd_toStartOf="@+id/tvTeslimZamani"
         app:layout_constraintStart_toEndOf="@+id/tv5lt"
         app:layout_constraintTop_toTopOf="@+id/tv3litre" />
+
+    <Switch
+        android:theme="@style/SwitchCompatTheme"
+        android:id="@+id/swSiparisPro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/tvSiparisVeren"
+        app:layout_constraintEnd_toStartOf="@+id/tvSiparisTel"
+        app:layout_constraintTop_toTopOf="@+id/tvSiparisVeren" />
+
+    <TextView
+        android:id="@+id/tvSiparisGiren"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:text="Mehmet"
+        android:textColor="@color/beyaz"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvTeslimZamani"
+        app:layout_constraintEnd_toStartOf="@+id/tvTeslimZamani"
+        app:layout_constraintTop_toTopOf="@+id/tvTeslimZamani" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -42,7 +42,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriData>) : RecyclerView.Adapter<MusteriAdapter.MusteriHolder>() {
+class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriData>, val kullaniciAdi: String?) : RecyclerView.Adapter<MusteriAdapter.MusteriHolder>() {
 
     lateinit var dialogViewSp: View
     lateinit var dialogMsDznle: Dialog
@@ -89,6 +89,18 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                 cal.set(Calendar.MINUTE, minute)
             }
 
+            dialogViewSp.swPromosyon.setOnClickListener {
+
+                if (dialogViewSp.swPromosyon.isChecked) {
+                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).child("promosyon_verildimi").setValue(true)
+                } else {
+                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).child("promosyon_verildimi").setValue(false)
+
+                }
+            }
+
+            dialogViewSp.swPromosyon.isChecked = musteriler[position].promosyon_verildimi.toString().toBoolean()
+
             dialogViewSp.tvZamanEkleDialog.setOnClickListener {
                 DatePickerDialog(myContext, dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
                 TimePickerDialog(myContext, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
@@ -102,7 +114,6 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                 if (dialogViewSp.et3lt.text.isNotEmpty()) {
                     fiyat3 = dialogViewSp.et3lt.text.toString().toInt() * 16
                 }
-
 
                 var fiyat5 = 0
                 if (dialogViewSp.et5lt.text.isNotEmpty()) {
@@ -146,8 +157,8 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                     var siparisData = SiparisData(
                         null, null, cal.timeInMillis, musteriler[position].musteri_adres, musteriler[position].musteri_apartman,
                         musteriler[position].musteri_tel, musteriler[position].musteri_ad_soyad, musteriler[position].musteri_mah, siparisNotu, siparisKey, yumurta, sut3lt, sut5lt,
-                        musteriler[position].musteri_zkonum,musteriler[position].musteri_zlat,musteriler[position].musteri_zlong
-                    )
+                        musteriler[position].musteri_zkonum, musteriler[position].promosyon_verildimi, musteriler[position].musteri_zlat, musteriler[position].musteri_zlong,kullaniciAdi)
+
                     FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisKey).setValue(siparisData)
                     FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisKey).child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
                     FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisKey).child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
@@ -231,7 +242,8 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
 
                         dialogView.imgBack.setOnClickListener {
                             holder.locationManager.removeUpdates(holder.myLocationListener)
-                            dialogMsDznle.dismiss() }
+                            dialogMsDznle.dismiss()
+                        }
 
                         dialogView.tvAdSoyad.text = musteriler[position].musteri_ad_soyad.toString()
                         dialogView.tvMahalle.text = musteriler[position].musteri_mah.toString() + " Mahallesi"
@@ -337,15 +349,15 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
         }
 
 
-
         var locationManager = myContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
         @SuppressLint("MissingPermission")
         fun getLocation(musteriAdi: String) {
-            if (isLocationEnabled(myContext)){
+            if (isLocationEnabled(myContext)) {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1500, 0f, myLocationListener)
 
-            }else{
-                Toast.makeText(myContext,"Konumu Açın", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(myContext, "Konumu Açın", Toast.LENGTH_LONG).show()
                 dialogMsDznle.dismiss()
             }
         }
@@ -356,7 +368,6 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                 LocationManager.NETWORK_PROVIDER
             )
         }
-
 
 
         val myLocationListener = object : LocationListener {

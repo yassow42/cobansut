@@ -34,6 +34,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:background="@drawable/bg_edittext"
+        android:textColor="@color/beyaz"
+        android:textColorHint="@color/beyaz"
         app:layout_constraintEnd_toEndOf="@+id/etMusteriAdSoyad"
         app:layout_constraintStart_toStartOf="@+id/etMusteriAdSoyad"
         app:layout_constraintTop_toBottomOf="@+id/etMusteriAdSoyad" />

@@ -95,10 +95,13 @@ class TeslimActivity : AppCompatActivity() {
 
         imgTarih.setOnClickListener {
             suankiTeslimList.clear()
+
+            var sut3ltSayisi = 0
+            var sut5ltSayisi = 0
+            var yumurtaSayisi = 0
+
             for (ds in butunTeslimList){
-                var sut3ltSayisi = 0
-                var sut5ltSayisi = 0
-                var yumurtaSayisi = 0
+
 
                 if (calZamandan.timeInMillis < ds.siparis_teslim_zamani!!.toLong() && ds.siparis_teslim_zamani!!.toLong() < calZamana.timeInMillis) {
                     suankiTeslimList.add(ds)
