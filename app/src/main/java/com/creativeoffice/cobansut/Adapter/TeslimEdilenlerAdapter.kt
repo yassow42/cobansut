@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.R
@@ -18,15 +19,21 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.item_teslim.view.*
 
-class TeslimEdilenlerAdapter(val myContext: Context, val siparisler: ArrayList<SiparisData>) : RecyclerView.Adapter<TeslimEdilenlerAdapter.SiparisHolder>() {
+class TeslimEdilenlerAdapter(val myContext: Context, val siparisler: ArrayList<SiparisData>, val bolge: String) : RecyclerView.Adapter<TeslimEdilenlerAdapter.SiparisHolder>() {
     lateinit var mAuth: FirebaseAuth
     lateinit var userID: String
     lateinit var saticiYetki: String
+    var ref = FirebaseDatabase.getInstance().reference
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TeslimEdilenlerAdapter.SiparisHolder {
         val view = LayoutInflater.from(myContext).inflate(R.layout.item_teslim, parent, false)
         mAuth = FirebaseAuth.getInstance()
         userID = mAuth.currentUser!!.uid
-        //Log.e("sad",userID)
+
+        if (bolge == "Corlu") {
+            ref = FirebaseDatabase.getInstance().reference.child("Corlu")
+        } else {
+            ref = FirebaseDatabase.getInstance().reference
+        }
         FirebaseDatabase.getInstance().reference.child("users").child(userID).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
@@ -55,9 +62,11 @@ class TeslimEdilenlerAdapter(val myContext: Context, val siparisler: ArrayList<S
                     .setPositiveButton("Sil", object : DialogInterface.OnClickListener {
                         override fun onClick(p0: DialogInterface?, p1: Int) {
 
-                            FirebaseDatabase.getInstance().reference.child("Teslim_siparisler").child(siparisler[position].siparis_key.toString()).removeValue()
-                            FirebaseDatabase.getInstance().reference.child("Musteriler").child(siparisler[position].siparis_veren.toString()).child("siparisleri").child(siparisler[position].siparis_key.toString())
-                                .removeValue()
+                            ref.child("Teslim_siparisler").child(siparisler[position].siparis_key.toString()).removeValue()
+                            ref.child("Musteriler").child(siparisler[position].siparis_veren.toString()).child("siparisleri").child(siparisler[position].siparis_key.toString())
+                                .removeValue().addOnCompleteListener {
+                                    Toast.makeText(myContext,"Sipariş silindi sayfayı yenileyebilirsin...", Toast.LENGTH_SHORT).show()
+                                }
 
                         }
                     })
@@ -97,8 +106,6 @@ class TeslimEdilenlerAdapter(val myContext: Context, val siparisler: ArrayList<S
             } else {
                 teslimEden.visibility = View.GONE
             }
-
-
 
 
         }

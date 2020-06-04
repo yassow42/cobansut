@@ -1,24 +1,23 @@
-package com.creativeoffice.cobansut
+package com.creativeoffice.cobansut.CorluActivity
 
-import android.Manifest
+import android.Manifest.permission.*
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import com.creativeoffice.cobansut.Activity.SiparislerActivity
 import com.creativeoffice.cobansut.Datalar.SiparisData
-import com.creativeoffice.cobansut.utils.BottomNavigationViewHelper
+import com.creativeoffice.cobansut.R
+import com.creativeoffice.cobansut.utils.BottomNavigationViewHelperCorlu
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -33,12 +32,12 @@ import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import kotlinx.android.synthetic.main.activity_maps.*
+import kotlinx.android.synthetic.main.activity_maps_corlu.*
 import kotlinx.android.synthetic.main.dialog_map_item_siparisler.view.*
 import java.io.IOException
+import java.util.jar.Manifest
 
-
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapsCorluActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var bottomSheetDialog: BottomSheetDialog
@@ -52,19 +51,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     var konum: Boolean = false
     val hndler = Handler()
     val ref = FirebaseDatabase.getInstance().reference
+    val refCorlu = FirebaseDatabase.getInstance().reference.child("Corlu")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_maps)
-        // this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        setContentView(R.layout.activity_maps_corlu)
         mAuth = FirebaseAuth.getInstance()
         userID = mAuth.currentUser!!.uid
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map2) as SupportMapFragment
+        mapFragment.getMapAsync(this)
 
         setupKullaniciAdi()
         setupNavigationView()
-
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
         konumIzni()
         progressDialog = ProgressDialog(this)
         progressDialog.setMessage(" Harita Yükleniyor... Lütfen bekleyin...")
@@ -72,33 +70,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         progressDialog.show()
 
         val sharedPreferences = getPreferences(Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
+
         konum = sharedPreferences.getBoolean("Konum", false)
         swKonum.isChecked = konum
-
-        Toast.makeText(this, "Bazı Siparişler Adres Bulunamadığından gösterilmeyebilir. Dikkatli Ol.!!!", Toast.LENGTH_LONG).show()
-
-
+       // Toast.makeText(this, "Bazı Siparişler Adres Bulunamadığından gösterilmeyebilir. Dikkatli Ol.!!!", Toast.LENGTH_LONG).show()
     }
 
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        //     mMap.mapType = GoogleMap.MAP_TYPE_SATELLITE
-        mMap.isMyLocationEnabled = konum
-        // Add a marker in Sydney and move the camera
-        val burgaz = LatLng(41.400897, 27.356983)
-        //   mMap.addMarker(MarkerOptions().position(burgaz).title("Lüleburgaz"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(burgaz, 13.7f))
-
-        hndler.postDelayed(Runnable { veriler() }, 1200)
-
+        val burgaz = LatLng(41.160780, 27.797565)
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(burgaz, 13.0f))
+        hndler.postDelayed(Runnable { verilerCorlu() }, 1200)
+        hndler.postDelayed(Runnable { progressDialog.dismiss()}, 5000)
     }
 
 
-    fun veriler() {
+    fun verilerCorlu() {
         var gelenData: SiparisData
-        ref.child("Siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
+        refCorlu.child("Siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
             override fun onDataChange(p0: DataSnapshot) {
 
@@ -110,36 +100,27 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                 if (gelenData.siparis_teslim_tarihi!!.compareTo(System.currentTimeMillis()) == -1) {
                                     var konumVarMi = gelenData.musteri_zkonum.toString().toBoolean()
                                     if (konumVarMi) {
-                                        try {
-                                            var lat = gelenData.musteri_zlat!!.toDouble()
-                                            var long = gelenData.musteri_zlong!!.toDouble()
-                                            val adres = LatLng(lat, long)
-                                            var myMarker = mMap.addMarker(MarkerOptions().position(adres).title(gelenData.siparis_veren).snippet(gelenData.siparis_adres + " / " + gelenData.siparis_apartman))
+                                        var lat = gelenData.musteri_zlat!!.toDouble()
+                                        var long = gelenData.musteri_zlong!!.toDouble()
+                                        val adres = LatLng(lat, long)
+                                        var myMarker = mMap.addMarker(MarkerOptions().position(adres).title(gelenData.siparis_veren).snippet(gelenData.siparis_adres + " / " + gelenData.siparis_apartman))
 
-                                            myMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.order_map))
-                                            myMarker.tag = gelenData.siparis_key
-                                        }catch (e:Exception){
-                                            Toast.makeText(this@MapsActivity,gelenData.siparis_veren + " adlı müşterinin konumu hatalı. Lütfen ev konum switch'ini kapatın",Toast.LENGTH_LONG).show()
-                                        }
-
+                                        myMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.order_map))
+                                        myMarker.tag = gelenData.siparis_key
                                     } else {
-                                        var lat = convertAddressLat(gelenData.siparis_mah + " mahallesi " + gelenData.siparis_adres + " Lüleburgaz 39750")!!.toDouble()
-                                        var long = convertAddressLng(gelenData.siparis_mah + " mahallesi " + gelenData.siparis_adres + " Lüleburgaz 39750")!!.toDouble()
+                                        var lat = convertAddressLat(gelenData.siparis_mah + " mahallesi " + gelenData.siparis_adres + " Çorlu 59850")!!.toDouble()
+                                        var long = convertAddressLng(gelenData.siparis_mah + " mahallesi " + gelenData.siparis_adres + " Çorlu 59850")!!.toDouble()
                                         val adres = LatLng(lat, long)
                                         var myMarker = mMap.addMarker(MarkerOptions().position(adres).title(gelenData.siparis_veren).snippet(gelenData.siparis_adres + " / " + gelenData.siparis_apartman))
 
                                         myMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.order_map))
                                         myMarker.tag = gelenData.siparis_key
                                     }
-                                    mMap.setOnMarkerClickListener {
-                                        it.tag
-
-                                        var bottomSheetDialog = BottomSheetDialog(this@MapsActivity)
-
+                                    mMap.setOnMarkerClickListener { it.tag
+                                        var bottomSheetDialog = BottomSheetDialog(this@MapsCorluActivity)
                                         var view = bottomSheetDialog.layoutInflater.inflate(R.layout.dialog_map_item_siparisler, null)
                                         bottomSheetDialog.setContentView(view)
-                                        var ref = FirebaseDatabase.getInstance().reference
-                                        ref.child("Siparisler").child(it.tag.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
+                                        refCorlu.child("Siparisler").child(it.tag.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
                                             override fun onCancelled(p0: DatabaseError) {
                                             }
 
@@ -165,9 +146,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                                 view.swMapPro.setOnClickListener {
 
                                                     if (view.swMapPro.isChecked) {
-                                                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(gelenData.siparis_veren.toString()).child("promosyon_verildimi").setValue(true)
+                                                        refCorlu.child("Musteriler").child(gelenData.siparis_veren.toString()).child("promosyon_verildimi").setValue(true)
                                                     } else {
-                                                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(gelenData.siparis_veren.toString()).child("promosyon_verildimi").setValue(false)
+                                                        refCorlu.child("Musteriler").child(gelenData.siparis_veren.toString()).child("promosyon_verildimi").setValue(false)
 
                                                     }
                                                 }
@@ -180,7 +161,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                                     startActivity(arama)
                                                 }
                                                 view.btnTeslim.setOnClickListener {
-                                                    var alert = AlertDialog.Builder(this@MapsActivity)
+                                                    var alert = AlertDialog.Builder(this@MapsCorluActivity)
                                                         .setTitle("Sipariş Teslim Edildi")
                                                         .setMessage("Emin Misin ?")
                                                         .setPositiveButton("Onayla", object : DialogInterface.OnClickListener {
@@ -208,20 +189,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                                                     kullaniciAdi
                                                                 )
 
-                                                                FirebaseDatabase.getInstance().reference.child("Musteriler").child(gelenData.siparis_veren.toString()).child("siparisleri")
+                                                                refCorlu.child("Musteriler").child(gelenData.siparis_veren.toString()).child("siparisleri")
                                                                     .child(gelenData.siparis_key.toString()).setValue(siparisData)
 
-                                                                FirebaseDatabase.getInstance().reference.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).setValue(siparisData)
+                                                                refCorlu.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).setValue(siparisData)
                                                                     .addOnCompleteListener {
 
-                                                                        startActivity(Intent(this@MapsActivity, SiparislerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
-                                                                        Toast.makeText(this@MapsActivity, "Sipariş Teslim Edildi", Toast.LENGTH_LONG).show()
-                                                                        FirebaseDatabase.getInstance().reference.child("Siparisler").child(gelenData.siparis_key.toString()).removeValue()
-                                                                        FirebaseDatabase.getInstance().reference.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("siparis_teslim_zamani")
+                                                                        startActivity(Intent(this@MapsCorluActivity, SiparislerCorluActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+                                                                        Toast.makeText(this@MapsCorluActivity, "Sipariş Teslim Edildi", Toast.LENGTH_LONG).show()
+                                                                        refCorlu.child("Siparisler").child(gelenData.siparis_key.toString()).removeValue()
+                                                                        refCorlu.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("siparis_teslim_zamani")
                                                                             .setValue(ServerValue.TIMESTAMP)
-                                                                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(gelenData.siparis_veren.toString()).child("siparis_son_zaman").setValue(
-                                                                            ServerValue.TIMESTAMP
-                                                                        )
+                                                                        refCorlu.child("Musteriler").child(gelenData.siparis_veren.toString()).child("siparis_son_zaman").setValue(ServerValue.TIMESTAMP)
                                                                     }
                                                             }
                                                         })
@@ -241,7 +220,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                 }
                             }
                         } catch (ex: IOException) {
-                            Log.e("sad", ex.message.toString())
+                            Log.e("Harita Veri Hatası", ex.message.toString())
                         }
                     }
                     progressDialog.dismiss()
@@ -253,7 +232,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
         swKonum.setOnClickListener {
-            val sharedPreferences = getPreferences(Context.MODE_PRIVATE)
+            val sharedPreferences = getSharedPreferences("PREFS_FILENAME", Context.MODE_PRIVATE)
             val editor = sharedPreferences.edit()
             if (swKonum.isChecked) {
                 editor.putBoolean("Konum", true)
@@ -268,36 +247,32 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
     }
+    private fun konumIzni() = Dexter.withActivity(this).withPermissions(
+       ACCESS_FINE_LOCATION,
+       ACCESS_COARSE_LOCATION,
+        INTERNET
+    )
+        .withListener(object : MultiplePermissionsListener {
+            override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
 
 
-    private fun konumIzni() {
-        Dexter.withActivity(this).withPermissions(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.INTERNET
-        )
-            .withListener(object : MultiplePermissionsListener {
-                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
-
-
-                    if (report!!.areAllPermissionsGranted()) {
-
-                    }
-
-                    if (report!!.isAnyPermissionPermanentlyDenied) {
-                        FirebaseDatabase.getInstance().reference.child("Hatalar/İzin Hatası").push().setValue("İzin Yok")
-                        Toast.makeText(this@MapsActivity, "İzinleri kontrol et", Toast.LENGTH_SHORT).show()
-                    }
+                if (report!!.areAllPermissionsGranted()) {
 
                 }
 
-                override fun onPermissionRationaleShouldBeShown(permissions: MutableList<com.karumi.dexter.listener.PermissionRequest>?, token: PermissionToken?) {
-
+                if (report!!.isAnyPermissionPermanentlyDenied) {
+                    FirebaseDatabase.getInstance().reference.child("Hatalar/İzin Hatası").push().setValue("İzin Yok")
+                    Toast.makeText(this@MapsCorluActivity, "İzinleri kontrol et", Toast.LENGTH_SHORT).show()
                 }
 
+            }
 
-            }).check()
-    }
+            override fun onPermissionRationaleShouldBeShown(permissions: MutableList<com.karumi.dexter.listener.PermissionRequest>?, token: PermissionToken?) {
+
+            }
+
+
+        }).check()
 
     fun convertAddressLat(adres: String): Double? {
         var geoCoder = Geocoder(this)
@@ -344,11 +319,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun setupNavigationView() {
-        BottomNavigationViewHelper.setupBottomNavigationView(bottomNav)
-        BottomNavigationViewHelper.setupNavigation(this, bottomNav) // Bottomnavhelper içinde setupNavigationda context ve nav istiyordu verdik...
+        BottomNavigationViewHelperCorlu.setupBottomNavigationView(bottomNav)
+        BottomNavigationViewHelperCorlu.setupNavigation(this, bottomNav) // Bottomnavhelper içinde setupNavigationda context ve nav istiyordu verdik...
         var menu = bottomNav.menu
         var menuItem = menu.getItem(ACTIVITY_NO)
         menuItem.setChecked(true)
     }
-
 }

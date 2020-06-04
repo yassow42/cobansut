@@ -239,7 +239,7 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
                         dialogView.tvAdSoyad.text = musteriler[position].musteri_ad_soyad.toString()
                         dialogView.tvMahalle.text = musteriler[position].musteri_mah.toString() + " Mahallesi"
                         dialogView.etApartman.setText(musteriler[position].musteri_apartman.toString())
-                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).addListenerForSingleValueEvent(object : ValueEventListener {
+                       refCorlu.child("Musteriler").child(musteriAdi).addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onCancelled(p0: DatabaseError) {
 
                             }

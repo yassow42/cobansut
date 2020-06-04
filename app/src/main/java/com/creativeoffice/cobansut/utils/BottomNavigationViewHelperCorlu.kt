@@ -3,6 +3,7 @@ package com.creativeoffice.cobansut.utils
 import android.content.Context
 import android.content.Intent
 import android.view.MenuItem
+import com.creativeoffice.cobansut.CorluActivity.MapsCorluActivity
 
 import com.creativeoffice.cobansut.CorluActivity.MusterilerCorluActivity
 import com.creativeoffice.cobansut.CorluActivity.SiparislerCorluActivity
@@ -39,14 +40,6 @@ class BottomNavigationViewHelperCorlu {
                                 val intent = Intent(context, SiparislerCorluActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
 
                                 context.startActivity(intent)
-/*
-maksutlu
-yenice
-deregündüz
-sarılar
-türkgücü
-önerler
- */
 
                             }
 
@@ -63,7 +56,7 @@ türkgücü
 
                             }
                             R.id.ic_maps -> {
-                                val intent = Intent(context, MapsActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                                val intent = Intent(context, MapsCorluActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
 
                                 context.startActivity(intent)
                             }

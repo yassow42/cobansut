@@ -159,7 +159,7 @@ class TeslimActivity : AppCompatActivity() {
                         suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }
                         setupRecyclerView()
                     }
-                    R.id.umit -> {
+                    R.id.Engin -> {
                         suankiTeslimList.clear()
 
                         for (ds in butunTeslimList) {
@@ -272,7 +272,7 @@ class TeslimActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         rcTeslimEdilenler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        val Adapter = TeslimEdilenlerAdapter(this, suankiTeslimList)
+        val Adapter = TeslimEdilenlerAdapter(this, suankiTeslimList,"Burgaz")
         rcTeslimEdilenler.adapter = Adapter
         rcTeslimEdilenler.setHasFixedSize(true)
     }

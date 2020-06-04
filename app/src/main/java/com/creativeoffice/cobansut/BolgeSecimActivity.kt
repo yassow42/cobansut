@@ -1,10 +1,12 @@
 package com.creativeoffice.cobansut
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.widget.Toast
 import com.creativeoffice.cobansut.Activity.SiparislerActivity
 import com.creativeoffice.cobansut.CorluActivity.SiparislerCorluActivity
@@ -15,6 +17,7 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import kotlinx.android.synthetic.main.activity_bolge_secim.*
+import kotlinx.android.synthetic.main.activity_maps.*
 
 class BolgeSecimActivity : AppCompatActivity() {
     val handler = Handler()
@@ -22,6 +25,7 @@ class BolgeSecimActivity : AppCompatActivity() {
 
     lateinit var mAuth: FirebaseAuth
     lateinit var mAuthListener: FirebaseAuth.AuthStateListener
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +35,7 @@ class BolgeSecimActivity : AppCompatActivity() {
         progressDialog.setMessage(" Bölgeler Yükleniyor... Lütfen bekleyin...")
         progressDialog.setCancelable(false)
         progressDialog.show()
-        handler.postDelayed(Runnable { progressDialog.dismiss() }, 500)
+        handler.postDelayed(Runnable { progressDialog.dismiss() }, 350)
 
         mAuth = FirebaseAuth.getInstance()
         //    mAuth.signOut()
@@ -42,18 +46,15 @@ class BolgeSecimActivity : AppCompatActivity() {
     }
 
     private fun setupButon() {
+
         tvBurgaz.setOnClickListener {
             val intent = Intent(this, SiparislerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-
             startActivity(intent)
-
         }
 
         tvCorlu.setOnClickListener {
             val intent = Intent(this, SiparislerCorluActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-
             startActivity(intent)
-
         }
 
     }
@@ -69,6 +70,7 @@ class BolgeSecimActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun konumIzni() {
         Dexter.withActivity(this).withPermissions(
             android.Manifest.permission.ACCESS_FINE_LOCATION,
