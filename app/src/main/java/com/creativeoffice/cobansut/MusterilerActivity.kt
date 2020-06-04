@@ -2,10 +2,12 @@ package com.creativeoffice.cobansut
 
 import android.app.DatePickerDialog
 import android.app.Dialog
+import android.app.ProgressDialog
 import android.app.TimePickerDialog
 import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -53,6 +55,8 @@ class MusterilerActivity : AppCompatActivity() {
     lateinit var userID: String
     var kullaniciAdi: String? = null
 
+    lateinit var progressDialog: ProgressDialog
+    var hndler = Handler()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_musteriler)
@@ -93,6 +97,7 @@ class MusterilerActivity : AppCompatActivity() {
                     searchMs.setAdapter(adapterSearch)
                     tvMusteri.text = "Müşteriler " + "(" + (musteriList.size) + ")"
                     setupRecyclerViewMusteriler()
+                    progressDialog.dismiss()
                 } else {
                     Toast.makeText(this@MusterilerActivity, "Müşteri Bilgisi Alınamadı.", Toast.LENGTH_SHORT).show()
                 }
@@ -436,7 +441,14 @@ class MusterilerActivity : AppCompatActivity() {
                  p0.child("user_name").value.toString()?.let{
                      kullaniciAdi = it
                 }
-                setupVeri()
+                progressDialog = ProgressDialog(this@MusterilerActivity)
+                progressDialog.setMessage("Müşteriler Yükleniyor.")
+                progressDialog.setCancelable(false)
+                progressDialog.show()
+
+                hndler.postDelayed({setupVeri()},500)
+                hndler.postDelayed({progressDialog.dismiss()},5000)
+
             }
         })
     }
