@@ -1,5 +1,6 @@
 package com.creativeoffice.cobansut
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -7,12 +8,14 @@ import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.creativeoffice.cobansut.Activity.SiparislerActivity
 import com.creativeoffice.cobansut.Datalar.SiparisData
+import com.creativeoffice.cobansut.utils.BottomNavigationViewHelper
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -32,6 +35,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var bottomSheetDialog: BottomSheetDialog
+    lateinit var progressDialog: ProgressDialog
     private val ACTIVITY_NO = 1
 
     lateinit var mAuth: FirebaseAuth
@@ -39,13 +43,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var kullaniciAdi: String
 
     var konum: Boolean = false
+    val hndler = Handler()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-
+       // this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         mAuth = FirebaseAuth.getInstance()
         userID = mAuth.currentUser!!.uid
 
@@ -54,9 +58,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        progressDialog = ProgressDialog(this)
+        progressDialog.setMessage(" Harita Yükleniyor... Lütfen bekleyin...")
+        progressDialog.setCancelable(false)
+        progressDialog.show()
+
         val sharedPreferences = getPreferences(Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-
         konum = sharedPreferences.getBoolean("Konum", false)
         swKonum.isChecked = konum
 
@@ -74,8 +83,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val burgaz = LatLng(41.400897, 27.356983)
         //   mMap.addMarker(MarkerOptions().position(burgaz).title("Lüleburgaz"))
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(burgaz, 13.7f))
-        veriler()
 
+
+       hndler.postDelayed(Runnable { veriler() }, 2000)
 
     }
 
@@ -89,7 +99,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             override fun onDataChange(p0: DataSnapshot) {
 
                 if (p0.hasChildren()) {
-
                     for (ds in p0.children) {
                         try {
                             gelenData = ds.getValue(SiparisData::class.java)!!
@@ -104,7 +113,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                                         myMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.order_map))
                                         myMarker.tag = gelenData.siparis_key
-                                    } else {
+                                    }
+                                    else {
                                         var lat = convertAddressLat(gelenData.siparis_mah + " mahallesi " + gelenData.siparis_adres + " Lüleburgaz 39750")!!.toDouble()
                                         var long = convertAddressLng(gelenData.siparis_mah + " mahallesi " + gelenData.siparis_adres + " Lüleburgaz 39750")!!.toDouble()
                                         val adres = LatLng(lat, long)
@@ -226,6 +236,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             Log.e("Harita Veri Hatası", ex.message.toString())
                         }
                     }
+                    progressDialog.dismiss()
+                }else{
+                    hndler.postDelayed(Runnable { progressDialog.dismiss() }, 2000)
                 }
             }
         })
@@ -285,19 +298,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     fun setupKullaniciAdi() {
         FirebaseDatabase.getInstance().reference.child("users").child(userID).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
-
             }
 
             override fun onDataChange(p0: DataSnapshot) {
                 kullaniciAdi = p0.child("user_name").value.toString()
-
             }
-
         })
     }
 
     fun setupNavigationView() {
-
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNav)
         BottomNavigationViewHelper.setupNavigation(this, bottomNav) // Bottomnavhelper içinde setupNavigationda context ve nav istiyordu verdik...
         var menu = bottomNav.menu

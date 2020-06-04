@@ -3,7 +3,7 @@
     package="com.creativeoffice.cobansut">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -13,6 +13,10 @@
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".CorluActivity.MusterilerCorluActivity"></activity>
+        <activity android:name=".CorluActivity.TeslimCorluActivity" />
+        <activity android:name=".BolgeSecimActivity" />
+        <activity android:name=".CorluActivity.SiparislerCorluActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -20,20 +24,19 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
-        <activity android:name=".GidilenMusteriActivity" />
+            android:label="@string/title_activity_maps" />
+        <activity android:name=".Activity.GidilenMusteriActivity" />
         <activity android:name=".MusterilerActivity" />
-        <activity android:name=".TeslimActivity" />
-        <activity android:name=".SiparislerActivity"/>
-        <activity android:name=".LoginActivity">
+        <activity android:name=".Activity.TeslimActivity" />
+        <activity android:name=".Activity.SiparislerActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
-
 
         <service
             android:name=".Services.MyFirebaseMessagingService"
@@ -43,6 +46,5 @@
             </intent-filter>
         </service>
     </application>
-
 
 </manifest>

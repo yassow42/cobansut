@@ -1,0 +1,1647 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CorluActivity.SiparislerCorluActivity">
+
+
+        <ScrollView
+            android:id="@+id/scrollView2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@color/colorPrimary">
+
+                    <ImageView
+                        android:id="@+id/imgCikis"
+                        android:layout_width="8dp"
+                        android:layout_height="4dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/cancel"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                    </ImageView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Siparişler"
+                        android:textColor="@color/beyaz"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"></TextView>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clMarket"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/colorPrimary">
+
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Adressiz"
+                        android:textColor="@color/beyaz"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"></TextView>
+
+                    <ImageView
+                        android:id="@+id/imgMarketDown"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@drawable/down"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgMarketUp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@drawable/up"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/imgMarketDown"
+                        app:layout_constraintEnd_toStartOf="@+id/imgMarketDown"
+                        app:layout_constraintTop_toTopOf="@+id/imgMarketDown"
+                        app:srcCompat="@drawable/up" />
+
+                    <TextView
+                        android:id="@+id/tvMarketSayi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="0"
+                        android:textColor="@color/beyaz"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcMarket"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="375dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clAli"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/colorPrimary">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ali Paşa"
+                        android:textColor="@color/beyaz"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"></TextView>
+
+                    <ImageView
+                        android:id="@+id/imgAliDown"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@drawable/down"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgAliUp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@drawable/up"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/imgAliDown"
+                        app:layout_constraintEnd_toStartOf="@+id/imgAliDown"
+                        app:layout_constraintTop_toTopOf="@+id/imgAliDown"
+                        app:srcCompat="@drawable/up" />
+
+                    <TextView
+                        android:id="@+id/tvAliSayi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="0"
+                        android:textColor="@color/beyaz"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcAli"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="375dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clCemaliye"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/colorPrimary">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cemaliye"
+                        android:textColor="@color/beyaz"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgCemaliyeDown"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/down" />
+
+                    <ImageView
+                        android:id="@+id/imgCemaliyeUp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/imgCemaliyeDown"
+                        app:layout_constraintEnd_toStartOf="@+id/imgCemaliyeDown"
+                        app:layout_constraintTop_toTopOf="@+id/imgCemaliyeDown"
+                        app:srcCompat="@drawable/up" />
+
+                    <TextView
+                        android:id="@+id/tvCemaliyeSayi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="0"
+                        android:textColor="@color/beyaz"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcCemaliye"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="375dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clCoban"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/colorPrimary">
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Çoban Çeşme"
+                        android:textColor="@color/beyaz"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgCobanDown"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/down" />
+
+                    <ImageView
+                        android:id="@+id/imgCobanUp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/imgCobanDown"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/up" />
+
+                    <TextView
+                        android:id="@+id/tvCobanSayi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="0"
+                        android:textColor="@color/beyaz"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcCoban"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="375dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.constraintlayout.widget.ConstraintLayout
+
+                    android:id="@+id/clCumhuriyet"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/colorPrimary">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cumhuriyet Mah."
+                        android:textColor="@color/beyaz"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgCumhuriyetDown"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/down" />
+
+                    <ImageView
+                        android:id="@+id/imgCumhuriyetUp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@drawable/up"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/imgCumhuriyetDown"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/up" />
+
+                    <TextView
+                        android:id="@+id/tvCumhuriyetSayi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="0"
+                        android:textColor="@color/beyaz"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcCumhuriyet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="375dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+
+                    android:id="@+id/clDere"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/colorPrimary">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dere Mah."
+                        android:textColor="@color/beyaz"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgDereDown"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/down" />
+
+                    <ImageView
+                        android:id="@+id/imgDereUp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@drawable/up"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/imgDereDown"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/up" />
+
+                    <TextView
+                        android:id="@+id/tvDereSayi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="0"
+                        android:textColor="@color/beyaz"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcDere"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="375dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+
+                    android:id="@+id/clEsen"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/colorPrimary">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Esentepe Mah."
+                        android:textColor="@color/beyaz"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgEsenDown"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/down" />
+
+                    <ImageView
+                        android:id="@+id/imgEsenUp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@drawable/up"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/imgEsenDown"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/up" />
+
+                    <TextView
+                        android:id="@+id/tvEsenSayi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="0"
+                        android:textColor="@color/beyaz"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcEsen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="375dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+
+                    android:id="@+id/clHatip"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/colorPrimary">
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hatip Mah."
+                        android:textColor="@color/beyaz"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgHatipDown"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/down" />
+
+                    <ImageView
+                        android:id="@+id/imgHatipUp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@drawable/up"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/imgHatipDown"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/up" />
+
+                    <TextView
+                        android:id="@+id/tvHatipSayi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="0"
+                        android:textColor="@color/beyaz"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcHatip"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="375dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+
+                    android:id="@+id/clHavuz"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/colorPrimary">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Havuzlar Mah."
+                        android:textColor="@color/beyaz"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgHavuzDown"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/down" />
+
+                    <ImageView
+                        android:id="@+id/imgHavuzUp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@drawable/up"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/imgHavuzDown"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/up" />
+
+                    <TextView
+                        android:id="@+id/tvHavuzSayi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="0"
+                        android:textColor="@color/beyaz"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcHavuz"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="375dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+
+                    android:id="@+id/clHidir"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/colorPrimary">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hıdırağa Mah."
+                        android:textColor="@color/beyaz"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgHidirDown"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/down" />
+
+                    <ImageView
+                        android:id="@+id/imgHidirUp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@drawable/up"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/imgHidirDown"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/up" />
+
+                    <TextView
+                        android:id="@+id/tvHidirSayi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="0"
+                        android:textColor="@color/beyaz"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcHidir"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="375dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+
+                    android:id="@+id/clHurriyet"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/colorPrimary">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hürriyet Mah."
+                        android:textColor="@color/beyaz"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgHurriyetDown"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/down" />
+
+                    <ImageView
+                        android:id="@+id/imgHurriyetUp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@drawable/up"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/imgHurriyetDown"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/up" />
+
+                    <TextView
+                        android:id="@+id/tvHurriyetSayi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="0"
+                        android:textColor="@color/beyaz"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcHurriyet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="375dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+
+                    android:id="@+id/clKazim"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/colorPrimary">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Kazımiye Mah."
+                        android:textColor="@color/beyaz"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgKazimDown"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/down" />
+
+                    <ImageView
+                        android:id="@+id/imgKazimUp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@drawable/up"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/imgKazimDown"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/up" />
+
+                    <TextView
+                        android:id="@+id/tvKazimSayi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="0"
+                        android:textColor="@color/beyaz"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcKazim"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="375dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+
+                    android:id="@+id/clKemal"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/colorPrimary">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Kemalettin Mah."
+                        android:textColor="@color/beyaz"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgKemalDown"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/down" />
+
+                    <ImageView
+                        android:id="@+id/imgKemalUp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@drawable/up"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/imgKemalDown"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/up" />
+
+                    <TextView
+                        android:id="@+id/tvKemalSayi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="0"
+                        android:textColor="@color/beyaz"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcKemal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="375dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+
+                    android:id="@+id/clMuhit"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/colorPrimary">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Muhittin Mah."
+                        android:textColor="@color/beyaz"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgMuhitDown"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/down" />
+
+                    <ImageView
+                        android:id="@+id/imgMuhitUp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@drawable/up"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/imgMuhitDown"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/up" />
+
+                    <TextView
+                        android:id="@+id/tvMuhitSayi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="0"
+                        android:textColor="@color/beyaz"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcMuhit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="375dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+
+                    android:id="@+id/clNusrat"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/colorPrimary">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nusratiye Mah."
+                        android:textColor="@color/beyaz"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgNusratDown"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/down" />
+
+                    <ImageView
+                        android:id="@+id/imgNusratUp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@drawable/up"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/imgNusratDown"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/up" />
+
+                    <TextView
+                        android:id="@+id/tvNusratSayi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="0"
+                        android:textColor="@color/beyaz"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcNusrat"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="375dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+
+                    android:id="@+id/clResat"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/colorPrimary">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Reşadiye Mah."
+                        android:textColor="@color/beyaz"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgResatDown"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/down" />
+
+                    <ImageView
+                        android:id="@+id/imgResatUp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@drawable/up"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/imgResatDown"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/up" />
+
+                    <TextView
+                        android:id="@+id/tvResatSayi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="0"
+                        android:textColor="@color/beyaz"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcResat"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="375dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+
+                    android:id="@+id/clRumeli"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/colorPrimary">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rumeli Mah."
+                        android:textColor="@color/beyaz"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgRumeliDown"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/down" />
+
+                    <ImageView
+                        android:id="@+id/imgRumeliUp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@drawable/up"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/imgRumeliDown"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/up" />
+
+                    <TextView
+                        android:id="@+id/tvRumeliSayi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="0"
+                        android:textColor="@color/beyaz"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcRumeli"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="375dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+
+                    android:id="@+id/clSeyh"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/colorPrimary">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Şeyh Sinan Mah."
+                        android:textColor="@color/beyaz"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgSeyhDown"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/down" />
+
+                    <ImageView
+                        android:id="@+id/imgSeyhUp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@drawable/up"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/imgSeyhDown"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/up" />
+
+                    <TextView
+                        android:id="@+id/tvSeyhSayi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="0"
+                        android:textColor="@color/beyaz"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcSeyh"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="375dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+
+                    android:id="@+id/clSilah"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/colorPrimary">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Silahtarağa Mah."
+                        android:textColor="@color/beyaz"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgSilahDown"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/down" />
+
+                    <ImageView
+                        android:id="@+id/imgSilahUp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@drawable/up"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/imgSilahDown"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/up" />
+
+                    <TextView
+                        android:id="@+id/tvSilahSayi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="0"
+                        android:textColor="@color/beyaz"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcSilah"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="375dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+
+                    android:id="@+id/clZafer"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/colorPrimary">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Zafer Mah."
+                        android:textColor="@color/beyaz"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgZaferDown"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/down" />
+
+                    <ImageView
+                        android:id="@+id/imgZaferUp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@drawable/up"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/imgZaferDown"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/up" />
+
+                    <TextView
+                        android:id="@+id/tvZaferSayi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="0"
+                        android:textColor="@color/beyaz"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcZafer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="375dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+
+                    android:id="@+id/clileriTarih"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/kirmizi">
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="İleri Tarihli"
+                        android:textColor="@color/beyaz"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgileriDown"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/down" />
+
+                    <ImageView
+                        android:id="@+id/imgileriUp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@drawable/up"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/imgileriDown"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/up" />
+
+                    <TextView
+                        android:id="@+id/tvileriTarihliSayi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="0"
+                        android:textColor="@color/beyaz"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcileriTarih"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="375dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout5"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintBottom_toTopOf="@+id/bottomNav"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/tv3litre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3lt: 0"
+                android:textColor="@color/beyaz"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tv5litre"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv5litre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5lt: 0"
+                android:textColor="@color/beyaz"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tvYumurta"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tv3litre"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvYumurta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yumurta: 0"
+                android:textColor="@color/beyaz"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tvFiyatGenel"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tv5litre"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvFiyatGenel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00 tl"
+                android:textColor="@color/beyaz"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tvYumurta"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+

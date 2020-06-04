@@ -1,27 +1,32 @@
-package com.creativeoffice.cobansut
+package com.creativeoffice.cobansut.Activity
 
+import android.app.ProgressDialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.os.Handler
 import android.view.View
 import android.view.WindowManager
-
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.creativeoffice.cobansut.Adapter.SiparisAdapter
+import com.creativeoffice.cobansut.BolgeSecimActivity
+import com.creativeoffice.cobansut.utils.BottomNavigationViewHelper
 import com.creativeoffice.cobansut.Datalar.SiparisData
+import com.creativeoffice.cobansut.LoginActivity
+import com.creativeoffice.cobansut.R
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_siparisler.*
-import kotlin.collections.ArrayList
 
 class SiparislerActivity : AppCompatActivity() {
     lateinit var marketlist: ArrayList<SiparisData>
@@ -56,25 +61,40 @@ class SiparislerActivity : AppCompatActivity() {
     lateinit var kullaniciAdi: String
     private val ACTIVITY_NO = 0
 
+    lateinit var progressDialog: ProgressDialog
+    var hndler = Handler()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_siparisler)
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
         mAuth = FirebaseAuth.getInstance()
+    //    mAuth.signOut()
         initMyAuthStateListener()
         userID = mAuth.currentUser!!.uid
         setupKullaniciAdi()
-
-        konumIzni()
         setupListeler()
         setupNavigationView()
-        setupVeri()
         setupBtn()
+        zamanAyarı()
+        progressDialog = ProgressDialog(this)
+        progressDialog.setMessage("Yükleniyor...")
+        progressDialog.setCancelable(false)
+        progressDialog.show()
 
+        
+        hndler.postDelayed(Runnable { setupVeri() }, 750)
+        hndler.postDelayed(Runnable { progressDialog.dismiss() }, 5000)
 
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this,BolgeSecimActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        startActivity(intent)
+    }
+    private fun zamanAyarı() {
         FirebaseMessaging.getInstance().subscribeToTopic("msgNotification");
-        //   FirebaseDatabase.getInstance().reference.child("Zaman").child("simdi").setValue(ServerValue.TIMESTAMP)
         FirebaseDatabase.getInstance().reference.child("Zaman").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
@@ -96,25 +116,20 @@ class SiparislerActivity : AppCompatActivity() {
                 }
             }
         })
-
-
-
-
     }
-
 
     private fun setupVeri() {
 
         var sut3ltSayisi = 0
         var sut5ltSayisi = 0
         var yumurtaSayisi = 0
+
         var ref = FirebaseDatabase.getInstance().reference
         ref.child("Siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
             override fun onDataChange(p0: DataSnapshot) {
 
                 if (p0.hasChildren()) {
-
                     for (ds in p0.children) {
                         try {
                             var gelenData = ds.getValue(SiparisData::class.java)!!
@@ -339,18 +354,22 @@ class SiparislerActivity : AppCompatActivity() {
                                 ilerilist.add(gelenData)
                                 tvileriTarihliSayi.text = ilerilist.size.toString() + " Sipariş"
 
-                                recyclerViewileriTarihli()
+                                recyclerView(rcileriTarih,ilerilist)
+                                //recyclerViewileriTarihli()
                             }
                         } catch (e: Exception) {
                             ref.child("Hatalar/siparisDataHata").push().setValue(e.message.toString())
                         }
                     }
+                    progressDialog.dismiss()
                     tv3litre.text = "3lt: " + sut3ltSayisi.toString()
                     tv5litre.text = "5lt: " + sut5ltSayisi.toString()
                     tvYumurta.text = "Yumurta: " + yumurtaSayisi.toString()
                     tvFiyatGenel.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
 
                 } else {
+                    progressDialog.setMessage("Sipariş yok :(")
+                    hndler.postDelayed(Runnable { progressDialog.dismiss() }, 2000)
                     Toast.makeText(this@SiparislerActivity, "Sipariş yok :(", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -719,39 +738,9 @@ class SiparislerActivity : AppCompatActivity() {
 
     }
 
-    private fun konumIzni() {
-        Dexter.withActivity(this).withPermissions(
-            android.Manifest.permission.ACCESS_FINE_LOCATION,
-            android.Manifest.permission.ACCESS_COARSE_LOCATION,
-            android.Manifest.permission.INTERNET
-        )
-            .withListener(object : MultiplePermissionsListener {
-                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
-
-
-                    if (report!!.areAllPermissionsGranted()) {
-
-                        Log.e("izin", "izinler Tamam")
-                        //  Toast.makeText(this@SiparislerActivity,"İzinler Tamam",Toast.LENGTH_SHORT).show()
-
-                    }
-
-                    if (report!!.isAnyPermissionPermanentlyDenied) {
-
-                        Toast.makeText(this@SiparislerActivity, "İzinleri kontrol et", Toast.LENGTH_SHORT).show()
-                    }
-
-                }
-
-                override fun onPermissionRationaleShouldBeShown(permissions: MutableList<com.karumi.dexter.listener.PermissionRequest>?, token: PermissionToken?) {
-
-                }
-
-
-            }).check()
-    }
-
     private fun setupListeler() {
+
+
         marketlist = ArrayList()
         kurtulusList = ArrayList()
         genclikList = ArrayList()
@@ -777,8 +766,27 @@ class SiparislerActivity : AppCompatActivity() {
         yilmazlist = ArrayList()
         zaferlist = ArrayList()
         ilerilist = ArrayList()
+
     }
 
+
+
+    fun recyclerView(recyclerView: RecyclerView, siparisListesi: ArrayList<SiparisData>) {
+        recyclerView.layoutManager = LinearLayoutManager(this@SiparislerActivity, LinearLayoutManager.VERTICAL, false)
+        val Adapter = SiparisAdapter(this@SiparislerActivity, siparisListesi, kullaniciAdi)
+        recyclerView.adapter = Adapter
+        recyclerView.setHasFixedSize(true)
+    }
+
+
+    fun setupNavigationView() {
+
+        BottomNavigationViewHelper.setupBottomNavigationView(bottomNav)
+        BottomNavigationViewHelper.setupNavigation(this, bottomNav) // Bottomnavhelper içinde setupNavigationda context ve nav istiyordu verdik...
+        var menu = bottomNav.menu
+        var menuItem = menu.getItem(ACTIVITY_NO)
+        menuItem.setChecked(true)
+    }
     fun setupKullaniciAdi() {
         FirebaseDatabase.getInstance().reference.child("users").child(userID).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -790,31 +798,6 @@ class SiparislerActivity : AppCompatActivity() {
 
         })
     }
-
-    fun recyclerView(recyclerView: RecyclerView, siparisListesi: ArrayList<SiparisData>) {
-        recyclerView.layoutManager = LinearLayoutManager(this@SiparislerActivity, LinearLayoutManager.VERTICAL, false)
-        val Adapter = SiparisAdapter(this@SiparislerActivity, siparisListesi, kullaniciAdi)
-
-        recyclerView.adapter = Adapter
-        recyclerView.setHasFixedSize(true)
-    }
-
-    fun recyclerViewileriTarihli() {
-        rcileriTarih.layoutManager = LinearLayoutManager(this@SiparislerActivity, LinearLayoutManager.VERTICAL, false)
-        val Adapter = SiparisAdapter(this@SiparislerActivity, ilerilist, kullaniciAdi)
-        rcileriTarih.adapter = Adapter
-        rcileriTarih.setHasFixedSize(true)
-    }
-
-    fun setupNavigationView() {
-
-        BottomNavigationViewHelper.setupBottomNavigationView(bottomNav)
-        BottomNavigationViewHelper.setupNavigation(this, bottomNav) // Bottomnavhelper içinde setupNavigationda context ve nav istiyordu verdik...
-        var menu = bottomNav.menu
-        var menuItem = menu.getItem(ACTIVITY_NO)
-        menuItem.setChecked(true)
-    }
-
     private fun initMyAuthStateListener() {
         mAuthListener = object : FirebaseAuth.AuthStateListener {
             override fun onAuthStateChanged(p0: FirebaseAuth) {

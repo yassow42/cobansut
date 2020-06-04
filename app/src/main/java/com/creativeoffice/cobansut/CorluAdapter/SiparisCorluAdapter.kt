@@ -1,4 +1,4 @@
-package com.creativeoffice.cobansut.Adapter
+package com.creativeoffice.cobansut.CorluAdapter
 
 
 import android.app.AlertDialog
@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.R
 import com.creativeoffice.cobansut.Activity.SiparislerActivity
+import com.creativeoffice.cobansut.CorluActivity.SiparislerCorluActivity
 import com.creativeoffice.cobansut.TimeAgo
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -27,24 +28,25 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisData>, val kullaniciAdi: String) : RecyclerView.Adapter<SiparisAdapter.SiparisHolder>() {
+class SiparisCorluAdapter(val myContext: Context, val siparisler: ArrayList<SiparisData>, val kullaniciAdi: String) : RecyclerView.Adapter<SiparisCorluAdapter.SiparisHolder>() {
     lateinit var mAuth: FirebaseAuth
     lateinit var userID: String
     lateinit var saticiYetki: String
+    val refCorlu = FirebaseDatabase.getInstance().reference.child("Corlu")
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): SiparisAdapter.SiparisHolder {
+    ): SiparisCorluAdapter.SiparisHolder {
         val view = LayoutInflater.from(myContext).inflate(R.layout.item_siparisler, parent, false)
         mAuth = FirebaseAuth.getInstance()
         userID = mAuth.currentUser!!.uid
         //Log.e("sad",userID)
-        FirebaseDatabase.getInstance().reference.child("users").child(userID).addListenerForSingleValueEvent(object :ValueEventListener{
+        FirebaseDatabase.getInstance().reference.child("users").child(userID).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-            saticiYetki = p0.child("yetki").value.toString()
+                saticiYetki = p0.child("yetki").value.toString()
             }
 
         })
@@ -57,7 +59,7 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
         return siparisler.size
     }
 
-    override fun onBindViewHolder(holder: SiparisAdapter.SiparisHolder, position: Int) {
+    override fun onBindViewHolder(holder: SiparisCorluAdapter.SiparisHolder, position: Int) {
 
         holder.setData(siparisler[position])
 
@@ -69,57 +71,43 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
             popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.popTeslim -> {
-                        var alert = AlertDialog.Builder(myContext)
-                            .setTitle("Sipariş Teslim Edildi")
-                            .setMessage("Emin Misin ?")
-                            .setPositiveButton("Onayla", object : DialogInterface.OnClickListener {
-                                override fun onClick(p0: DialogInterface?, p1: Int) {
+                        var alert = AlertDialog.Builder(myContext).setTitle("Sipariş Teslim Edildi").setMessage("Emin Misin ?").setPositiveButton("Onayla", object : DialogInterface.OnClickListener {
+                            override fun onClick(p0: DialogInterface?, p1: Int) {
+                                var siparisData = SiparisData(
+                                    siparisler[position].siparis_zamani,
+                                    siparisler[position].siparis_teslim_zamani,
+                                    siparisler[position].siparis_teslim_tarihi,
+                                    siparisler[position].siparis_adres,
+                                    siparisler[position].siparis_apartman,
+                                    siparisler[position].siparis_tel,
+                                    siparisler[position].siparis_veren,
+                                    siparisler[position].siparis_mah,
+                                    siparisler[position].siparis_notu,
+                                    siparisler[position].siparis_key,
+                                    siparisler[position].yumurta,
+                                    siparisler[position].sut3lt,
+                                    siparisler[position].sut5lt,
+                                    siparisler[position].musteri_zkonum,
+                                    siparisler[position].promosyon_verildimi,
+                                    siparisler[position].musteri_zlat,
+                                    siparisler[position].musteri_zlong,
+                                    kullaniciAdi
+                                )
 
+                                refCorlu.child("Musteriler").child(siparisler[position].siparis_veren.toString()).child("siparisleri").child(siparisler[position].siparis_key.toString()).setValue(siparisData)
 
-                                    var siparisData = SiparisData(
-                                        siparisler[position].siparis_zamani,
-                                        siparisler[position].siparis_teslim_zamani,
-                                        siparisler[position].siparis_teslim_tarihi,
-                                        siparisler[position].siparis_adres,
-                                        siparisler[position].siparis_apartman,
-                                        siparisler[position].siparis_tel,
-                                        siparisler[position].siparis_veren,
-                                        siparisler[position].siparis_mah,
-                                        siparisler[position].siparis_notu,
-                                        siparisler[position].siparis_key,
-                                        siparisler[position].yumurta,
-                                        siparisler[position].sut3lt,
-                                        siparisler[position].sut5lt,
-                                        siparisler[position].musteri_zkonum,
-                                        siparisler[position].promosyon_verildimi,
-                                        siparisler[position].musteri_zlat,
-                                        siparisler[position].musteri_zlong,
-                                        kullaniciAdi
+                                refCorlu.child("Teslim_siparisler").child(siparisler[position].siparis_key.toString()).setValue(siparisData).addOnCompleteListener {
 
-                                    )
-
-                                    FirebaseDatabase.getInstance().reference.child("Musteriler")
-                                        .child(siparisler[position].siparis_veren.toString())
-                                        .child("siparisleri")
-                                        .child(siparisler[position].siparis_key.toString())
-                                        .setValue(siparisData)
-
-                                    FirebaseDatabase.getInstance().reference.child("Teslim_siparisler")
-                                        .child(siparisler[position].siparis_key.toString())
-                                        .setValue(siparisData)
-                                        .addOnCompleteListener {
-
-                                            myContext.startActivity(Intent(myContext, SiparislerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
-                                            Toast.makeText(myContext, "Sipariş Teslim Edildi", Toast.LENGTH_LONG).show()
-                                            FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisler[position].siparis_key.toString()).removeValue()
-                                            FirebaseDatabase.getInstance().reference.child("Teslim_siparisler").child(siparisler[position].siparis_key.toString()).child("siparis_teslim_zamani")
-                                                .setValue(ServerValue.TIMESTAMP)
-                                            FirebaseDatabase.getInstance().reference.child("Musteriler").child(siparisler[position].siparis_veren.toString()).child("siparis_son_zaman").setValue(ServerValue.TIMESTAMP)
-                                        }
-
-
+                                    myContext.startActivity(Intent(myContext, SiparislerCorluActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+                                    Toast.makeText(myContext, "Sipariş Teslim Edildi", Toast.LENGTH_LONG).show()
+                                    refCorlu.child("Siparisler").child(siparisler[position].siparis_key.toString()).removeValue()
+                                    refCorlu.child("Teslim_siparisler").child(siparisler[position].siparis_key.toString()).child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
+                                    refCorlu.child("Musteriler").child(siparisler[position].siparis_veren.toString()).child("siparis_son_zaman").setValue(ServerValue.TIMESTAMP)
                                 }
-                            })
+
+
+                            }
+                        })
                             .setNegativeButton("İptal", object : DialogInterface.OnClickListener {
                                 override fun onClick(p0: DialogInterface?, p1: Int) {
                                     p0!!.dismiss()
@@ -190,26 +178,22 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
                                     yumurta = viewDuzenle.etYumurta.text.toString()
                                 }
 
-                                var ref = FirebaseDatabase.getInstance().reference
+
                                 var not = viewDuzenle.etSiparisNotu.text.toString()
                                 var siparisKey = siparisler[position].siparis_key.toString()
                                 var siparisVeren = siparisler[position].siparis_veren.toString()
-                                ref.child("Siparisler").child(siparisKey).child("sut3lt").setValue(sut3lt)
-                                ref.child("Siparisler").child(siparisKey).child("sut5lt").setValue(sut5lt)
-                                ref.child("Siparisler").child(siparisKey).child("yumurta").setValue(yumurta)
-                                ref.child("Siparisler").child(siparisKey).child("siparis_notu").setValue(not)
-                                ref.child("Siparisler").child(siparisKey).child("siparis_teslim_tarihi").setValue(cal.timeInMillis)
+                                refCorlu.child("Siparisler").child(siparisKey).child("sut3lt").setValue(sut3lt)
+                                refCorlu.child("Siparisler").child(siparisKey).child("sut5lt").setValue(sut5lt)
+                                refCorlu.child("Siparisler").child(siparisKey).child("yumurta").setValue(yumurta)
+                                refCorlu.child("Siparisler").child(siparisKey).child("siparis_notu").setValue(not)
+                                refCorlu.child("Siparisler").child(siparisKey).child("siparis_teslim_tarihi").setValue(cal.timeInMillis)
 
-                                ref.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("sut3lt").setValue(sut3lt)
-                                ref.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("sut5lt").setValue(sut5lt)
-                                ref.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("yumurta").setValue(yumurta)
-                                ref.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("siparis_notu").setValue(not)
-                                var intent = Intent(myContext, SiparislerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-
-
+                                refCorlu.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("sut3lt").setValue(sut3lt)
+                                refCorlu.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("sut5lt").setValue(sut5lt)
+                                refCorlu.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("yumurta").setValue(yumurta)
+                                refCorlu.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("siparis_notu").setValue(not)
+                                var intent = Intent(myContext, SiparislerCorluActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                                 myContext.startActivity(intent)
-
-
                             }
                         })
 
@@ -220,25 +204,21 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
 
                     R.id.popSil -> {
 
-                        if (saticiYetki == "Yönetici"){
+                        if (saticiYetki == "Yönetici") {
 
-                            var alert = AlertDialog.Builder(myContext)
-                                .setTitle("Siparişi Sil")
-                                .setMessage("Emin Misin ?")
-                                .setPositiveButton("Sil", object : DialogInterface.OnClickListener {
-                                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                            var alert = AlertDialog.Builder(myContext).setTitle("Siparişi Sil").setMessage("Emin Misin ?").setPositiveButton("Sil", object : DialogInterface.OnClickListener {
+                                override fun onClick(p0: DialogInterface?, p1: Int) {
 
-                                        FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisler[position].siparis_key.toString()).removeValue().addOnCompleteListener {
-                                            Toast.makeText(myContext, "Sipariş Silindi...", Toast.LENGTH_LONG).show()
-                                        }
-
-                                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(siparisler[position].siparis_veren.toString()).child("siparisleri")
-                                            .child(siparisler[position].siparis_key.toString()).removeValue()
-
-                                        myContext.startActivity(Intent(myContext, SiparislerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
-
+                                    refCorlu.child("Siparisler").child(siparisler[position].siparis_key.toString()).removeValue().addOnCompleteListener {
+                                        Toast.makeText(myContext, "Sipariş Silindi...", Toast.LENGTH_LONG).show()
                                     }
-                                })
+
+                                    refCorlu.child("Musteriler").child(siparisler[position].siparis_veren.toString()).child("siparisleri").child(siparisler[position].siparis_key.toString()).removeValue()
+
+                                    myContext.startActivity(Intent(myContext, SiparislerCorluActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+
+                                }
+                            })
                                 .setNegativeButton("İptal", object : DialogInterface.OnClickListener {
                                     override fun onClick(p0: DialogInterface?, p1: Int) {
                                         p0!!.dismiss()
@@ -247,7 +227,7 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
 
                             alert.show()
 
-                        }else{
+                        } else {
                             Toast.makeText(myContext, "Yetkiniz yok. Yönetici ile iletişime geçin", Toast.LENGTH_LONG).show()
 
                         }
@@ -293,9 +273,9 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
             tvNot.text = siparisData.siparis_notu
             tvFiyat.textSize = 18f
 
-            if (!siparisData.siparisi_giren.isNullOrEmpty()){
+            if (!siparisData.siparisi_giren.isNullOrEmpty()) {
                 siparisGiren.text = siparisData.siparisi_giren.toString()
-            }else{
+            } else {
                 siparisGiren.visibility = View.GONE
             }
 
@@ -303,9 +283,9 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
 
             swSiparisPromosyon.setOnClickListener {
                 if (swSiparisPromosyon.isChecked) {
-                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(siparisData.siparis_veren.toString()).child("promosyon_verildimi").setValue(true)
+                    refCorlu.child("Musteriler").child(siparisData.siparis_veren.toString()).child("promosyon_verildimi").setValue(true)
                 } else {
-                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(siparisData.siparis_veren.toString()).child("promosyon_verildimi").setValue(false)
+                    refCorlu.child("Musteriler").child(siparisData.siparis_veren.toString()).child("promosyon_verildimi").setValue(false)
 
                 }
 
@@ -372,10 +352,7 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
             }
 
             siparisAdres.setOnClickListener {
-                val intent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("google.navigation:q= " + siparisData.siparis_adres)
-                )
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q= " + siparisData.siparis_adres))
                 myContext.startActivity(intent)
             }
 
@@ -384,7 +361,7 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
 
 
         fun hataMesajiYazdir(s: String, isim: String) {
-            FirebaseDatabase.getInstance().reference.child("Hatalar/SiparisAdapter").push().setValue(s)
+            refCorlu.child("Hatalar/SiparisAdapter").push().setValue(s)
             Toast.makeText(myContext, "Bu Kişinin Siparişi Hatalı Lütfen Sil $isim", Toast.LENGTH_LONG).show()
         }
 

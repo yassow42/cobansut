@@ -1,8 +1,13 @@
-package com.creativeoffice.cobansut
+package com.creativeoffice.cobansut.utils
 
 import android.content.Context
 import android.content.Intent
 import android.view.MenuItem
+import com.creativeoffice.cobansut.Activity.SiparislerActivity
+import com.creativeoffice.cobansut.Activity.TeslimActivity
+import com.creativeoffice.cobansut.MapsActivity
+import com.creativeoffice.cobansut.MusterilerActivity
+import com.creativeoffice.cobansut.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
 

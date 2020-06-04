@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TeslimActivity">
+    tools:context=".Activity.TeslimActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout4"
@@ -28,6 +28,16 @@
             app:layout_constraintTop_toTopOf="parent">
 
         </TextView>
+
+        <ImageView
+            android:id="@+id/imgOptions"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/options" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

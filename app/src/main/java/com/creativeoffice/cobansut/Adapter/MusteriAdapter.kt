@@ -37,6 +37,7 @@ import kotlinx.android.synthetic.main.dialog_gidilen_musteri.view.tvFiyatGenel
 import kotlinx.android.synthetic.main.dialog_gidilen_musteri.view.tvYumurta
 import kotlinx.android.synthetic.main.dialog_siparis_ekle.view.*
 import kotlinx.android.synthetic.main.item_musteri.view.*
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -61,275 +62,276 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
     }
 
     override fun onBindViewHolder(holder: MusteriAdapter.MusteriHolder, position: Int) {
-        holder.setData(musteriler[position])
+        try {
+            holder.setData(musteriler[position])
+            holder.btnSiparisEkle.setOnClickListener {
 
 
-        holder.btnSiparisEkle.setOnClickListener {
+                var builder: AlertDialog.Builder = AlertDialog.Builder(this.myContext)
+                dialogViewSp = inflate(myContext, R.layout.dialog_siparis_ekle, null)
 
 
-            var builder: AlertDialog.Builder = AlertDialog.Builder(this.myContext)
-            dialogViewSp = inflate(myContext, R.layout.dialog_siparis_ekle, null)
+                dialogViewSp.tvZamanEkleDialog.text = SimpleDateFormat("HH:mm dd.MM.yyyy").format(System.currentTimeMillis())
+                var cal = Calendar.getInstance()
+                val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                    cal.set(Calendar.YEAR, year)
+                    cal.set(Calendar.MONTH, monthOfYear)
+                    cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
 
-            dialogViewSp.tvZamanEkleDialog.text = SimpleDateFormat("HH:mm dd.MM.yyyy").format(System.currentTimeMillis())
-            var cal = Calendar.getInstance()
-            val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                cal.set(Calendar.YEAR, year)
-                cal.set(Calendar.MONTH, monthOfYear)
-                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-
-
-                val myFormat = "HH:mm dd.MM.yyyy" // mention the format you need
-                val sdf = SimpleDateFormat(myFormat, Locale("tr"))
-                dialogViewSp.tvZamanEkleDialog.text = sdf.format(cal.time)
-            }
-
-            val timeSetListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
-                cal.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                cal.set(Calendar.MINUTE, minute)
-            }
-
-            dialogViewSp.swPromosyon.setOnClickListener {
-
-                if (dialogViewSp.swPromosyon.isChecked) {
-                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).child("promosyon_verildimi").setValue(true)
-                } else {
-                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).child("promosyon_verildimi").setValue(false)
-
-                }
-            }
-
-            dialogViewSp.swPromosyon.isChecked = musteriler[position].promosyon_verildimi.toString().toBoolean()
-
-            dialogViewSp.tvZamanEkleDialog.setOnClickListener {
-                DatePickerDialog(myContext, dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
-                TimePickerDialog(myContext, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
-            }
-
-            dialogViewSp.et3lt.addTextChangedListener(holder.watcherFiyat3lt)
-            dialogViewSp.et5lt.addTextChangedListener(holder.watcherFiyat5lt)
-            dialogViewSp.etYumurta.addTextChangedListener(holder.watcherFiyatYumurta)
-            dialogViewSp.imgFiyatRefresh.setOnClickListener {
-                var fiyat3 = 0
-                if (dialogViewSp.et3lt.text.isNotEmpty()) {
-                    fiyat3 = dialogViewSp.et3lt.text.toString().toInt() * 16
+                    val myFormat = "HH:mm dd.MM.yyyy" // mention the format you need
+                    val sdf = SimpleDateFormat(myFormat, Locale("tr"))
+                    dialogViewSp.tvZamanEkleDialog.text = sdf.format(cal.time)
                 }
 
-                var fiyat5 = 0
-                if (dialogViewSp.et5lt.text.isNotEmpty()) {
-                    fiyat5 = dialogViewSp.et5lt.text.toString().toInt() * 22
-                }
-                var fiyatYum = 0
-                if (dialogViewSp.etYumurta.text.isNotEmpty()) {
-                    fiyatYum = dialogViewSp.etYumurta.text.toString().toInt() * 1
-                }
-                dialogViewSp.tvFiyatSp.text = (fiyat3 + fiyat5 + fiyatYum).toString()
-            }
-
-            builder.setNegativeButton("İptal", object : DialogInterface.OnClickListener {
-                override fun onClick(dialog: DialogInterface?, which: Int) {
-                    dialog!!.dismiss()
+                val timeSetListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+                    cal.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                    cal.set(Calendar.MINUTE, minute)
                 }
 
-            })
-            builder.setPositiveButton("Sipariş Ekle", object : DialogInterface.OnClickListener {
-                override fun onClick(dialog: DialogInterface?, which: Int) {
+                dialogViewSp.swPromosyon.setOnClickListener {
 
-                    var sut3lt = "0"
-                    if (dialogViewSp.et3lt.text.toString().isNotEmpty()) {
-                        sut3lt = dialogViewSp.et3lt.text.toString()
+                    if (dialogViewSp.swPromosyon.isChecked) {
+                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).child("promosyon_verildimi").setValue(true)
+                    } else {
+                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).child("promosyon_verildimi").setValue(false)
+
                     }
-                    var sut5lt = "0"
+                }
 
-                    if (dialogViewSp.et5lt.text.toString().isNotEmpty()) {
-                        sut5lt = dialogViewSp.et5lt.text.toString()
-                    }
-                    var yumurta = "0"
-                    if (dialogViewSp.etYumurta.text.toString().isNotEmpty()) {
-                        yumurta = dialogViewSp.etYumurta.text.toString()
+                dialogViewSp.swPromosyon.isChecked = musteriler[position].promosyon_verildimi.toString().toBoolean()
+
+                dialogViewSp.tvZamanEkleDialog.setOnClickListener {
+                    DatePickerDialog(myContext, dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
+                    TimePickerDialog(myContext, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
+                }
+
+                dialogViewSp.et3lt.addTextChangedListener(holder.watcherFiyat3lt)
+                dialogViewSp.et5lt.addTextChangedListener(holder.watcherFiyat5lt)
+                dialogViewSp.etYumurta.addTextChangedListener(holder.watcherFiyatYumurta)
+                dialogViewSp.imgFiyatRefresh.setOnClickListener {
+                    var fiyat3 = 0
+                    if (dialogViewSp.et3lt.text.isNotEmpty()) {
+                        fiyat3 = dialogViewSp.et3lt.text.toString().toInt() * 16
                     }
 
-                    var siparisNotu = dialogViewSp.etSiparisNotu.text.toString()
-
-                    var siparisKey = FirebaseDatabase.getInstance().reference.child("Siparisler").push().key.toString()
-
-
-                    var siparisData = SiparisData(
-                        null, null, cal.timeInMillis, musteriler[position].musteri_adres, musteriler[position].musteri_apartman,
-                        musteriler[position].musteri_tel, musteriler[position].musteri_ad_soyad, musteriler[position].musteri_mah, siparisNotu, siparisKey, yumurta, sut3lt, sut5lt,
-                        musteriler[position].musteri_zkonum, musteriler[position].promosyon_verildimi, musteriler[position].musteri_zlat, musteriler[position].musteri_zlong,kullaniciAdi)
-
-                    FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisKey).setValue(siparisData)
-                    FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisKey).child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
-                    FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisKey).child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
-                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey).setValue(siparisData)
-                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey)
-                        .child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
-                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey)
-                        .child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
-
-
+                    var fiyat5 = 0
+                    if (dialogViewSp.et5lt.text.isNotEmpty()) {
+                        fiyat5 = dialogViewSp.et5lt.text.toString().toInt() * 22
+                    }
+                    var fiyatYum = 0
+                    if (dialogViewSp.etYumurta.text.isNotEmpty()) {
+                        fiyatYum = dialogViewSp.etYumurta.text.toString().toInt() * 1
+                    }
+                    dialogViewSp.tvFiyatSp.text = (fiyat3 + fiyat5 + fiyatYum).toString()
                 }
-            })
 
-            builder.setTitle(musteriler[position].musteri_ad_soyad)
-            builder.setIcon(R.drawable.cow)
+                builder.setNegativeButton("İptal", object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+                        dialog!!.dismiss()
+                    }
 
-            builder.setView(dialogViewSp)
-            var dialog: Dialog = builder.create()
-            dialog.show()
+                })
+                builder.setPositiveButton("Sipariş Ekle", object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
 
-        }
+                        var sut3lt = "0"
+                        if (dialogViewSp.et3lt.text.toString().isNotEmpty()) {
+                            sut3lt = dialogViewSp.et3lt.text.toString()
+                        }
+                        var sut5lt = "0"
 
-
-        holder.itemView.setOnLongClickListener {
-
-
-            val popup = PopupMenu(myContext, holder.itemView)
-            popup.inflate(R.menu.popup_menu_musteri)
-            popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.popDüzenle -> {
-
-                        var musteriAdi = musteriler[position].musteri_ad_soyad.toString()
-                        var builder: AlertDialog.Builder = AlertDialog.Builder(myContext)
-
-                        var dialogView: View = inflate(myContext, R.layout.dialog_gidilen_musteri, null)
-                        builder.setView(dialogView)
-
-
-                        dialogMsDznle = builder.create()
-
-                        dialogView.swKonumKaydet.setOnClickListener {
-
-
-                            if (dialogView.swKonumKaydet.isChecked) {
-                                FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_zkonum").setValue(true)
-                                holder.getLocation(musteriAdi)
-
-                            } else {
-                                holder.locationManager.removeUpdates(holder.myLocationListener)
-                                FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_zkonum").setValue(false)
-                                FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_zlat").removeValue()
-                                FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_zlong").removeValue()
-
-                            }
-
+                        if (dialogViewSp.et5lt.text.toString().isNotEmpty()) {
+                            sut5lt = dialogViewSp.et5lt.text.toString()
+                        }
+                        var yumurta = "0"
+                        if (dialogViewSp.etYumurta.text.toString().isNotEmpty()) {
+                            yumurta = dialogViewSp.etYumurta.text.toString()
                         }
 
-                        dialogView.imgCheck.setOnClickListener {
+                        var siparisNotu = dialogViewSp.etSiparisNotu.text.toString()
 
-                            if (dialogView.etAdresGidilen.text.toString().isNotEmpty() && dialogView.etTelefonGidilen.text.toString().isNotEmpty()) {
-                                var adres = dialogView.etAdresGidilen.text.toString()
-                                var telefon = dialogView.etTelefonGidilen.text.toString()
-                                var apartman = dialogView.etApartman.text.toString()
+                        var siparisKey = FirebaseDatabase.getInstance().reference.child("Siparisler").push().key.toString()
 
 
-                                FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_adres").setValue(adres)
-                                FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_apartman").setValue(apartman)
-                                FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_tel").setValue(telefon).addOnCompleteListener {
-///locationsu durduruyruz
+                        var siparisData = SiparisData(
+                            null, null, cal.timeInMillis, musteriler[position].musteri_adres, musteriler[position].musteri_apartman,
+                            musteriler[position].musteri_tel, musteriler[position].musteri_ad_soyad, musteriler[position].musteri_mah, siparisNotu, siparisKey, yumurta, sut3lt, sut5lt,
+                            musteriler[position].musteri_zkonum, musteriler[position].promosyon_verildimi, musteriler[position].musteri_zlat, musteriler[position].musteri_zlong,kullaniciAdi)
+
+                        FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisKey).setValue(siparisData)
+                        FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisKey).child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
+                        FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisKey).child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
+                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey).setValue(siparisData)
+                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey)
+                            .child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
+                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey)
+                            .child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
+
+
+                    }
+                })
+
+                builder.setTitle(musteriler[position].musteri_ad_soyad)
+                builder.setIcon(R.drawable.cow)
+
+                builder.setView(dialogViewSp)
+                var dialog: Dialog = builder.create()
+                dialog.show()
+
+            }
+            holder.itemView.setOnLongClickListener {
+
+
+                val popup = PopupMenu(myContext, holder.itemView)
+                popup.inflate(R.menu.popup_menu_musteri)
+                popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener {
+                    when (it.itemId) {
+                        R.id.popDüzenle -> {
+
+                            var musteriAdi = musteriler[position].musteri_ad_soyad.toString()
+                            var builder: AlertDialog.Builder = AlertDialog.Builder(myContext)
+
+                            var dialogView: View = inflate(myContext, R.layout.dialog_gidilen_musteri, null)
+                            builder.setView(dialogView)
+
+
+                            dialogMsDznle = builder.create()
+
+                            dialogView.swKonumKaydet.setOnClickListener {
+
+
+                                if (dialogView.swKonumKaydet.isChecked) {
+                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_zkonum").setValue(true)
+                                    holder.getLocation(musteriAdi)
+
+                                } else {
                                     holder.locationManager.removeUpdates(holder.myLocationListener)
+                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_zkonum").setValue(false)
+                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_zlat").removeValue()
+                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_zlong").removeValue()
+
+                                }
+
+                            }
+
+                            dialogView.imgCheck.setOnClickListener {
+
+                                if (dialogView.etAdresGidilen.text.toString().isNotEmpty() && dialogView.etTelefonGidilen.text.toString().isNotEmpty()) {
+                                    var adres = dialogView.etAdresGidilen.text.toString()
+                                    var telefon = dialogView.etTelefonGidilen.text.toString()
+                                    var apartman = dialogView.etApartman.text.toString()
+
+
+                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_adres").setValue(adres)
+                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_apartman").setValue(apartman)
+                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_tel").setValue(telefon).addOnCompleteListener {
+///locationsu durduruyruz
+                                        holder.locationManager.removeUpdates(holder.myLocationListener)
 ///
-                                    dialogMsDznle.dismiss()
+                                        dialogMsDznle.dismiss()
 
-                                    Toast.makeText(myContext, "Müşteri Bilgileri Güncellendi", Toast.LENGTH_LONG).show()
-                                }.addOnFailureListener { Toast.makeText(myContext, "Müşteri Bilgileri Güncellenemedi", Toast.LENGTH_LONG).show() }
-                            } else {
-                                Toast.makeText(myContext, "Bilgilerde boşluklar var", Toast.LENGTH_LONG).show()
-                            }
-                        }
-
-                        dialogView.imgBack.setOnClickListener {
-                            holder.locationManager.removeUpdates(holder.myLocationListener)
-                            dialogMsDznle.dismiss()
-                        }
-
-                        dialogView.tvAdSoyad.text = musteriler[position].musteri_ad_soyad.toString()
-                        dialogView.tvMahalle.text = musteriler[position].musteri_mah.toString() + " Mahallesi"
-                        dialogView.etApartman.setText(musteriler[position].musteri_apartman.toString())
-                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onCancelled(p0: DatabaseError) {
-
+                                        Toast.makeText(myContext, "Müşteri Bilgileri Güncellendi", Toast.LENGTH_LONG).show()
+                                    }.addOnFailureListener { Toast.makeText(myContext, "Müşteri Bilgileri Güncellenemedi", Toast.LENGTH_LONG).show() }
+                                } else {
+                                    Toast.makeText(myContext, "Bilgilerde boşluklar var", Toast.LENGTH_LONG).show()
+                                }
                             }
 
-                            override fun onDataChange(p0: DataSnapshot) {
-                                var adres = p0.child("musteri_adres").value.toString()
-                                var telefon = p0.child("musteri_tel").value.toString()
-                                var konum = p0.child("musteri_zkonum").value.toString().toBoolean()
+                            dialogView.imgBack.setOnClickListener {
+                                holder.locationManager.removeUpdates(holder.myLocationListener)
+                                dialogMsDznle.dismiss()
+                            }
 
-                                dialogView.swKonumKaydet.isChecked = konum
-                                dialogView.etAdresGidilen.setText(adres)
-                                dialogView.etTelefonGidilen.setText(telefon)
+                            dialogView.tvAdSoyad.text = musteriler[position].musteri_ad_soyad.toString()
+                            dialogView.tvMahalle.text = musteriler[position].musteri_mah.toString() + " Mahallesi"
+                            dialogView.etApartman.setText(musteriler[position].musteri_apartman.toString())
+                            FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onCancelled(p0: DatabaseError) {
 
-                                var list = ArrayList<SiparisData>()
-                                list = ArrayList()
-                                if (p0.child("siparisleri").hasChildren()) {
+                                }
 
-                                    var sut3ltSayisi = 0
-                                    var sut5ltSayisi = 0
-                                    var yumurtaSayisi = 0
+                                override fun onDataChange(p0: DataSnapshot) {
+                                    var adres = p0.child("musteri_adres").value.toString()
+                                    var telefon = p0.child("musteri_tel").value.toString()
+                                    var konum = p0.child("musteri_zkonum").value.toString().toBoolean()
 
-                                    for (ds in p0.child("siparisleri").children) {
-                                        var gelenData = ds.getValue(SiparisData::class.java)!!
-                                        list.add(gelenData)
+                                    dialogView.swKonumKaydet.isChecked = konum
+                                    dialogView.etAdresGidilen.setText(adres)
+                                    dialogView.etTelefonGidilen.setText(telefon)
 
-                                        sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
-                                        sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
-                                        yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
+                                    var list = ArrayList<SiparisData>()
+                                    list = ArrayList()
+                                    if (p0.child("siparisleri").hasChildren()) {
+
+                                        var sut3ltSayisi = 0
+                                        var sut5ltSayisi = 0
+                                        var yumurtaSayisi = 0
+
+                                        for (ds in p0.child("siparisleri").children) {
+                                            var gelenData = ds.getValue(SiparisData::class.java)!!
+                                            list.add(gelenData)
+
+                                            sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
+                                            sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
+                                            yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
+
+                                        }
+
+                                        dialogView.tv3litre.text = "3lt: " + sut3ltSayisi.toString()
+                                        dialogView.tv5litre.text = "5lt: " + sut5ltSayisi.toString()
+                                        dialogView.tvYumurta.text = "Yumurta: " + yumurtaSayisi.toString()
+                                        dialogView.tvFiyatGenel.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
+
+
+                                        dialogView.rcSiparisGidilen.layoutManager = LinearLayoutManager(myContext, LinearLayoutManager.VERTICAL, false)
+                                        //        dialogView.rcSiparisGidilen.layoutManager = StaggeredGridLayoutManager(myContext, LinearLayoutManager.VERTICAL, 2)
+                                        val Adapter = MusteriSiparisleriAdapter(myContext, list)
+                                        dialogView.rcSiparisGidilen.adapter = Adapter
+                                        dialogView.rcSiparisGidilen.setHasFixedSize(true)
+
 
                                     }
-
-                                    dialogView.tv3litre.text = "3lt: " + sut3ltSayisi.toString()
-                                    dialogView.tv5litre.text = "5lt: " + sut5ltSayisi.toString()
-                                    dialogView.tvYumurta.text = "Yumurta: " + yumurtaSayisi.toString()
-                                    dialogView.tvFiyatGenel.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
-
-
-                                    dialogView.rcSiparisGidilen.layoutManager = LinearLayoutManager(myContext, LinearLayoutManager.VERTICAL, false)
-                                    //        dialogView.rcSiparisGidilen.layoutManager = StaggeredGridLayoutManager(myContext, LinearLayoutManager.VERTICAL, 2)
-                                    val Adapter = MusteriSiparisleriAdapter(myContext, list)
-                                    dialogView.rcSiparisGidilen.adapter = Adapter
-                                    dialogView.rcSiparisGidilen.setHasFixedSize(true)
-
-
                                 }
-                            }
 
 
-                        })
-                        dialogMsDznle.setCancelable(false)
-                        dialogMsDznle.show()
-
-                    }
-                    R.id.popSil -> {
-
-                        var alert = AlertDialog.Builder(myContext)
-                            .setTitle("Müşteriyi Sil")
-                            .setMessage("Emin Misin ?")
-                            .setPositiveButton("Sil", object : DialogInterface.OnClickListener {
-                                override fun onClick(p0: DialogInterface?, p1: Int) {
-                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).removeValue()
-
-                                }
                             })
-                            .setNegativeButton("İptal", object : DialogInterface.OnClickListener {
-                                override fun onClick(p0: DialogInterface?, p1: Int) {
-                                    p0!!.dismiss()
-                                }
-                            }).create()
+                            dialogMsDznle.setCancelable(false)
+                            dialogMsDznle.show()
 
-                        alert.show()
+                        }
+                        R.id.popSil -> {
+
+                            var alert = AlertDialog.Builder(myContext)
+                                .setTitle("Müşteriyi Sil")
+                                .setMessage("Emin Misin ?")
+                                .setPositiveButton("Sil", object : DialogInterface.OnClickListener {
+                                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).removeValue()
+
+                                    }
+                                })
+                                .setNegativeButton("İptal", object : DialogInterface.OnClickListener {
+                                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                                        p0!!.dismiss()
+                                    }
+                                }).create()
+
+                            alert.show()
 
 
+                        }
                     }
-                }
-                return@OnMenuItemClickListener true
-            })
-            popup.show()
+                    return@OnMenuItemClickListener true
+                })
+                popup.show()
 
-            return@setOnLongClickListener true
+                return@setOnLongClickListener true
+            }
+        }catch (e:Exception){
+            Toast.makeText(myContext,"332. satır hatasıMusteriAdapter",Toast.LENGTH_LONG).show()
         }
+
 
 
     }
@@ -376,7 +378,9 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                 var Long = location!!.longitude
 
                 FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdiGnl).child("musteri_zlat").setValue(Lat)
-                FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdiGnl).child("musteri_zlong").setValue(Long)
+                FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdiGnl).child("musteri_zlong").setValue(Long).addOnCompleteListener {
+                    Toast.makeText(myContext,"Konum Kaydedildi.",Toast.LENGTH_SHORT).show()
+                }
             }
 
             override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {

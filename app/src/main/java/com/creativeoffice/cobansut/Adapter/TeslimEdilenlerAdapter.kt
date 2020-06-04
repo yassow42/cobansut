@@ -3,6 +3,7 @@ package com.creativeoffice.cobansut.Adapter
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -96,6 +97,8 @@ class TeslimEdilenlerAdapter(val myContext: Context, val siparisler: ArrayList<S
             } else {
                 teslimEden.visibility = View.GONE
             }
+
+
 
 
         }

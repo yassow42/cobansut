@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SiparislerActivity">
+    tools:context=".Activity.SiparislerActivity">
 
 
     <ScrollView
@@ -29,8 +29,8 @@
 
                 <ImageView
                     android:id="@+id/imgCikis"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
+                    android:layout_width="8dp"
+                    android:layout_height="4dp"
                     android:layout_marginEnd="16dp"
                     android:background="@drawable/cancel"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -1860,15 +1860,7 @@
     </ScrollView>
 
 
-    <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
-        android:id="@+id/bottomNav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#fff"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout5"
@@ -1927,6 +1919,17 @@
             app:layout_constraintStart_toEndOf="@+id/tvYumurta"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

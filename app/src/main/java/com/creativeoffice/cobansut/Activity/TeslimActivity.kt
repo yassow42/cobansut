@@ -1,13 +1,18 @@
-package com.creativeoffice.cobansut
+package com.creativeoffice.cobansut.Activity
 
 import android.app.DatePickerDialog
+import android.app.ProgressDialog
 import android.app.TimePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.view.WindowManager
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.creativeoffice.cobansut.Adapter.TeslimEdilenlerAdapter
+import com.creativeoffice.cobansut.utils.BottomNavigationViewHelper
 import com.creativeoffice.cobansut.Datalar.SiparisData
+import com.creativeoffice.cobansut.R
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_siparisler.bottomNav
 import kotlinx.android.synthetic.main.activity_teslim.*
@@ -20,26 +25,31 @@ class TeslimActivity : AppCompatActivity() {
     lateinit var suankiTeslimList: ArrayList<SiparisData>
     lateinit var butunTeslimList: ArrayList<SiparisData>
 
+    lateinit var progressDialog: ProgressDialog
+    val hndler = Handler()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_teslim)
         setupNavigationView()
-        this.getWindow().setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        setupBtn()
 
         suankiTeslimList = ArrayList()
         butunTeslimList = ArrayList()
-        setupVeri()
-        setupBtn()
+
+        progressDialog = ProgressDialog(this)
+        progressDialog.setMessage("Lütfen bekleyin...")
+        progressDialog.setCancelable(false)
+        progressDialog.show()
 
 
-         FirebaseDatabase.getInstance().reference.child("Teslim_siparisler").keepSynced(true)
+
+        hndler.postDelayed(Runnable { setupVeri() }, 2000)
+        hndler.postDelayed(Runnable { progressDialog.dismiss() }, 5000)
+
+
 
     }
-
-
 
 
     private fun setupBtn() {
@@ -100,7 +110,7 @@ class TeslimActivity : AppCompatActivity() {
             var sut5ltSayisi = 0
             var yumurtaSayisi = 0
 
-            for (ds in butunTeslimList){
+            for (ds in butunTeslimList) {
 
 
                 if (calZamandan.timeInMillis < ds.siparis_teslim_zamani!!.toLong() && ds.siparis_teslim_zamani!!.toLong() < calZamana.timeInMillis) {
@@ -118,49 +128,92 @@ class TeslimActivity : AppCompatActivity() {
                 setupRecyclerView()
 
             }
-    /*
-            FirebaseDatabase.getInstance().reference.child("Teslim_siparisler").orderByChild("siparis_teslim_zamani").addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError) {
+        }
+        imgOptions.setOnClickListener {
 
-                }
-
-                override fun onDataChange(data: DataSnapshot) {
-                    if (data.hasChildren()) {
+            val popup = PopupMenu(this, imgOptions)
+            popup.inflate(R.menu.popup_menu_teslim)
+            popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener {
+                var sut3ltSayisi = 0
+                var sut5ltSayisi = 0
+                var yumurtaSayisi = 0
+                when (it.itemId) {
+                    R.id.samet -> {
                         suankiTeslimList.clear()
 
-                        var sut3ltSayisi = 0
-                        var sut5ltSayisi = 0
-                        var yumurtaSayisi = 0
-
-
-                        for (ds in data.children) {
-                            var gelenData = ds.getValue(SiparisData::class.java)!!
-
-
-                            if (calZamandan.timeInMillis < gelenData.siparis_teslim_zamani!!.toLong() && gelenData.siparis_teslim_zamani!!.toLong() < calZamana.timeInMillis) {
-                                suankiTeslimList.add(gelenData)
-                                sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
-                                sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
-                                yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
+                        for (ds in butunTeslimList) {
+                            if (calZamandan.timeInMillis < ds.siparis_teslim_zamani!!.toLong() && ds.siparis_teslim_zamani!!.toLong() < calZamana.timeInMillis) {
+                                if (ds.siparisi_giren == "Samet") {
+                                    suankiTeslimList.add(ds)
+                                    sut3ltSayisi = ds.sut3lt!!.toInt() + sut3ltSayisi
+                                    sut5ltSayisi = ds.sut5lt!!.toInt() + sut5ltSayisi
+                                    yumurtaSayisi = ds.yumurta!!.toInt() + yumurtaSayisi
+                                }
                             }
                         }
 
-                        suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }
                         tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
                         tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
                         tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
                         tvFiyatGenelTeslim.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
+                        suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }
                         setupRecyclerView()
+                    }
+                    R.id.umit -> {
+                        suankiTeslimList.clear()
 
+                        for (ds in butunTeslimList) {
+                            if (calZamandan.timeInMillis < ds.siparis_teslim_zamani!!.toLong() && ds.siparis_teslim_zamani!!.toLong() < calZamana.timeInMillis) {
 
+                                if (ds.siparisi_giren == "Umit") {
+                                    suankiTeslimList.add(ds)
+                                    sut3ltSayisi = ds.sut3lt!!.toInt() + sut3ltSayisi
+                                    sut5ltSayisi = ds.sut5lt!!.toInt() + sut5ltSayisi
+                                    yumurtaSayisi = ds.yumurta!!.toInt() + yumurtaSayisi
+                                }
+
+                            }
+                        }
+
+                        tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
+                        tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
+                        tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
+                        tvFiyatGenelTeslim.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
+                        suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }
+                        setupRecyclerView()
                     }
 
+                    R.id.nihat -> {
+                        suankiTeslimList.clear()
+
+                        for (ds in butunTeslimList) {
+                            if (calZamandan.timeInMillis < ds.siparis_teslim_zamani!!.toLong() && ds.siparis_teslim_zamani!!.toLong() < calZamana.timeInMillis) {
+
+                                if (ds.siparisi_giren == "Nihat") {
+                                    suankiTeslimList.add(ds)
+                                    sut3ltSayisi = ds.sut3lt!!.toInt() + sut3ltSayisi
+                                    sut5ltSayisi = ds.sut5lt!!.toInt() + sut5ltSayisi
+                                    yumurtaSayisi = ds.yumurta!!.toInt() + yumurtaSayisi
+                                }
+
+                            }
+                        }
+
+                        tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
+                        tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
+                        tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
+                        tvFiyatGenelTeslim.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
+                        suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }
+                        setupRecyclerView()
+                    }
+
+
                 }
-
+                return@OnMenuItemClickListener true
             })
-*/
-        }
+            popup.show()
 
+        }
 
     }
 
@@ -172,22 +225,16 @@ class TeslimActivity : AppCompatActivity() {
 
             override fun onDataChange(data: DataSnapshot) {
                 if (data.hasChildren()) {
-
-
                     var sut3ltSayisi = 0
                     var sut5ltSayisi = 0
                     var yumurtaSayisi = 0
-
-
                     FirebaseDatabase.getInstance().reference.child("Zaman").addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onCancelled(p0: DatabaseError) {
-
                         }
 
                         override fun onDataChange(p0: DataSnapshot) {
 
                             var gece3GelenZaman = p0.child("gece3").value.toString().toLong()
-
                             var suankıZaman = System.currentTimeMillis()
 
                             if (gece3GelenZaman < suankıZaman) {
@@ -196,9 +243,7 @@ class TeslimActivity : AppCompatActivity() {
                             }
                             for (ds in data.children) {
                                 var gelenData = ds.getValue(SiparisData::class.java)!!
-
                                 butunTeslimList.add(gelenData)
-
                                 if (gece3GelenZaman - 86400000 < gelenData.siparis_teslim_zamani!!.toLong() && gelenData.siparis_teslim_zamani!!.toLong() < gece3GelenZaman) {
                                     suankiTeslimList.add(gelenData)
                                     sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
@@ -206,23 +251,22 @@ class TeslimActivity : AppCompatActivity() {
                                     yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
                                 }
                             }
-
+                            progressDialog.dismiss()
                             suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }
                             tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
                             tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
                             tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
                             tvFiyatGenelTeslim.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
                             setupRecyclerView()
-
                         }
-
                     })
-
+                }
+                else{
+                    progressDialog.setMessage("Veri Alınamıyor...")
+                    hndler.postDelayed(Runnable { progressDialog.dismiss() }, 2000)
 
                 }
-
             }
-
         })
     }
 
