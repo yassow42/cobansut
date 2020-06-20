@@ -32,8 +32,14 @@
             android:value="@string/google_maps_key" />
 
         <activity
+            android:name=".Activity.AdresBulmaMapsActivity"
+            android:label="@string/title_activity_adres_bulma_maps"></activity>
+        <activity
+            android:name=".CorluActivity.AdresBulmaMapsCorluActivity"
+            android:label="@string/title_activity_adres_bulma_maps_corlu" />
+        <activity
             android:name=".CorluActivity.MapsCorluActivity"
-            android:label="@string/title_activity_maps_corlu"></activity>
+            android:label="@string/title_activity_maps_corlu" />
         <activity android:name=".CorluActivity.MusterilerCorluActivity" />
         <activity android:name=".CorluActivity.TeslimCorluActivity" />
         <activity android:name=".BolgeSecimActivity" />

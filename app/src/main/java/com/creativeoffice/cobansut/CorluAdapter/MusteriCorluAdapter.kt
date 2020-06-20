@@ -6,6 +6,7 @@ import android.app.Dialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -21,6 +22,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.creativeoffice.cobansut.Adapter.MusteriSiparisleriAdapter
+import com.creativeoffice.cobansut.CorluActivity.AdresBulmaMapsCorluActivity
 import com.creativeoffice.cobansut.Datalar.MusteriData
 import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.R
@@ -54,7 +56,6 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
 
     override fun onBindViewHolder(holder: MusteriCorluAdapter.MusteriHolder, position: Int) {
         holder.setData(musteriler[position])
-
 
         holder.btnSiparisEkle.setOnClickListener {
 
@@ -175,7 +176,6 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
 
         holder.itemView.setOnLongClickListener {
 
-
             val popup = PopupMenu(myContext, holder.itemView)
             popup.inflate(R.menu.popup_menu_musteri)
             popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener {
@@ -188,18 +188,23 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
                         var dialogView: View = View.inflate(myContext, R.layout.dialog_gidilen_musteri, null)
                         builder.setView(dialogView)
 
-
                         dialogMsDznle = builder.create()
+
+                        dialogView.imgMaps.setOnClickListener {
+                            var intent = Intent(myContext, AdresBulmaMapsCorluActivity::class.java)
+
+                            intent.putExtra("musteriAdi",musteriler[position].musteri_ad_soyad)
+                            myContext.startActivity(intent)
+                        }
 
                         dialogView.swKonumKaydet.setOnClickListener {
 
-
                             if (dialogView.swKonumKaydet.isChecked) {
                                 refCorlu.child("Musteriler").child(musteriAdi).child("musteri_zkonum").setValue(true)
-                                holder.getLocation(musteriAdi)
+                              //  holder.getLocation(musteriAdi)
 
                             } else {
-                                holder.locationManager.removeUpdates(holder.myLocationListener)
+                           //     holder.locationManager.removeUpdates(holder.myLocationListener)
                                 refCorlu.child("Musteriler").child(musteriAdi).child("musteri_zkonum").setValue(false)
                                 refCorlu.child("Musteriler").child(musteriAdi).child("musteri_zlat").removeValue()
                                 refCorlu.child("Musteriler").child(musteriAdi).child("musteri_zlong").removeValue()
@@ -220,7 +225,7 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
                                 refCorlu.child("Musteriler").child(musteriAdi).child("musteri_apartman").setValue(apartman)
                                 refCorlu.child("Musteriler").child(musteriAdi).child("musteri_tel").setValue(telefon).addOnCompleteListener {
 ///locationsu durduruyruz
-                                    holder.locationManager.removeUpdates(holder.myLocationListener)
+                                 //   holder.locationManager.removeUpdates(holder.myLocationListener)
 ///
                                     dialogMsDznle.dismiss()
 
@@ -232,14 +237,14 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
                         }
 
                         dialogView.imgBack.setOnClickListener {
-                            holder.locationManager.removeUpdates(holder.myLocationListener)
+                          //  holder.locationManager.removeUpdates(holder.myLocationListener)
                             dialogMsDznle.dismiss()
                         }
 
                         dialogView.tvAdSoyad.text = musteriler[position].musteri_ad_soyad.toString()
                         dialogView.tvMahalle.text = musteriler[position].musteri_mah.toString() + " Mahallesi"
                         dialogView.etApartman.setText(musteriler[position].musteri_apartman.toString())
-                       refCorlu.child("Musteriler").child(musteriAdi).addListenerForSingleValueEvent(object : ValueEventListener {
+                        refCorlu.child("Musteriler").child(musteriAdi).addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onCancelled(p0: DatabaseError) {
 
                             }

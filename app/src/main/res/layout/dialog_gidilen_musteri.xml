@@ -6,6 +6,18 @@
     android:layout_height="wrap_content"
     tools:context=".Activity.GidilenMusteriActivity">
 
+    <ImageView
+        android:id="@+id/imgMaps"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/swKonumKaydet"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/swKonumKaydet"
+        app:layout_constraintTop_toTopOf="@+id/swKonumKaydet"
+        app:srcCompat="@drawable/map" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout6"
         android:layout_width="match_parent"

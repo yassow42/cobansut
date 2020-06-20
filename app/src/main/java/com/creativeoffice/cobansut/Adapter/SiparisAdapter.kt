@@ -358,9 +358,35 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
             } else {
                 hataMesajiYazdir("yumurta yok ${siparisData.siparis_key}", siparisData.siparis_veren.toString())
             }
+/*
+            mahalleler.add("Market")
+            mahalleler.add("Akbilek")
+            mahalleler.add("Aşağı")
+            mahalleler.add("Bahçeleriçi") Bahcelerici
+            mahalleler.add("Beyazıtpaşa")Beyazitpasa
+            mahalleler.add("Boğazköy") Bogazkoy
 
-
-
+            mahalleler.add("Çakallar") CakallarList
+            mahalleler.add("Demet Evler") Demet
+            mahalleler.add("Dere")
+            mahalleler.add("Ellibeşevler")Ellibes
+            mahalleler.add("Fethiye")
+            mahalleler.add("Fındıklı")
+            mahalleler.add("Gökmedrese")
+            mahalleler.add("Göllü Bağları")
+            mahalleler.add("Gümüşlü")
+            mahalleler.add("Hacı İlyas")
+            mahalleler.add("Hacılar Meydanı")
+            mahalleler.add("Hatuniye")
+            mahalleler.add("Helvacı")
+            mahalleler.add("Hızır Paşa")
+            mahalleler.add("İhsaniye")
+            mahalleler.add("Karasenir")
+            mahalleler.add("Kirazlı Dere")
+            mahalleler.add("Koza")
+            mahalleler.add("Kurşunlu")
+            mahalleler.add("Mehmet Paşa")
+*/
             tvFiyat.text = ((sut3ltFiyat * 16) + (sut5ltFiyat * 22) + yumurtaFiyat).toString() + " tl"
 
 

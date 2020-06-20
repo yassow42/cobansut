@@ -2,4 +2,6 @@
     <string name="app_name">Çoban Süt</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_maps_corlu">Map</string>
+    <string name="title_activity_adres_bulma_maps_corlu">Map</string>
+    <string name="title_activity_adres_bulma_maps">Map</string>
 </resources>

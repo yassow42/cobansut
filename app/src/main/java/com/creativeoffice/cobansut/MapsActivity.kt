@@ -106,140 +106,139 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     for (ds in p0.children) {
                         try {
                             gelenData = ds.getValue(SiparisData::class.java)!!
-                            if (gelenData.siparis_adres.toString() != "Adres") {
-                                if (gelenData.siparis_teslim_tarihi!!.compareTo(System.currentTimeMillis()) == -1) {
-                                    var konumVarMi = gelenData.musteri_zkonum.toString().toBoolean()
-                                    if (konumVarMi) {
-                                        try {
-                                            var lat = gelenData.musteri_zlat!!.toDouble()
-                                            var long = gelenData.musteri_zlong!!.toDouble()
-                                            val adres = LatLng(lat, long)
-                                            var myMarker = mMap.addMarker(MarkerOptions().position(adres).title(gelenData.siparis_veren).snippet(gelenData.siparis_adres + " / " + gelenData.siparis_apartman))
-
-                                            myMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.order_map))
-                                            myMarker.tag = gelenData.siparis_key
-                                        }catch (e:Exception){
-                                            Toast.makeText(this@MapsActivity,gelenData.siparis_veren + " adlı müşterinin konumu hatalı. Lütfen ev konum switch'ini kapatın",Toast.LENGTH_LONG).show()
-                                        }
-
-                                    } else {
-                                        var lat = convertAddressLat(gelenData.siparis_mah + " mahallesi " + gelenData.siparis_adres + " Lüleburgaz 39750")!!.toDouble()
-                                        var long = convertAddressLng(gelenData.siparis_mah + " mahallesi " + gelenData.siparis_adres + " Lüleburgaz 39750")!!.toDouble()
+                            if (gelenData.siparis_teslim_tarihi!!.compareTo(System.currentTimeMillis()) == -1) {
+                                var konumVarMi = gelenData.musteri_zkonum.toString().toBoolean()
+                                if (konumVarMi) {
+                                    try {
+                                        var lat = gelenData.musteri_zlat!!.toDouble()
+                                        var long = gelenData.musteri_zlong!!.toDouble()
                                         val adres = LatLng(lat, long)
                                         var myMarker = mMap.addMarker(MarkerOptions().position(adres).title(gelenData.siparis_veren).snippet(gelenData.siparis_adres + " / " + gelenData.siparis_apartman))
 
                                         myMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.order_map))
                                         myMarker.tag = gelenData.siparis_key
+                                    } catch (e: Exception) {
+                                        Toast.makeText(this@MapsActivity, gelenData.siparis_veren + " adlı müşterinin konumu hatalı. Lütfen ev konum switch'ini kapatın", Toast.LENGTH_LONG).show()
                                     }
-                                    mMap.setOnMarkerClickListener {
-                                        it.tag
 
-                                        var bottomSheetDialog = BottomSheetDialog(this@MapsActivity)
+                                } else {
+                                    var lat = convertAddressLat(gelenData.siparis_mah + " mahallesi " + gelenData.siparis_adres + " Lüleburgaz 39750")!!.toDouble()
+                                    var long = convertAddressLng(gelenData.siparis_mah + " mahallesi " + gelenData.siparis_adres + " Lüleburgaz 39750")!!.toDouble()
+                                    val adres = LatLng(lat, long)
+                                    var myMarker = mMap.addMarker(MarkerOptions().position(adres).title(gelenData.siparis_veren).snippet(gelenData.siparis_adres + " / " + gelenData.siparis_apartman))
 
-                                        var view = bottomSheetDialog.layoutInflater.inflate(R.layout.dialog_map_item_siparisler, null)
-                                        bottomSheetDialog.setContentView(view)
-                                        var ref = FirebaseDatabase.getInstance().reference
-                                        ref.child("Siparisler").child(it.tag.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
-                                            override fun onCancelled(p0: DatabaseError) {
-                                            }
+                                    myMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.order_map))
+                                    myMarker.tag = gelenData.siparis_key
+                                }
+                                mMap.setOnMarkerClickListener {
+                                    it.tag
 
-                                            override fun onDataChange(p0: DataSnapshot) {
-                                                var gelenData = p0.getValue(SiparisData::class.java)!!
-                                                view.tvSiparisVeren.text = gelenData!!.siparis_veren
-                                                view.tvSiparisAdres.text = gelenData!!.siparis_mah + " mah. " + gelenData!!.siparis_adres + " " + gelenData!!.siparis_apartman
-                                                view.tvSiparisTel.text = gelenData.siparis_tel
-                                                view.tvNot.text = gelenData.siparis_notu
+                                    var bottomSheetDialog = BottomSheetDialog(this@MapsActivity)
 
+                                    var view = bottomSheetDialog.layoutInflater.inflate(R.layout.dialog_map_item_siparisler, null)
+                                    bottomSheetDialog.setContentView(view)
+                                    var ref = FirebaseDatabase.getInstance().reference
+                                    ref.child("Siparisler").child(it.tag.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
+                                        override fun onCancelled(p0: DatabaseError) {
+                                        }
 
-                                                view.tv5lt.text = gelenData!!.sut5lt
-                                                view.tv3lt.text = gelenData!!.sut3lt
-                                                view.tvYumurta.text = gelenData!!.yumurta
-
-                                                var sut3ltFiyat = gelenData.sut3lt.toString().toInt()
-                                                var sut5ltFiyat = gelenData.sut5lt.toString().toInt()
-                                                var yumurtaFiyat = gelenData.yumurta.toString().toInt()
-
-                                                view.tvFiyat.text = ((sut3ltFiyat * 16) + (sut5ltFiyat * 22) + yumurtaFiyat).toString() + " tl"
-
-
-                                                view.swMapPro.setOnClickListener {
-
-                                                    if (view.swMapPro.isChecked) {
-                                                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(gelenData.siparis_veren.toString()).child("promosyon_verildimi").setValue(true)
-                                                    } else {
-                                                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(gelenData.siparis_veren.toString()).child("promosyon_verildimi").setValue(false)
-
-                                                    }
-                                                }
-                                                view.swMapPro.isChecked = gelenData.promosyon_verildimi.toString().toBoolean()
-
-                                                view.tvSiparisTel.setOnClickListener {
-                                                    val arama =
-                                                        Intent(Intent.ACTION_DIAL)//Bu kod satırımız bizi rehbere telefon numarası ile yönlendiri.
-                                                    arama.data = Uri.parse("tel:" + gelenData.siparis_tel)
-                                                    startActivity(arama)
-                                                }
-                                                view.btnTeslim.setOnClickListener {
-                                                    var alert = AlertDialog.Builder(this@MapsActivity)
-                                                        .setTitle("Sipariş Teslim Edildi")
-                                                        .setMessage("Emin Misin ?")
-                                                        .setPositiveButton("Onayla", object : DialogInterface.OnClickListener {
-                                                            override fun onClick(p0: DialogInterface?, p1: Int) {
+                                        override fun onDataChange(p0: DataSnapshot) {
+                                            var gelenData = p0.getValue(SiparisData::class.java)!!
+                                            view.tvSiparisVeren.text = gelenData!!.siparis_veren
+                                            view.tvSiparisAdres.text = gelenData!!.siparis_mah + " mah. " + gelenData!!.siparis_adres + " " + gelenData!!.siparis_apartman
+                                            view.tvSiparisTel.text = gelenData.siparis_tel
+                                            view.tvNot.text = gelenData.siparis_notu
 
 
-                                                                var siparisData = SiparisData(
-                                                                    gelenData.siparis_zamani,
-                                                                    gelenData.siparis_teslim_zamani,
-                                                                    gelenData.siparis_teslim_tarihi,
-                                                                    gelenData.siparis_adres,
-                                                                    gelenData.siparis_apartman,
-                                                                    gelenData.siparis_tel,
-                                                                    gelenData.siparis_veren,
-                                                                    gelenData.siparis_mah,
-                                                                    gelenData.siparis_notu,
-                                                                    gelenData.siparis_key,
-                                                                    gelenData.yumurta,
-                                                                    gelenData.sut3lt,
-                                                                    gelenData.sut5lt,
-                                                                    gelenData.musteri_zkonum,
-                                                                    gelenData.promosyon_verildimi,
-                                                                    gelenData.musteri_zlat,
-                                                                    gelenData.musteri_zlong,
-                                                                    kullaniciAdi
-                                                                )
+                                            view.tv5lt.text = gelenData!!.sut5lt
+                                            view.tv3lt.text = gelenData!!.sut3lt
+                                            view.tvYumurta.text = gelenData!!.yumurta
 
-                                                                FirebaseDatabase.getInstance().reference.child("Musteriler").child(gelenData.siparis_veren.toString()).child("siparisleri")
-                                                                    .child(gelenData.siparis_key.toString()).setValue(siparisData)
+                                            var sut3ltFiyat = gelenData.sut3lt.toString().toInt()
+                                            var sut5ltFiyat = gelenData.sut5lt.toString().toInt()
+                                            var yumurtaFiyat = gelenData.yumurta.toString().toInt()
 
-                                                                FirebaseDatabase.getInstance().reference.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).setValue(siparisData)
-                                                                    .addOnCompleteListener {
+                                            view.tvFiyat.text = ((sut3ltFiyat * 16) + (sut5ltFiyat * 22) + yumurtaFiyat).toString() + " tl"
 
-                                                                        startActivity(Intent(this@MapsActivity, SiparislerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
-                                                                        Toast.makeText(this@MapsActivity, "Sipariş Teslim Edildi", Toast.LENGTH_LONG).show()
-                                                                        FirebaseDatabase.getInstance().reference.child("Siparisler").child(gelenData.siparis_key.toString()).removeValue()
-                                                                        FirebaseDatabase.getInstance().reference.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("siparis_teslim_zamani")
-                                                                            .setValue(ServerValue.TIMESTAMP)
-                                                                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(gelenData.siparis_veren.toString()).child("siparis_son_zaman").setValue(
-                                                                            ServerValue.TIMESTAMP
-                                                                        )
-                                                                    }
-                                                            }
-                                                        })
-                                                        .setNegativeButton("İptal", object : DialogInterface.OnClickListener {
-                                                            override fun onClick(p0: DialogInterface?, p1: Int) {
-                                                                p0!!.dismiss()
-                                                            }
-                                                        }).create()
-                                                    alert.show()
+
+                                            view.swMapPro.setOnClickListener {
+
+                                                if (view.swMapPro.isChecked) {
+                                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(gelenData.siparis_veren.toString()).child("promosyon_verildimi").setValue(true)
+                                                } else {
+                                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(gelenData.siparis_veren.toString()).child("promosyon_verildimi").setValue(false)
+
                                                 }
                                             }
-                                        })
+                                            view.swMapPro.isChecked = gelenData.promosyon_verildimi.toString().toBoolean()
 
-                                        bottomSheetDialog.show()
-                                        it.isVisible
-                                    }
+                                            view.tvSiparisTel.setOnClickListener {
+                                                val arama =
+                                                    Intent(Intent.ACTION_DIAL)//Bu kod satırımız bizi rehbere telefon numarası ile yönlendiri.
+                                                arama.data = Uri.parse("tel:" + gelenData.siparis_tel)
+                                                startActivity(arama)
+                                            }
+                                            view.btnTeslim.setOnClickListener {
+                                                var alert = AlertDialog.Builder(this@MapsActivity)
+                                                    .setTitle("Sipariş Teslim Edildi")
+                                                    .setMessage("Emin Misin ?")
+                                                    .setPositiveButton("Onayla", object : DialogInterface.OnClickListener {
+                                                        override fun onClick(p0: DialogInterface?, p1: Int) {
+
+
+                                                            var siparisData = SiparisData(
+                                                                gelenData.siparis_zamani,
+                                                                gelenData.siparis_teslim_zamani,
+                                                                gelenData.siparis_teslim_tarihi,
+                                                                gelenData.siparis_adres,
+                                                                gelenData.siparis_apartman,
+                                                                gelenData.siparis_tel,
+                                                                gelenData.siparis_veren,
+                                                                gelenData.siparis_mah,
+                                                                gelenData.siparis_notu,
+                                                                gelenData.siparis_key,
+                                                                gelenData.yumurta,
+                                                                gelenData.sut3lt,
+                                                                gelenData.sut5lt,
+                                                                gelenData.musteri_zkonum,
+                                                                gelenData.promosyon_verildimi,
+                                                                gelenData.musteri_zlat,
+                                                                gelenData.musteri_zlong,
+                                                                kullaniciAdi
+                                                            )
+
+                                                            FirebaseDatabase.getInstance().reference.child("Musteriler").child(gelenData.siparis_veren.toString()).child("siparisleri")
+                                                                .child(gelenData.siparis_key.toString()).setValue(siparisData)
+
+                                                            FirebaseDatabase.getInstance().reference.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).setValue(siparisData)
+                                                                .addOnCompleteListener {
+
+                                                                    startActivity(Intent(this@MapsActivity, SiparislerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+                                                                    Toast.makeText(this@MapsActivity, "Sipariş Teslim Edildi", Toast.LENGTH_LONG).show()
+                                                                    FirebaseDatabase.getInstance().reference.child("Siparisler").child(gelenData.siparis_key.toString()).removeValue()
+                                                                    FirebaseDatabase.getInstance().reference.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("siparis_teslim_zamani")
+                                                                        .setValue(ServerValue.TIMESTAMP)
+                                                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(gelenData.siparis_veren.toString()).child("siparis_son_zaman").setValue(
+                                                                        ServerValue.TIMESTAMP
+                                                                    )
+                                                                }
+                                                        }
+                                                    })
+                                                    .setNegativeButton("İptal", object : DialogInterface.OnClickListener {
+                                                        override fun onClick(p0: DialogInterface?, p1: Int) {
+                                                            p0!!.dismiss()
+                                                        }
+                                                    }).create()
+                                                alert.show()
+                                            }
+                                        }
+                                    })
+
+                                    bottomSheetDialog.show()
+                                    it.isVisible
                                 }
                             }
+
                         } catch (ex: IOException) {
                             Log.e("sad", ex.message.toString())
                         }
@@ -352,3 +351,5 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 }
+
+

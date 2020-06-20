@@ -138,7 +138,7 @@ class LoginActivity : AppCompatActivity() {
             override fun onAuthStateChanged(p0: FirebaseAuth) {
                 var user = FirebaseAuth.getInstance().currentUser
                 if (user != null) {
-                    var intent = Intent(this@LoginActivity, SiparislerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                    var intent = Intent(this@LoginActivity, BolgeSecimActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                     startActivity(intent)
                     finish()
                 } else {

@@ -6,6 +6,7 @@ import android.app.Dialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -21,6 +22,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.creativeoffice.cobansut.Activity.AdresBulmaMapsActivity
+import com.creativeoffice.cobansut.CorluActivity.AdresBulmaMapsCorluActivity
 import com.creativeoffice.cobansut.Datalar.MusteriData
 import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.R
@@ -198,15 +201,22 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
 
                             dialogMsDznle = builder.create()
 
+                            dialogView.imgMaps.setOnClickListener {
+                                var intent = Intent(myContext, AdresBulmaMapsActivity::class.java)
+
+                                intent.putExtra("musteriAdi",musteriler[position].musteri_ad_soyad)
+                                myContext.startActivity(intent)
+                            }
                             dialogView.swKonumKaydet.setOnClickListener {
 
 
                                 if (dialogView.swKonumKaydet.isChecked) {
                                     FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_zkonum").setValue(true)
-                                    holder.getLocation(musteriAdi)
+                                  //  holder.getLocation(musteriAdi)
 
-                                } else {
-                                    holder.locationManager.removeUpdates(holder.myLocationListener)
+                                }
+                                else {
+                                  //  holder.locationManager.removeUpdates(holder.myLocationListener)
                                     FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_zkonum").setValue(false)
                                     FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_zlat").removeValue()
                                     FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_zlong").removeValue()
@@ -227,7 +237,7 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                                     FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_apartman").setValue(apartman)
                                     FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_tel").setValue(telefon).addOnCompleteListener {
 ///locationsu durduruyruz
-                                        holder.locationManager.removeUpdates(holder.myLocationListener)
+                                    //    holder.locationManager.removeUpdates(holder.myLocationListener)
 ///
                                         dialogMsDznle.dismiss()
 
@@ -239,7 +249,7 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                             }
 
                             dialogView.imgBack.setOnClickListener {
-                                holder.locationManager.removeUpdates(holder.myLocationListener)
+                             //   holder.locationManager.removeUpdates(holder.myLocationListener)
                                 dialogMsDznle.dismiss()
                             }
 
