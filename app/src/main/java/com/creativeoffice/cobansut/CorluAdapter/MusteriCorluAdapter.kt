@@ -92,7 +92,7 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
                 }
             }
 
-            dialogViewSp.swPromosyon.isChecked = musteriler[position].promosyon_verildimi.toString().toBoolean()
+        //    dialogViewSp.swPromosyon.isChecked = musteriler[position].promosyon_verildimi.toString().toBoolean()
 
             dialogViewSp.tvZamanEkleDialog.setOnClickListener {
                 DatePickerDialog(myContext, dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
@@ -146,11 +146,15 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
 
                     var siparisKey = refCorlu.child("Siparisler").push().key.toString()
 
+                    var sut3ltFiyat = dialogViewSp.et3ltFiyat.text.toString().toDouble()
+                    var sut5ltFiyat = dialogViewSp.et5ltFiyat.text.toString().toDouble()
+                    var yumurtaFiyat = dialogViewSp.etYumurtaFiyat.text.toString().toDouble()
 
                     var siparisData = SiparisData(
                         null, null, cal.timeInMillis, musteriler[position].musteri_adres, musteriler[position].musteri_apartman,
-                        musteriler[position].musteri_tel, musteriler[position].musteri_ad_soyad, musteriler[position].musteri_mah, siparisNotu, siparisKey, yumurta, sut3lt, sut5lt,
-                        musteriler[position].musteri_zkonum, musteriler[position].promosyon_verildimi, musteriler[position].musteri_zlat, musteriler[position].musteri_zlong, kullaniciAdi
+                        musteriler[position].musteri_tel, musteriler[position].musteri_ad_soyad, musteriler[position].musteri_mah, siparisNotu, siparisKey, yumurta, yumurtaFiyat, sut3lt, sut3ltFiyat,
+                        sut5lt, sut5ltFiyat, 0.0, musteriler[position].musteri_zkonum, musteriler[position].promosyon_verildimi, musteriler[position].musteri_zlat,
+                        musteriler[position].musteri_zlong, kullaniciAdi
                     )
 
                     refCorlu.child("Siparisler").child(siparisKey).setValue(siparisData)
@@ -193,7 +197,7 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
                         dialogView.imgMaps.setOnClickListener {
                             var intent = Intent(myContext, AdresBulmaMapsCorluActivity::class.java)
 
-                            intent.putExtra("musteriAdi",musteriler[position].musteri_ad_soyad)
+                            intent.putExtra("musteriAdi", musteriler[position].musteri_ad_soyad)
                             myContext.startActivity(intent)
                         }
 
@@ -201,10 +205,10 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
 
                             if (dialogView.swKonumKaydet.isChecked) {
                                 refCorlu.child("Musteriler").child(musteriAdi).child("musteri_zkonum").setValue(true)
-                              //  holder.getLocation(musteriAdi)
+                                //  holder.getLocation(musteriAdi)
 
                             } else {
-                           //     holder.locationManager.removeUpdates(holder.myLocationListener)
+                                //     holder.locationManager.removeUpdates(holder.myLocationListener)
                                 refCorlu.child("Musteriler").child(musteriAdi).child("musteri_zkonum").setValue(false)
                                 refCorlu.child("Musteriler").child(musteriAdi).child("musteri_zlat").removeValue()
                                 refCorlu.child("Musteriler").child(musteriAdi).child("musteri_zlong").removeValue()
@@ -225,7 +229,7 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
                                 refCorlu.child("Musteriler").child(musteriAdi).child("musteri_apartman").setValue(apartman)
                                 refCorlu.child("Musteriler").child(musteriAdi).child("musteri_tel").setValue(telefon).addOnCompleteListener {
 ///locationsu durduruyruz
-                                 //   holder.locationManager.removeUpdates(holder.myLocationListener)
+                                    //   holder.locationManager.removeUpdates(holder.myLocationListener)
 ///
                                     dialogMsDznle.dismiss()
 
@@ -237,7 +241,7 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
                         }
 
                         dialogView.imgBack.setOnClickListener {
-                          //  holder.locationManager.removeUpdates(holder.myLocationListener)
+                            //  holder.locationManager.removeUpdates(holder.myLocationListener)
                             dialogMsDznle.dismiss()
                         }
 
@@ -344,26 +348,6 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
             sonSiparisZamani.text = TimeAgo.getTimeAgo(musteriData.siparis_son_zaman!!).toString()
         }
 
-
-        var locationManager = myContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-        @SuppressLint("MissingPermission")
-        fun getLocation(musteriAdi: String) {
-            if (isLocationEnabled(myContext)) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1500, 0f, myLocationListener)
-
-            } else {
-                Toast.makeText(myContext, "Konumu Açın", Toast.LENGTH_LONG).show()
-                dialogMsDznle.dismiss()
-            }
-        }
-
-        private fun isLocationEnabled(mContext: Context): Boolean {
-            val lm = mContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            return lm.isProviderEnabled(LocationManager.GPS_PROVIDER) || lm.isProviderEnabled(
-                LocationManager.NETWORK_PROVIDER
-            )
-        }
 
 
         val myLocationListener = object : LocationListener {

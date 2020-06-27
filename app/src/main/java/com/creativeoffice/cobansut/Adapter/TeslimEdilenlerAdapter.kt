@@ -3,7 +3,6 @@ package com.creativeoffice.cobansut.Adapter
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -65,7 +64,7 @@ class TeslimEdilenlerAdapter(val myContext: Context, val siparisler: ArrayList<S
                             ref.child("Teslim_siparisler").child(siparisler[position].siparis_key.toString()).removeValue()
                             ref.child("Musteriler").child(siparisler[position].siparis_veren.toString()).child("siparisleri").child(siparisler[position].siparis_key.toString())
                                 .removeValue().addOnCompleteListener {
-                                    Toast.makeText(myContext,"Sipariş silindi sayfayı yenileyebilirsin...", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(myContext, "Sipariş silindi sayfayı yenileyebilirsin...", Toast.LENGTH_SHORT).show()
                                 }
 
                         }
@@ -90,8 +89,11 @@ class TeslimEdilenlerAdapter(val myContext: Context, val siparisler: ArrayList<S
         val musteriAdSoyad = itemView.tvMusteriAdSoyad
         val teslimEden = itemView.tvSiparisGiren
         val sut3lt = itemView.tv3lt
+        val sut3ltf = itemView.tv3ltFiyat
         val sut5lt = itemView.tv5lt
+        val sut5ltf = itemView.tv5ltFiyat
         val yumurta = itemView.tvYumurta
+        val yumurtaf = itemView.tvYumurtaFiyat
         val zaman = itemView.tvZaman
 
 
@@ -101,6 +103,20 @@ class TeslimEdilenlerAdapter(val myContext: Context, val siparisler: ArrayList<S
             sut5lt.text = siparisData.sut5lt
             yumurta.text = siparisData.yumurta
             zaman.text = TimeAgo.getTimeAgo(siparisData.siparis_teslim_zamani.toString().toLong())
+
+            if (siparisData.sut3lt_fiyat.toString().isNullOrEmpty()|| siparisData.sut3lt_fiyat.toString() == "null") {
+                sut3ltf.visibility = View.GONE
+            } else  sut3ltf.text = siparisData.sut3lt_fiyat.toString()
+
+            if (siparisData.sut5lt_fiyat.toString().isNullOrEmpty()|| siparisData.sut5lt_fiyat.toString() == "null") {
+                sut5ltf.visibility = View.GONE
+            } else sut5ltf.text = siparisData.sut5lt_fiyat.toString()
+
+            if (siparisData.yumurta_fiyat.toString().isNullOrEmpty() || siparisData.yumurta_fiyat.toString() == "null") {
+               yumurtaf.visibility = View.GONE
+            } else  yumurtaf.text = siparisData.yumurta_fiyat.toString()
+
+
             if (!siparisData.siparisi_giren.isNullOrEmpty()) {
                 teslimEden.text = siparisData.siparisi_giren.toString()
             } else {

@@ -268,25 +268,15 @@ class MusterilerCorluActivity : AppCompatActivity() {
 
                                     var siparisNotu = dialogViewSpArama.etSiparisNotu.text.toString()
                                     var siparisKey = refCorlu.child("Siparisler").push().key.toString()
+                                    var sut3ltFiyat = dialogViewSpArama.et3ltFiyat.text.toString().toDouble()
+                                    var sut5ltFiyat = dialogViewSpArama.et5ltFiyat.text.toString().toDouble()
+                                    var yumurtaFiyat = dialogViewSpArama.etYumurtaFiyat.text.toString().toDouble()
+
                                     var siparisData = SiparisData(
-                                        null,
-                                        null,
-                                        cal.timeInMillis,
-                                        musteriData.musteri_adres,
-                                        musteriData.musteri_apartman,
-                                        musteriData.musteri_tel,
-                                        musteriData.musteri_ad_soyad,
-                                        musteriData.musteri_mah,
-                                        siparisNotu,
-                                        siparisKey,
-                                        yumurta,
-                                        sut3lt,
-                                        sut5lt,
-                                        musteriData.musteri_zkonum,
-                                        musteriData.promosyon_verildimi,
-                                        musteriData.musteri_zlat,
-                                        musteriData.musteri_zlong,
-                                        kullaniciAdi
+                                        null, null, cal.timeInMillis, musteriData.musteri_adres, musteriData.musteri_apartman,
+                                        musteriData.musteri_tel, musteriData.musteri_ad_soyad, musteriData.musteri_mah, siparisNotu, siparisKey, yumurta, yumurtaFiyat, sut3lt, sut3ltFiyat,
+                                        sut5lt, sut5ltFiyat, null,musteriData.musteri_zkonum, musteriData.promosyon_verildimi, musteriData.musteri_zlat,
+                                        musteriData.musteri_zlong, kullaniciAdi
                                     )
                                     refCorlu.child("Siparisler").child(siparisKey).setValue(siparisData)
                                     refCorlu.child("Siparisler").child(siparisKey).child("siparis_zamani").setValue(ServerValue.TIMESTAMP)

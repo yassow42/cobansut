@@ -132,16 +132,21 @@ class MapsCorluActivity : AppCompatActivity(), OnMapReadyCallback {
                                             view.tvSiparisTel.text = gelenData.siparis_tel
                                             view.tvNot.text = gelenData.siparis_notu
 
-
-                                            view.tv5lt.text = gelenData!!.sut5lt
                                             view.tv3lt.text = gelenData!!.sut3lt
+                                            view.tv3ltFiyat.text = gelenData!!.sut3lt_fiyat.toString()
+                                            view.tv5lt.text = gelenData!!.sut5lt
+                                            view.tv5ltFiyat.text = gelenData!!.sut5lt_fiyat.toString()
                                             view.tvYumurta.text = gelenData!!.yumurta
+                                            view.tvYumurtaFiyat.text = gelenData!!.yumurta_fiyat.toString()
 
-                                            var sut3ltFiyat = gelenData.sut3lt.toString().toInt()
-                                            var sut5ltFiyat = gelenData.sut5lt.toString().toInt()
-                                            var yumurtaFiyat = gelenData.yumurta.toString().toInt()
+                                            var sut3ltAdet = gelenData.sut3lt.toString().toInt()
+                                            var sut3ltFiyat = gelenData.sut3lt_fiyat.toString().toDouble()
+                                            var sut5ltAdet = gelenData.sut5lt.toString().toInt()
+                                            var sut5ltFiyat = gelenData.sut5lt_fiyat.toString().toDouble()
+                                            var yumurtaAdet = gelenData.yumurta.toString().toInt()
+                                            var yumurtaFiyat = gelenData.yumurta_fiyat.toString().toDouble()
 
-                                            view.tvFiyat.text = ((sut3ltFiyat * 16) + (sut5ltFiyat * 22) + yumurtaFiyat).toString() + " tl"
+                                            view.tvFiyat.text = ((sut3ltAdet * sut3ltFiyat) + (sut5ltAdet * sut5ltFiyat) + (yumurtaAdet * yumurtaFiyat)).toString() + " tl"
 
 
                                             view.swMapPro.setOnClickListener {
@@ -181,8 +186,12 @@ class MapsCorluActivity : AppCompatActivity(), OnMapReadyCallback {
                                                                 gelenData.siparis_notu,
                                                                 gelenData.siparis_key,
                                                                 gelenData.yumurta,
+                                                                gelenData.yumurta_fiyat,
                                                                 gelenData.sut3lt,
+                                                                gelenData.sut3lt_fiyat,
                                                                 gelenData.sut5lt,
+                                                                gelenData.sut5lt_fiyat,
+                                                                gelenData.toplam_fiyat,
                                                                 gelenData.musteri_zkonum,
                                                                 gelenData.promosyon_verildimi,
                                                                 gelenData.musteri_zlat,

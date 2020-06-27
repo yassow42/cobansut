@@ -48,6 +48,19 @@
         app:layout_constraintTop_toTopOf="@+id/tv5litre" />
 
     <TextView
+        android:id="@+id/tv5ltFiyat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="0"
+        android:textColor="@color/beyaz"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/tv5lt"
+        app:layout_constraintStart_toEndOf="@+id/tv5lt"
+        app:layout_constraintTop_toTopOf="@+id/tv5lt" />
+
+    <TextView
         android:id="@+id/tv3lt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -60,6 +73,19 @@
         app:layout_constraintTop_toTopOf="@+id/tv3litre" />
 
     <TextView
+        android:id="@+id/tv3ltFiyat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="0"
+        android:textColor="@color/beyaz"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/tv3lt"
+        app:layout_constraintStart_toEndOf="@+id/tv3lt"
+        app:layout_constraintTop_toTopOf="@+id/tv3lt" />
+
+    <TextView
         android:id="@+id/tvYumurta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -70,6 +96,19 @@
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/tvYumurtaYazisi"
         app:layout_constraintTop_toTopOf="@+id/tvYumurtaYazisi" />
+
+    <TextView
+        android:id="@+id/tvYumurtaFiyat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="0"
+        android:textColor="@color/beyaz"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/tvYumurta"
+        app:layout_constraintStart_toEndOf="@+id/tvYumurta"
+        app:layout_constraintTop_toTopOf="@+id/tvYumurta" />
 
     <TextView
         android:id="@+id/tvSiparisTel"
@@ -178,14 +217,13 @@
         android:id="@+id/tvFiyat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:text="TextView"
         android:textColor="@color/beyaz"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/tvYumurtaYazisi"
         app:layout_constraintEnd_toStartOf="@+id/tvTeslimZamani"
-        app:layout_constraintStart_toEndOf="@+id/tv5lt"
+        app:layout_constraintStart_toEndOf="@+id/tv5ltFiyat"
         app:layout_constraintTop_toTopOf="@+id/tv3litre" />
 
     <Switch

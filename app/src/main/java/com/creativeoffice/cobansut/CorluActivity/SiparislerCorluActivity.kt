@@ -22,6 +22,41 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_siparis_corlu.*
+import kotlinx.android.synthetic.main.activity_siparis_corlu.bottomNav
+import kotlinx.android.synthetic.main.activity_siparis_corlu.clCumhuriyet
+import kotlinx.android.synthetic.main.activity_siparis_corlu.clDere
+import kotlinx.android.synthetic.main.activity_siparis_corlu.clHurriyet
+import kotlinx.android.synthetic.main.activity_siparis_corlu.clMarket
+import kotlinx.android.synthetic.main.activity_siparis_corlu.clZafer
+import kotlinx.android.synthetic.main.activity_siparis_corlu.imgCumhuriyetDown
+import kotlinx.android.synthetic.main.activity_siparis_corlu.imgCumhuriyetUp
+import kotlinx.android.synthetic.main.activity_siparis_corlu.imgDereDown
+import kotlinx.android.synthetic.main.activity_siparis_corlu.imgDereUp
+import kotlinx.android.synthetic.main.activity_siparis_corlu.imgHurriyetDown
+import kotlinx.android.synthetic.main.activity_siparis_corlu.imgHurriyetUp
+import kotlinx.android.synthetic.main.activity_siparis_corlu.imgMarketDown
+import kotlinx.android.synthetic.main.activity_siparis_corlu.imgMarketUp
+import kotlinx.android.synthetic.main.activity_siparis_corlu.imgZaferDown
+import kotlinx.android.synthetic.main.activity_siparis_corlu.imgZaferUp
+import kotlinx.android.synthetic.main.activity_siparis_corlu.imgileriDown
+import kotlinx.android.synthetic.main.activity_siparis_corlu.imgileriUp
+import kotlinx.android.synthetic.main.activity_siparis_corlu.rcCumhuriyet
+import kotlinx.android.synthetic.main.activity_siparis_corlu.rcDere
+import kotlinx.android.synthetic.main.activity_siparis_corlu.rcHurriyet
+import kotlinx.android.synthetic.main.activity_siparis_corlu.rcMarket
+import kotlinx.android.synthetic.main.activity_siparis_corlu.rcZafer
+import kotlinx.android.synthetic.main.activity_siparis_corlu.rcileriTarih
+import kotlinx.android.synthetic.main.activity_siparis_corlu.tv3litre
+import kotlinx.android.synthetic.main.activity_siparis_corlu.tv5litre
+import kotlinx.android.synthetic.main.activity_siparis_corlu.tvCumhuriyetSayi
+import kotlinx.android.synthetic.main.activity_siparis_corlu.tvDereSayi
+import kotlinx.android.synthetic.main.activity_siparis_corlu.tvFiyatGenel
+import kotlinx.android.synthetic.main.activity_siparis_corlu.tvHurriyetSayi
+import kotlinx.android.synthetic.main.activity_siparis_corlu.tvMarketSayi
+import kotlinx.android.synthetic.main.activity_siparis_corlu.tvYumurta
+import kotlinx.android.synthetic.main.activity_siparis_corlu.tvZaferSayi
+import kotlinx.android.synthetic.main.activity_siparis_corlu.tvileriTarihliSayi
+import kotlinx.android.synthetic.main.activity_siparisler.*
 
 
 class SiparislerCorluActivity : AppCompatActivity() {
@@ -99,9 +134,11 @@ class SiparislerCorluActivity : AppCompatActivity() {
         silahList = ArrayList()
         zaferlist = ArrayList()
         ilerilist = ArrayList()
+
         var sut3ltSayisi = 0
         var sut5ltSayisi = 0
         var yumurtaSayisi = 0
+        var toplamFiyatlar = 0.0
 
         var ref = FirebaseDatabase.getInstance().reference
 
@@ -119,6 +156,7 @@ class SiparislerCorluActivity : AppCompatActivity() {
                                 sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
                                 sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
                                 yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
+                                toplamFiyatlar = gelenData.toplam_fiyat!!.toDouble() + toplamFiyatlar
                             }
 
 
@@ -318,7 +356,8 @@ class SiparislerCorluActivity : AppCompatActivity() {
                     tv3litre.text = "3lt: " + sut3ltSayisi.toString()
                     tv5litre.text = "5lt: " + sut5ltSayisi.toString()
                     tvYumurta.text = "Yumurta: " + yumurtaSayisi.toString()
-                    tvFiyatGenel.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
+
+                    tvFiyatGenel.text = toplamFiyatlar.toString() + " TL"
 
                 } else {
                     progressDialog.setMessage("Sipariş yok :(")

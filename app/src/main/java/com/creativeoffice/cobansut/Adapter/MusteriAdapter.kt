@@ -53,7 +53,7 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
 
 
     var genelFiyat = 0
-
+    var ref = FirebaseDatabase.getInstance().reference
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusteriAdapter.MusteriHolder {
         val myView = LayoutInflater.from(myContext).inflate(R.layout.item_musteri, parent, false)
 
@@ -153,14 +153,18 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                         }
 
                         var siparisNotu = dialogViewSp.etSiparisNotu.text.toString()
-
                         var siparisKey = FirebaseDatabase.getInstance().reference.child("Siparisler").push().key.toString()
 
+                        var sut3ltFiyat = dialogViewSp.et3ltFiyat.text.toString().toDouble()
+                        var sut5ltFiyat = dialogViewSp.et5ltFiyat.text.toString().toDouble()
+                        var yumurtaFiyat = dialogViewSp.etYumurtaFiyat.text.toString().toDouble()
 
                         var siparisData = SiparisData(
                             null, null, cal.timeInMillis, musteriler[position].musteri_adres, musteriler[position].musteri_apartman,
-                            musteriler[position].musteri_tel, musteriler[position].musteri_ad_soyad, musteriler[position].musteri_mah, siparisNotu, siparisKey, yumurta, sut3lt, sut5lt,
-                            musteriler[position].musteri_zkonum, musteriler[position].promosyon_verildimi, musteriler[position].musteri_zlat, musteriler[position].musteri_zlong,kullaniciAdi)
+                            musteriler[position].musteri_tel, musteriler[position].musteri_ad_soyad, musteriler[position].musteri_mah, siparisNotu, siparisKey, yumurta, yumurtaFiyat, sut3lt, sut3ltFiyat,
+                            sut5lt, sut5ltFiyat, 0.0, musteriler[position].musteri_zkonum, musteriler[position].promosyon_verildimi, musteriler[position].musteri_zlat,
+                            musteriler[position].musteri_zlong, kullaniciAdi
+                        )
 
                         FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisKey).setValue(siparisData)
                         FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisKey).child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
@@ -204,7 +208,7 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                             dialogView.imgMaps.setOnClickListener {
                                 var intent = Intent(myContext, AdresBulmaMapsActivity::class.java)
 
-                                intent.putExtra("musteriAdi",musteriler[position].musteri_ad_soyad)
+                                intent.putExtra("musteriAdi", musteriler[position].musteri_ad_soyad)
                                 myContext.startActivity(intent)
                             }
                             dialogView.swKonumKaydet.setOnClickListener {
@@ -212,11 +216,10 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
 
                                 if (dialogView.swKonumKaydet.isChecked) {
                                     FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_zkonum").setValue(true)
-                                  //  holder.getLocation(musteriAdi)
+                                    //  holder.getLocation(musteriAdi)
 
-                                }
-                                else {
-                                  //  holder.locationManager.removeUpdates(holder.myLocationListener)
+                                } else {
+                                    //  holder.locationManager.removeUpdates(holder.myLocationListener)
                                     FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_zkonum").setValue(false)
                                     FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_zlat").removeValue()
                                     FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_zlong").removeValue()
@@ -233,11 +236,11 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                                     var apartman = dialogView.etApartman.text.toString()
 
 
-                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_adres").setValue(adres)
-                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_apartman").setValue(apartman)
-                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_tel").setValue(telefon).addOnCompleteListener {
+                                    ref.child("Musteriler").child(musteriAdi).child("musteri_adres").setValue(adres)
+                                    ref.child("Musteriler").child(musteriAdi).child("musteri_apartman").setValue(apartman)
+                                    ref.child("Musteriler").child(musteriAdi).child("musteri_tel").setValue(telefon).addOnCompleteListener {
 ///locationsu durduruyruz
-                                    //    holder.locationManager.removeUpdates(holder.myLocationListener)
+                                        //    holder.locationManager.removeUpdates(holder.myLocationListener)
 ///
                                         dialogMsDznle.dismiss()
 
@@ -249,7 +252,7 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                             }
 
                             dialogView.imgBack.setOnClickListener {
-                             //   holder.locationManager.removeUpdates(holder.myLocationListener)
+                                //   holder.locationManager.removeUpdates(holder.myLocationListener)
                                 dialogMsDznle.dismiss()
                             }
 
@@ -311,13 +314,14 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
 
                         }
                         R.id.popSil -> {
+                            ref.child("musterisilme").push().setValue(kullaniciAdi)
 
                             var alert = AlertDialog.Builder(myContext)
                                 .setTitle("Müşteriyi Sil")
                                 .setMessage("Emin Misin ?")
                                 .setPositiveButton("Sil", object : DialogInterface.OnClickListener {
                                     override fun onClick(p0: DialogInterface?, p1: Int) {
-                                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).removeValue()
+                                        ref.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).removeValue()
 
                                     }
                                 })
@@ -338,10 +342,9 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
 
                 return@setOnLongClickListener true
             }
-        }catch (e:Exception){
-            Toast.makeText(myContext,"332. satır hatasıMusteriAdapter",Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            Toast.makeText(myContext, "332. satır hatasıMusteriAdapter", Toast.LENGTH_LONG).show()
         }
-
 
 
     }
@@ -389,7 +392,7 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
 
                 FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdiGnl).child("musteri_zlat").setValue(Lat)
                 FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdiGnl).child("musteri_zlong").setValue(Long).addOnCompleteListener {
-                    Toast.makeText(myContext,"Konum Kaydedildi.",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(myContext, "Konum Kaydedildi.", Toast.LENGTH_SHORT).show()
                 }
             }
 

@@ -62,6 +62,7 @@ class AdresBulmaMapsCorluActivity : AppCompatActivity(), OnMapReadyCallback {
         tvKaydet.setOnClickListener {
           //  hand.removeCallbacks(mRunnable)
             val latLng: LatLng = mMap.getCameraPosition().target
+            ref.child("Corlu/Musteriler").child(musteriAdi.toString()).child("musteri_zkonum").setValue(true)
             ref.child("Corlu/Musteriler").child(musteriAdi.toString()).child("musteri_zlat").setValue(latLng.latitude)
             ref.child("Corlu/Musteriler").child(musteriAdi.toString()).child("musteri_zlong").setValue(latLng.longitude)
             var intent = Intent(this, MusterilerCorluActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)

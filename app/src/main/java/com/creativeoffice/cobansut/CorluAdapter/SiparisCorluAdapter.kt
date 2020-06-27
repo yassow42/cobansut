@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.dialog_siparis_ekle.view.*
 import kotlinx.android.synthetic.main.item_siparisler.view.*
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -85,8 +86,12 @@ class SiparisCorluAdapter(val myContext: Context, val siparisler: ArrayList<Sipa
                                     siparisler[position].siparis_notu,
                                     siparisler[position].siparis_key,
                                     siparisler[position].yumurta,
+                                    siparisler[position].yumurta_fiyat,
                                     siparisler[position].sut3lt,
+                                    siparisler[position].sut3lt_fiyat,
                                     siparisler[position].sut5lt,
+                                    siparisler[position].sut5lt_fiyat,
+                                    siparisler[position].toplam_fiyat,
                                     siparisler[position].musteri_zkonum,
                                     siparisler[position].promosyon_verildimi,
                                     siparisler[position].musteri_zlat,
@@ -125,8 +130,11 @@ class SiparisCorluAdapter(val myContext: Context, val siparisler: ArrayList<Sipa
                         builder.setIcon(R.drawable.cow)
                         //   view.tvMusteriAdSoyad.setText(siparisler[position].siparis_veren)
                         viewDuzenle.et3lt.setText(siparisler[position].sut3lt)
+                        viewDuzenle.et3ltFiyat.setText(siparisler[position].sut3lt_fiyat.toString())
                         viewDuzenle.et5lt.setText(siparisler[position].sut5lt)
+                        viewDuzenle.et5ltFiyat.setText(siparisler[position].sut5lt_fiyat.toString())
                         viewDuzenle.etYumurta.setText(siparisler[position].yumurta)
+                        viewDuzenle.etYumurtaFiyat.setText(siparisler[position].yumurta_fiyat.toString())
                         viewDuzenle.etSiparisNotu.setText(siparisler[position].siparis_notu)
 
                         viewDuzenle.tvZamanEkleDialog.text = SimpleDateFormat("HH:mm dd.MM.yyyy").format(System.currentTimeMillis())
@@ -178,13 +186,19 @@ class SiparisCorluAdapter(val myContext: Context, val siparisler: ArrayList<Sipa
                                     yumurta = viewDuzenle.etYumurta.text.toString()
                                 }
 
+                                var sut3ltFiyat = viewDuzenle.et3ltFiyat.text.toString().toDouble()
+                                var sut5ltFiyat = viewDuzenle.et5ltFiyat.text.toString().toDouble()
+                                var yumurtaFiyat = viewDuzenle.etYumurtaFiyat.text.toString().toDouble()
 
                                 var not = viewDuzenle.etSiparisNotu.text.toString()
                                 var siparisKey = siparisler[position].siparis_key.toString()
                                 var siparisVeren = siparisler[position].siparis_veren.toString()
                                 refCorlu.child("Siparisler").child(siparisKey).child("sut3lt").setValue(sut3lt)
+                                refCorlu.child("Siparisler").child(siparisKey).child("sut3lt_fiyat").setValue(sut3ltFiyat)
                                 refCorlu.child("Siparisler").child(siparisKey).child("sut5lt").setValue(sut5lt)
+                                refCorlu.child("Siparisler").child(siparisKey).child("sut5lt_fiyat").setValue(sut5ltFiyat)
                                 refCorlu.child("Siparisler").child(siparisKey).child("yumurta").setValue(yumurta)
+                                refCorlu.child("Siparisler").child(siparisKey).child("yumurta_fiyat").setValue(yumurtaFiyat)
                                 refCorlu.child("Siparisler").child(siparisKey).child("siparis_notu").setValue(not)
                                 refCorlu.child("Siparisler").child(siparisKey).child("siparis_teslim_tarihi").setValue(cal.timeInMillis)
 
@@ -252,8 +266,11 @@ class SiparisCorluAdapter(val myContext: Context, val siparisler: ArrayList<Sipa
         val siparisAdres = itemView.tvSiparisAdres
         val siparisTel = itemView.tvSiparisTel
         val tv3lt = itemView.tv3lt
+        val tv3ltFiyat = itemView.tv3ltFiyat
         val tv5lt = itemView.tv5lt
+        val tv5ltFiyat = itemView.tv5ltFiyat
         val tvYumurta = itemView.tvYumurta
+        val tvYumurtaFiyat = itemView.tvYumurtaFiyat
         val tvZaman = itemView.tvZaman
         val tvTeslimZaman = itemView.tvTeslimZamani
         val tvNot = itemView.tvNot
@@ -313,35 +330,51 @@ class SiparisCorluAdapter(val myContext: Context, val siparisler: ArrayList<Sipa
                 hataMesajiYazdir("teslim tarihi ${siparisData.siparis_key}", siparisData.siparis_veren.toString())
             }
 
-            var sut3ltFiyat = 0
-            var yumurtaFiyat = 0
-            var sut5ltFiyat = 0
+            var sut3ltAdet = 0
+            var sut3ltFiyat: Double? = null
+            var sut5ltAdet = 0
+            var sut5ltFiyat: Double? = null
+            var yumurtaAdet = 0
+            var yumurtaFiyat: Double? = null
+
+
 
             if (!siparisData.sut3lt.isNullOrEmpty()) {
                 tv3lt.text = siparisData.sut3lt
-                sut3ltFiyat = siparisData.sut3lt.toString().toInt()
+                sut3ltAdet = siparisData.sut3lt.toString().toInt()
+                sut3ltFiyat = siparisData.sut3lt_fiyat.toString().toDouble()
             } else {
                 hataMesajiYazdir("sut3 yok ${siparisData.siparis_key}", siparisData.siparis_veren.toString())
             }
 
             if (!siparisData.sut5lt.isNullOrEmpty()) {
                 tv5lt.text = siparisData.sut5lt
-                sut5ltFiyat = siparisData.sut5lt.toString().toInt()
+                sut5ltAdet = siparisData.sut5lt.toString().toInt()
+                sut5ltFiyat = siparisData.sut5lt_fiyat.toString().toDouble()
             } else {
                 hataMesajiYazdir("sut5 yok ${siparisData.siparis_key}", siparisData.siparis_veren.toString())
             }
 
-
             if (!siparisData.yumurta.isNullOrEmpty()) {
                 tvYumurta.text = siparisData.yumurta
-                yumurtaFiyat = siparisData.yumurta.toString().toInt()
+                yumurtaAdet = siparisData.yumurta.toString().toInt()
+                yumurtaFiyat = siparisData.yumurta_fiyat.toString().toDouble()
             } else {
                 hataMesajiYazdir("yumurta yok ${siparisData.siparis_key}", siparisData.siparis_veren.toString())
             }
 
 
+            try {
+                tv3ltFiyat.text = siparisData.sut3lt_fiyat.toString()
+                tv5ltFiyat.text = siparisData.sut5lt_fiyat.toString()
+                tvYumurtaFiyat.text = siparisData.yumurta_fiyat.toString()
+                var toplamFiyat = (sut3ltAdet * sut3ltFiyat!!) + (sut5ltAdet * sut5ltFiyat!!) + (yumurtaAdet * yumurtaFiyat!!)
+                FirebaseDatabase.getInstance().reference.child("Corlu/Siparisler").child(siparisData.siparis_key.toString()).child("toplam_fiyat").setValue(toplamFiyat)
+                tvFiyat.text = ((sut3ltAdet * sut3ltFiyat!!) + (sut5ltAdet * sut5ltFiyat!!) + (yumurtaAdet * yumurtaFiyat!!)).toString() + " tl"
+            } catch (e: IOException) {
+                Toast.makeText(myContext, "Bazı fiyatlar hatalı", Toast.LENGTH_LONG).show()
+            }
 
-            tvFiyat.text = ((sut3ltFiyat * 16) + (sut5ltFiyat * 22) + yumurtaFiyat).toString() + " tl"
 
 
             siparisTel.setOnClickListener {

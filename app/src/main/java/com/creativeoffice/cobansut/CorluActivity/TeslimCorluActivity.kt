@@ -138,7 +138,7 @@ class TeslimCorluActivity : AppCompatActivity() {
                 tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
                 tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
                 tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
-                tvFiyatGenelTeslim.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
+             //   tvFiyatGenelTeslim.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
                 setupRecyclerView()
 
             }
@@ -169,7 +169,7 @@ class TeslimCorluActivity : AppCompatActivity() {
                         tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
                         tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
                         tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
-                        tvFiyatGenelTeslim.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
+                    //    tvFiyatGenelTeslim.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
                         suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }
                         setupRecyclerView()
                     }
@@ -192,7 +192,7 @@ class TeslimCorluActivity : AppCompatActivity() {
                         tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
                         tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
                         tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
-                        tvFiyatGenelTeslim.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
+                   //     tvFiyatGenelTeslim.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
                         suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }
                         setupRecyclerView()
                     }
@@ -216,7 +216,7 @@ class TeslimCorluActivity : AppCompatActivity() {
                         tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
                         tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
                         tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
-                        tvFiyatGenelTeslim.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
+                   //     tvFiyatGenelTeslim.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
                         suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }
                         setupRecyclerView()
                     }
@@ -270,7 +270,7 @@ class TeslimCorluActivity : AppCompatActivity() {
                             tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
                             tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
                             tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
-                            tvFiyatGenelTeslim.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
+                         //   tvFiyatGenelTeslim.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
                             setupRecyclerView()
                         }
                     })

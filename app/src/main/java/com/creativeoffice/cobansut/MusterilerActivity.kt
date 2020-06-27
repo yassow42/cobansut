@@ -45,10 +45,9 @@ class MusterilerActivity : AppCompatActivity() {
     var secilenMah: String? = null
     lateinit var musteriList: ArrayList<MusteriData>
     lateinit var musteriAdList: ArrayList<String>
+
     lateinit var dialogViewSpArama: View
-
     lateinit var dialogView: View
-
 
     lateinit var mAuth: FirebaseAuth
     lateinit var mAuthListener: FirebaseAuth.AuthStateListener
@@ -57,6 +56,7 @@ class MusterilerActivity : AppCompatActivity() {
 
     lateinit var progressDialog: ProgressDialog
     var hndler = Handler()
+    var ref = FirebaseDatabase.getInstance().reference
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_musteriler)
@@ -78,7 +78,7 @@ class MusterilerActivity : AppCompatActivity() {
 
     private fun setupVeri() {
         musteriList.clear()
-        FirebaseDatabase.getInstance().reference.child("Musteriler").addListenerForSingleValueEvent(object : ValueEventListener {
+        ref.child("Musteriler").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
             override fun onDataChange(p0: DataSnapshot) {
 
@@ -90,7 +90,7 @@ class MusterilerActivity : AppCompatActivity() {
                             musteriList.add(gelenData)
                             musteriAdList.add(musteriAdlari.toString())
                         } catch (e: Exception) {
-                            FirebaseDatabase.getInstance().reference.child("Hatalar/musteriDataHata").push().setValue(e.message.toString())
+                            ref.child("Hatalar/musteriDataHata").push().setValue(e.message.toString())
                         }
                     }
                     var adapterSearch = ArrayAdapter<String>(this@MusterilerActivity, android.R.layout.simple_expandable_list_item_1, musteriAdList)
@@ -104,6 +104,7 @@ class MusterilerActivity : AppCompatActivity() {
             }
         })
     }
+
     private fun setupBtn() {
         imgMusteriEkle.setOnClickListener {
             var builder: AlertDialog.Builder = AlertDialog.Builder(this)
@@ -205,8 +206,8 @@ class MusterilerActivity : AppCompatActivity() {
 
                     var musteriBilgileri = MusteriData(musteriAdi, secilenMah, musteriAdres, musteriApt, musteriTel, null, false, null, null)
 
-                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi.toString()).setValue(musteriBilgileri).addOnCompleteListener {
-                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi.toString()).child("siparis_son_zaman").setValue(ServerValue.TIMESTAMP)
+                    ref.child("Musteriler").child(musteriAdi.toString()).setValue(musteriBilgileri).addOnCompleteListener {
+                        ref.child("Musteriler").child(musteriAdi.toString()).child("siparis_son_zaman").setValue(ServerValue.TIMESTAMP)
                         setupVeri()
                     }
 
@@ -224,7 +225,6 @@ class MusterilerActivity : AppCompatActivity() {
             val arananMusteriVarMi = musteriAdList.containsAll(listOf(arananMusteriAdi))
 
             if (arananMusteriVarMi) {
-                var ref = FirebaseDatabase.getInstance().reference
                 ref.child("Musteriler").child(arananMusteriAdi).addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
                     }
@@ -285,9 +285,9 @@ class MusterilerActivity : AppCompatActivity() {
                             dialogViewSpArama.swPromosyon.setOnClickListener {
 
                                 if (dialogViewSpArama.swPromosyon.isChecked) {
-                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("promosyon_verildimi").setValue(true)
+                                    ref.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("promosyon_verildimi").setValue(true)
                                 } else {
-                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("promosyon_verildimi").setValue(false)
+                                    ref.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("promosyon_verildimi").setValue(false)
 
                                 }
                             }
@@ -321,6 +321,10 @@ class MusterilerActivity : AppCompatActivity() {
 
                                     var siparisNotu = dialogViewSpArama.etSiparisNotu.text.toString()
                                     var siparisKey = FirebaseDatabase.getInstance().reference.child("Siparisler").push().key.toString()
+
+                                    var sut3ltFiyat = dialogViewSpArama.et3ltFiyat.text.toString().toDouble()
+                                    var sut5ltFiyat = dialogViewSpArama.et5ltFiyat.text.toString().toDouble()
+                                    var yumurtaFiyat = dialogViewSpArama.etYumurtaFiyat.text.toString().toDouble()
                                     var siparisData = SiparisData(
                                         null,
                                         null,
@@ -333,21 +337,25 @@ class MusterilerActivity : AppCompatActivity() {
                                         siparisNotu,
                                         siparisKey,
                                         yumurta,
+                                        yumurtaFiyat,
                                         sut3lt,
+                                        sut3ltFiyat,
                                         sut5lt,
+                                        sut5ltFiyat,
+                                        0.0,
                                         musteriData.musteri_zkonum,
                                         musteriData.promosyon_verildimi,
                                         musteriData.musteri_zlat,
                                         musteriData.musteri_zlong,
                                         kullaniciAdi
                                     )
-                                    FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisKey).setValue(siparisData)
-                                    FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisKey).child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
-                                    FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisKey).child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
-                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey).setValue(siparisData)
-                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey)
+                                    ref.child("Siparisler").child(siparisKey).setValue(siparisData)
+                                    ref.child("Siparisler").child(siparisKey).child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
+                                    ref.child("Siparisler").child(siparisKey).child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
+                                    ref.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey).setValue(siparisData)
+                                    ref.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey)
                                         .child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
-                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey)
+                                    ref.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey)
                                         .child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
 
 
@@ -433,27 +441,27 @@ class MusterilerActivity : AppCompatActivity() {
         rcMusteri.adapter = Adapter
         rcMusteri.setHasFixedSize(true)
     }
+
     fun setupKullaniciAdi() {
         FirebaseDatabase.getInstance().reference.child("users").child(userID).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
+
             override fun onDataChange(p0: DataSnapshot) {
-                 p0.child("user_name").value.toString()?.let{
-                     kullaniciAdi = it
+                p0.child("user_name").value.toString()?.let {
+                    kullaniciAdi = it
                 }
                 progressDialog = ProgressDialog(this@MusterilerActivity)
                 progressDialog.setMessage("Müşteriler Yükleniyor.")
                 progressDialog.setCancelable(false)
                 progressDialog.show()
 
-                hndler.postDelayed({setupVeri()},500)
-                hndler.postDelayed({progressDialog.dismiss()},5000)
+                hndler.postDelayed({ setupVeri() }, 500)
+                hndler.postDelayed({ progressDialog.dismiss() }, 5000)
 
             }
         })
     }
-
-
 
 
     var watcherAdres = object : TextWatcher {

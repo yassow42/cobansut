@@ -123,6 +123,7 @@ class SiparislerActivity : AppCompatActivity() {
         var sut3ltSayisi = 0
         var sut5ltSayisi = 0
         var yumurtaSayisi = 0
+        var toplamFiyatlar = 0.0
 
         var ref = FirebaseDatabase.getInstance().reference
         ref.child("Siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
@@ -137,6 +138,7 @@ class SiparislerActivity : AppCompatActivity() {
                                 sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
                                 sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
                                 yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
+                                toplamFiyatlar = gelenData.toplam_fiyat!!.toDouble() + toplamFiyatlar
                             }
 
 
@@ -365,7 +367,8 @@ class SiparislerActivity : AppCompatActivity() {
                     tv3litre.text = "3lt: " + sut3ltSayisi.toString()
                     tv5litre.text = "5lt: " + sut5ltSayisi.toString()
                     tvYumurta.text = "Yumurta: " + yumurtaSayisi.toString()
-                    tvFiyatGenel.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
+
+                    tvFiyatGenel.text = toplamFiyatlar.toString() + " TL"
 
                 } else {
                     progressDialog.setMessage("Sipariş yok :(")

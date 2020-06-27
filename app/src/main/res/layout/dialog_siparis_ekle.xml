@@ -24,11 +24,67 @@
         app:layout_constraintTop_toTopOf="@+id/et5lt" />
 
     <EditText
+        android:id="@+id/et3ltFiyat"
+        android:layout_width="85dp"
+        android:layout_height="45dp"
+
+        android:layout_marginTop="8dp"
+
+        android:background="@drawable/bg_edittext"
+        android:ems="10"
+        android:inputType="number"
+
+        android:text="16.0"
+        android:textAlignment="center"
+        android:textColor="#ffffff"
+        android:textColorHint="#ffffff"
+        app:layout_constraintEnd_toEndOf="@+id/et3lt"
+        app:layout_constraintStart_toStartOf="@+id/et3lt"
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+    <EditText
+        android:id="@+id/et5ltFiyat"
+        android:layout_width="85dp"
+        android:layout_height="45dp"
+
+        android:layout_marginTop="8dp"
+
+        android:background="@drawable/bg_edittext"
+        android:ems="10"
+        android:inputType="number"
+
+        android:text="22.0"
+        android:textAlignment="center"
+        android:textColor="#ffffff"
+        android:textColorHint="#ffffff"
+        app:layout_constraintEnd_toEndOf="@+id/et5lt"
+        app:layout_constraintStart_toStartOf="@+id/et5lt"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+    <EditText
+        android:id="@+id/etYumurtaFiyat"
+        android:layout_width="85dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_edittext"
+
+        android:ems="10"
+        android:inputType="number"
+        android:text="1.0"
+        android:textAlignment="center"
+
+        android:textColor="#ffffff"
+        android:textColorHint="#ffffff"
+        app:layout_constraintEnd_toEndOf="@+id/etYumurta"
+        app:layout_constraintStart_toStartOf="@+id/etYumurta"
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+    <EditText
         android:id="@+id/et5lt"
         android:layout_width="85dp"
         android:layout_height="45dp"
 
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="6dp"
         android:background="@drawable/bg_edittext"
         android:ems="10"
         android:inputType="number"
@@ -70,6 +126,40 @@
         app:layout_constraintTop_toTopOf="@+id/textView8" />
 
     <TextView
+
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Yumurta Fiyat"
+        android:textColor="@color/siyah"
+        app:layout_constraintEnd_toEndOf="@+id/etYumurtaFiyat"
+        app:layout_constraintStart_toStartOf="@+id/etYumurtaFiyat"
+        app:layout_constraintTop_toBottomOf="@+id/etYumurtaFiyat" />
+
+    <TextView
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="5 litre"
+        android:textColor="@color/siyah"
+        app:layout_constraintEnd_toEndOf="@+id/et5ltFiyat"
+        app:layout_constraintStart_toStartOf="@+id/et5ltFiyat"
+        app:layout_constraintTop_toBottomOf="@+id/et5ltFiyat" />
+
+    <TextView
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="3 litre"
+        android:textColor="@color/siyah"
+        app:layout_constraintEnd_toEndOf="@+id/et3ltFiyat"
+        app:layout_constraintStart_toStartOf="@+id/et3ltFiyat"
+        app:layout_constraintTop_toBottomOf="@+id/et3ltFiyat" />
+
+    <TextView
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -102,13 +192,13 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="2dp"
 
+        android:background="@drawable/bg_edittext"
         android:drawableLeft="@drawable/note"
         android:drawablePadding="8dp"
         android:ems="10"
         android:hint="Sipariş Notu"
-        android:inputType="none"
 
-        android:background="@drawable/bg_edittext"
+        android:inputType="none"
         android:paddingLeft="17dp"
         android:paddingTop="10dp"
         android:paddingRight="15dp"
@@ -131,7 +221,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toTopOf="@+id/swPromosyon" />
 
     <TextView
         android:id="@+id/tvFiyatSp"
@@ -159,10 +249,9 @@
         android:id="@+id/swPromosyon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="41dp"
-        app:layout_constraintBottom_toTopOf="@+id/etSiparisNotu"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tvZamanEkleDialog"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
