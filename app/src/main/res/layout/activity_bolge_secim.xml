@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ic_bg"
-    tools:context=".BolgeSecimActivity">
+    tools:context=".genel.BolgeSecimActivity">
 
     <TextView
         android:id="@+id/tvBurgaz"
@@ -38,4 +38,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvCerkez"
+        android:layout_width="250dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_bolge"
+        android:gravity="center"
+        android:text="Çerkezköy"
+        android:textAlignment="center"
+        android:textColor="@color/beyaz"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvCorlu" />
 </androidx.constraintlayout.widget.ConstraintLayout>

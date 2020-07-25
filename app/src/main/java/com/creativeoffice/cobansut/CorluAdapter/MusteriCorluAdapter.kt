@@ -29,7 +29,7 @@ import com.creativeoffice.cobansut.R
 import com.creativeoffice.cobansut.TimeAgo
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.dialog_gidilen_musteri.view.*
-import kotlinx.android.synthetic.main.dialog_siparis_ekle.view.*
+import kotlinx.android.synthetic.main.dialog_siparis_ekle_corlu.view.*
 import kotlinx.android.synthetic.main.item_musteri.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -61,7 +61,7 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
 
 
             var builder: AlertDialog.Builder = AlertDialog.Builder(this.myContext)
-            dialogViewSp = View.inflate(myContext, R.layout.dialog_siparis_ekle, null)
+            dialogViewSp = View.inflate(myContext, R.layout.dialog_siparis_ekle_corlu, null)
 
 
             dialogViewSp.tvZamanEkleDialog.text = SimpleDateFormat("HH:mm dd.MM.yyyy").format(System.currentTimeMillis())
@@ -99,25 +99,6 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
                 TimePickerDialog(myContext, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
             }
 
-            dialogViewSp.et3lt.addTextChangedListener(holder.watcherFiyat3lt)
-            dialogViewSp.et5lt.addTextChangedListener(holder.watcherFiyat5lt)
-            dialogViewSp.etYumurta.addTextChangedListener(holder.watcherFiyatYumurta)
-            dialogViewSp.imgFiyatRefresh.setOnClickListener {
-                var fiyat3 = 0
-                if (dialogViewSp.et3lt.text.isNotEmpty()) {
-                    fiyat3 = dialogViewSp.et3lt.text.toString().toInt() * 16
-                }
-
-                var fiyat5 = 0
-                if (dialogViewSp.et5lt.text.isNotEmpty()) {
-                    fiyat5 = dialogViewSp.et5lt.text.toString().toInt() * 22
-                }
-                var fiyatYum = 0
-                if (dialogViewSp.etYumurta.text.isNotEmpty()) {
-                    fiyatYum = dialogViewSp.etYumurta.text.toString().toInt() * 1
-                }
-                dialogViewSp.tvFiyatSp.text = (fiyat3 + fiyat5 + fiyatYum).toString()
-            }
 
             builder.setNegativeButton("İptal", object : DialogInterface.OnClickListener {
                 override fun onClick(dialog: DialogInterface?, which: Int) {
@@ -374,70 +355,7 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
             }
         }
 
-        var watcherFiyat3lt = object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
 
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s!!.length > 0) {
-
-                    dialogViewSp.tvFiyatSp.text = (dialogViewSp.tvFiyatSp.text.toString().toInt() + (s.toString().toInt() * 16)).toString()
-
-                } else {
-
-                    dialogViewSp.tvFiyatSp.text = dialogViewSp.tvFiyatSp.text.toString()
-                }
-            }
-
-        }
-
-        var watcherFiyat5lt = object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s!!.length > 0) {
-
-                    dialogViewSp.tvFiyatSp.text = (dialogViewSp.tvFiyatSp.text.toString().toInt() + (s.toString().toInt() * 22)).toString()
-
-                } else {
-
-                    dialogViewSp.tvFiyatSp.text = dialogViewSp.tvFiyatSp.text.toString()
-                }
-            }
-
-        }
-
-        var watcherFiyatYumurta = object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s!!.length > 0) {
-
-                    dialogViewSp.tvFiyatSp.text = (dialogViewSp.tvFiyatSp.text.toString().toInt() + (s.toString().toInt() * 1)).toString()
-
-                } else {
-                    dialogViewSp.tvFiyatSp.text = dialogViewSp.tvFiyatSp.text.toString()
-                }
-            }
-
-        }
 
 
     }

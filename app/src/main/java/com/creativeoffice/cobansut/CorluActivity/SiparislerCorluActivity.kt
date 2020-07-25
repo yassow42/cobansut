@@ -9,11 +9,10 @@ import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.creativeoffice.cobansut.Adapter.SiparisAdapter
-import com.creativeoffice.cobansut.BolgeSecimActivity
+import com.creativeoffice.cobansut.genel.BolgeSecimActivity
 import com.creativeoffice.cobansut.CorluAdapter.SiparisCorluAdapter
 import com.creativeoffice.cobansut.Datalar.SiparisData
-import com.creativeoffice.cobansut.LoginActivity
+import com.creativeoffice.cobansut.genel.LoginActivity
 import com.creativeoffice.cobansut.R
 import com.creativeoffice.cobansut.utils.BottomNavigationViewHelperCorlu
 import com.google.firebase.auth.FirebaseAuth
@@ -56,7 +55,6 @@ import kotlinx.android.synthetic.main.activity_siparis_corlu.tvMarketSayi
 import kotlinx.android.synthetic.main.activity_siparis_corlu.tvYumurta
 import kotlinx.android.synthetic.main.activity_siparis_corlu.tvZaferSayi
 import kotlinx.android.synthetic.main.activity_siparis_corlu.tvileriTarihliSayi
-import kotlinx.android.synthetic.main.activity_siparisler.*
 
 
 class SiparislerCorluActivity : AppCompatActivity() {

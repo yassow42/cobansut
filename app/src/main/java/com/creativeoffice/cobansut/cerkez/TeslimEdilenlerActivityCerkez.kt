@@ -1,4 +1,4 @@
-package com.creativeoffice.cobansut.CorluActivity
+package com.creativeoffice.cobansut.cerkez
 
 import android.app.DatePickerDialog
 import android.app.ProgressDialog
@@ -8,48 +8,38 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.WindowManager
-import android.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.creativeoffice.cobansut.Adapter.TeslimEdilenlerAdapter
 import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.R
-import com.creativeoffice.cobansut.utils.BottomNavigationViewHelper
-import com.creativeoffice.cobansut.utils.BottomNavigationViewHelperCorlu
+import com.creativeoffice.cobansut.utils.BottomNavigationViewHelperCerkez
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.activity_teslim.*
-import kotlinx.android.synthetic.main.activity_teslim.bottomNav
-import kotlinx.android.synthetic.main.activity_teslim_corlu.*
-import kotlinx.android.synthetic.main.activity_teslim_corlu.imgOptions
-import kotlinx.android.synthetic.main.activity_teslim_corlu.imgTarih
-import kotlinx.android.synthetic.main.activity_teslim_corlu.rcTeslimEdilenler
-import kotlinx.android.synthetic.main.activity_teslim_corlu.tv3ltTeslim
-import kotlinx.android.synthetic.main.activity_teslim_corlu.tv5ltTeslim
-import kotlinx.android.synthetic.main.activity_teslim_corlu.tvFiyatGenelTeslim
-import kotlinx.android.synthetic.main.activity_teslim_corlu.tvYumurtaTeslim
-import kotlinx.android.synthetic.main.activity_teslim_corlu.tvZamana
-import kotlinx.android.synthetic.main.activity_teslim_corlu.tvZamandan
+import kotlinx.android.synthetic.main.activity_teslim_edilenler_cerkez.*
+
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class TeslimCorluActivity : AppCompatActivity() {
+class TeslimEdilenlerActivityCerkez : AppCompatActivity() {
+
     private val ACTIVITY_NO = 2
     lateinit var suankiTeslimList: ArrayList<SiparisData>
     lateinit var butunTeslimList: ArrayList<SiparisData>
-
+    var ref = FirebaseDatabase.getInstance().reference.child("Cerkez")
     lateinit var progressDialog: ProgressDialog
-    val hndler = Handler()
+    val handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_teslim_corlu)
-        setupNavigationView()
+        setContentView(R.layout.activity_teslim_edilenler_cerkez)
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setupBtn()
+        setupNavigationView()
+
         suankiTeslimList = ArrayList()
         butunTeslimList = ArrayList()
 
@@ -60,14 +50,16 @@ class TeslimCorluActivity : AppCompatActivity() {
 
 
 
-        hndler.postDelayed(Runnable { setupVeri() }, 2000)
-        hndler.postDelayed(Runnable { progressDialog.dismiss() }, 5000)
+        handler.postDelayed(Runnable { setupVeri() }, 2000)
+        handler.postDelayed(Runnable { progressDialog.dismiss() }, 5000)
+
 
     }
 
 
     private fun setupVeri() {
-        FirebaseDatabase.getInstance().reference.child("Corlu").child("Teslim_siparisler").orderByChild("siparis_teslim_zamani").addListenerForSingleValueEvent(object : ValueEventListener {
+
+        ref.child("Teslim_siparisler").orderByChild("siparis_teslim_zamani").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
             }
@@ -100,11 +92,14 @@ class TeslimCorluActivity : AppCompatActivity() {
                                     sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
                                     sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
                                     yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
+
                                     try {
                                         toplamFiyatlar = gelenData.toplam_fiyat!!.toDouble() + toplamFiyatlar
                                     } catch (e: IOException) {
-                                        Log.e("teslim corlu activity", "hatalar ${e.message.toString()}")
+                                        Log.e("teslim activity", "hatalar ${e.message.toString()}")
                                     }
+
+
                                 }
                             }
                             progressDialog.dismiss()
@@ -112,6 +107,7 @@ class TeslimCorluActivity : AppCompatActivity() {
                             tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
                             tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
                             tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
+
                             try {
                                 tvFiyatGenelTeslim.setText(toplamFiyatlar.toString() + " TL")
                             } catch (e: IOException) {
@@ -119,22 +115,22 @@ class TeslimCorluActivity : AppCompatActivity() {
 
                             }
 
+
                             setupRecyclerView()
                         }
                     })
                 } else {
                     progressDialog.setMessage("Veri Alınamıyor...")
-                    hndler.postDelayed(Runnable { progressDialog.dismiss() }, 2000)
+                    handler.postDelayed(Runnable { progressDialog.dismiss() }, 2000)
 
                 }
             }
         })
     }
+
     private fun setupBtn() {
-        val zaman: Long = System.currentTimeMillis() - 86400000
-        val zamana: Long = System.currentTimeMillis()
-        tvZamandan.text = SimpleDateFormat("HH:mm dd.MM.yyyy").format(zaman)
-        tvZamana.text = SimpleDateFormat("HH:mm dd.MM.yyyy").format(zamana)
+        tvZamandan.text = SimpleDateFormat("HH:mm dd.MM.yyyy").format(System.currentTimeMillis())
+        tvZamana.text = SimpleDateFormat("HH:mm dd.MM.yyyy").format(System.currentTimeMillis())
 
         var calZamandan = Calendar.getInstance()
         val dateSetListenerZamandan = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
@@ -217,7 +213,7 @@ class TeslimCorluActivity : AppCompatActivity() {
         imgOptions.setOnClickListener {
 
             val popup = PopupMenu(this, imgOptions)
-            popup.inflate(R.menu.popup_menu_teslim_corlu)
+            popup.inflate(R.menu.popup_menu_teslim)
             popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener {
                 var sut3ltSayisi = 0
                 var sut5ltSayisi = 0
@@ -240,7 +236,7 @@ class TeslimCorluActivity : AppCompatActivity() {
                         tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
                         tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
                         tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
-                    //    tvFiyatGenelTeslim.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
+                        tvFiyatGenelTeslim.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
                         suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }
                         setupRecyclerView()
                     }
@@ -250,7 +246,7 @@ class TeslimCorluActivity : AppCompatActivity() {
                         for (ds in butunTeslimList) {
                             if (calZamandan.timeInMillis < ds.siparis_teslim_zamani!!.toLong() && ds.siparis_teslim_zamani!!.toLong() < calZamana.timeInMillis) {
 
-                                if (ds.siparisi_giren == "engin") {
+                                if (ds.siparisi_giren == "Umit") {
                                     suankiTeslimList.add(ds)
                                     sut3ltSayisi = ds.sut3lt!!.toInt() + sut3ltSayisi
                                     sut5ltSayisi = ds.sut5lt!!.toInt() + sut5ltSayisi
@@ -263,7 +259,7 @@ class TeslimCorluActivity : AppCompatActivity() {
                         tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
                         tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
                         tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
-                   //     tvFiyatGenelTeslim.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
+                        tvFiyatGenelTeslim.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
                         suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }
                         setupRecyclerView()
                     }
@@ -287,7 +283,7 @@ class TeslimCorluActivity : AppCompatActivity() {
                         tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
                         tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
                         tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
-                   //     tvFiyatGenelTeslim.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
+                        tvFiyatGenelTeslim.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
                         suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }
                         setupRecyclerView()
                     }
@@ -297,23 +293,25 @@ class TeslimCorluActivity : AppCompatActivity() {
                 return@OnMenuItemClickListener true
             })
             popup.show()
+
         }
 */
+
     }
 
 
     private fun setupRecyclerView() {
         rcTeslimEdilenler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        val Adapter = TeslimEdilenlerAdapter(this, suankiTeslimList,"Corlu")
+        val Adapter = TeslimEdilenlerAdapter(this, suankiTeslimList, "Cerkez")
         rcTeslimEdilenler.adapter = Adapter
         rcTeslimEdilenler.setHasFixedSize(true)
     }
 
     fun setupNavigationView() {
 
-        BottomNavigationViewHelperCorlu.setupBottomNavigationView(bottomNav)
-        BottomNavigationViewHelperCorlu.setupNavigation(this, bottomNav) // Bottomnavhelper içinde setupNavigationda context ve nav istiyordu verdik...
-        var menu = bottomNav.menu
+        BottomNavigationViewHelperCerkez.setupBottomNavigationView(bottomNavCerkez)
+        BottomNavigationViewHelperCerkez.setupNavigation(this@TeslimEdilenlerActivityCerkez, bottomNavCerkez) // Bottomnavhelper içinde setupNavigationda context ve nav istiyordu verdik...
+        var menu = bottomNavCerkez.menu
         var menuItem = menu.getItem(ACTIVITY_NO)
         menuItem.setChecked(true)
     }

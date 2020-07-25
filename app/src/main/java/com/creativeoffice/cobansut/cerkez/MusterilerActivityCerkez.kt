@@ -1,10 +1,7 @@
-package com.creativeoffice.cobansut.CorluActivity
+package com.creativeoffice.cobansut.cerkez
 
-import android.app.DatePickerDialog
-import android.app.Dialog
-import android.app.TimePickerDialog
+import android.app.*
 import android.content.DialogInterface
-import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,40 +10,40 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.creativeoffice.cobansut.Adapter.MusteriAdapter
-import com.creativeoffice.cobansut.genel.BolgeSecimActivity
-import com.creativeoffice.cobansut.CorluAdapter.MusteriCorluAdapter
+
 import com.creativeoffice.cobansut.Datalar.MusteriData
 import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.R
-import com.creativeoffice.cobansut.utils.BottomNavigationViewHelperCorlu
+import com.creativeoffice.cobansut.cerkez.adapter.MusteriAdapterCerkez
+
+import com.creativeoffice.cobansut.utils.BottomNavigationViewHelperCerkez
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.activity_musteriler_corlu.imgMusteriAra
-import kotlinx.android.synthetic.main.activity_musteriler_corlu.imgMusteriEkle
-import kotlinx.android.synthetic.main.activity_musteriler_corlu.rcMusteri
-import kotlinx.android.synthetic.main.activity_musteriler_corlu.searchMs
-import kotlinx.android.synthetic.main.activity_musteriler_corlu.spinner
-import kotlinx.android.synthetic.main.activity_musteriler_corlu.tvMusteri
-import kotlinx.android.synthetic.main.activity_siparis_corlu.bottomNav
+import kotlinx.android.synthetic.main.activity_musteriler_cerkez.*
+import kotlinx.android.synthetic.main.activity_musteriler_cerkez.imgMusteriAra
+import kotlinx.android.synthetic.main.activity_musteriler_cerkez.imgMusteriEkle
+import kotlinx.android.synthetic.main.activity_musteriler_cerkez.searchMs
+import kotlinx.android.synthetic.main.activity_musteriler_cerkez.tvMusteri
 import kotlinx.android.synthetic.main.dialog_musteri_ekle.view.*
-import kotlinx.android.synthetic.main.dialog_siparis_ekle_corlu.view.*
+import kotlinx.android.synthetic.main.dialog_siparis_ekle.view.*
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MusterilerCorluActivity : AppCompatActivity() {
+class MusterilerActivityCerkez : AppCompatActivity() {
+
     private val ACTIVITY_NO = 3
     var secilenMah: String? = null
     lateinit var musteriList: ArrayList<MusteriData>
     lateinit var musteriAdList: ArrayList<String>
+
     lateinit var dialogViewSpArama: View
     lateinit var dialogView: View
 
@@ -55,25 +52,55 @@ class MusterilerCorluActivity : AppCompatActivity() {
     lateinit var userID: String
     var kullaniciAdi: String? = null
 
-    val ref = FirebaseDatabase.getInstance().reference
-    val refCorlu = FirebaseDatabase.getInstance().reference.child("Corlu")
+    lateinit var progressDialog: ProgressDialog
+    var hndler = Handler()
+    var ref = FirebaseDatabase.getInstance().reference.child("Cerkez")
 
-    val handler = Handler()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_musteriler_corlu)
+        setContentView(R.layout.activity_musteriler_cerkez)
         setupNavigationView()
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+
         mAuth = FirebaseAuth.getInstance()
         userID = mAuth.currentUser!!.uid
         setupKullaniciAdi()
         musteriList = ArrayList()
         musteriAdList = ArrayList()
 
-        handler.postDelayed({ setupVeri() }, 1000)
+
         setupBtn()
         setupSpinner()
-        setupVeri()
 
+    }
+
+    private fun setupVeri() {
+        musteriList.clear()
+        ref.child("Musteriler").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {}
+            override fun onDataChange(p0: DataSnapshot) {
+
+                if (p0.hasChildren()) {
+                    for (ds in p0.children) {
+                        try {
+                            var gelenData = ds.getValue(MusteriData::class.java)!!
+                            var musteriAdlari = gelenData.musteri_ad_soyad
+                            musteriList.add(gelenData)
+                            musteriAdList.add(musteriAdlari.toString())
+                        } catch (e: Exception) {
+                            ref.child("Hatalar/musteriDataHataCerkez").push().setValue(e.message.toString())
+                        }
+                    }
+                    var adapterSearch = ArrayAdapter<String>(this@MusterilerActivityCerkez, android.R.layout.simple_expandable_list_item_1, musteriAdList)
+                    searchMs.setAdapter(adapterSearch)
+                    tvMusteri.text = "Müşteriler " + "(" + (musteriList.size) + ")"
+                    setupRecyclerViewMusteriler()
+                    progressDialog.dismiss()
+                } else {
+                    Toast.makeText(this@MusterilerActivityCerkez, "Müşteri Bilgisi Alınamadı.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
     }
 
     private fun setupBtn() {
@@ -85,28 +112,23 @@ class MusterilerCorluActivity : AppCompatActivity() {
             builder.setView(dialogView)
             builder.setTitle("Müşteri Ekle")
 //////////////////////spinner
+
             val mahalleler = ArrayList<String>()
+
+
             mahalleler.add("Market")
-            mahalleler.add("Alipaşa")
-            mahalleler.add("Cemaliye")
-            mahalleler.add("Çoban Çeşme")
+            mahalleler.add("Bağlık")
             mahalleler.add("Cumhuriyet")
-            mahalleler.add("Dere")
-            mahalleler.add("Esentepe")
-            mahalleler.add("Hatip")
-            mahalleler.add("Havuzlar")
-            mahalleler.add("Hıdırağa")
-            mahalleler.add("Hürriyet")
-            mahalleler.add("İnönü")
-            mahalleler.add("Kazımiye")
-            mahalleler.add("Kemalettin")
-            mahalleler.add("Muhittin")
-            mahalleler.add("Nusratiye")
-            mahalleler.add("Reşadiye")
-            mahalleler.add("Rumeli")
-            mahalleler.add("Şeyh Sinan")
-            mahalleler.add("Silahtarağa")
-            mahalleler.add("Zafer")
+            mahalleler.add("Fatih")
+            mahalleler.add("Fevzi Paşa")
+            mahalleler.add("Gazi Mustafa Kemal Paşa")
+            mahalleler.add("Gazi Osman Paşa")
+            mahalleler.add("İstasyon")
+            mahalleler.add("Kızıl Pınar")
+            mahalleler.add("VeliKöy")
+            mahalleler.add("Yıldırım Beyazıt")
+
+
 
 
             var adapterMah = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mahalleler)
@@ -114,13 +136,16 @@ class MusterilerCorluActivity : AppCompatActivity() {
             dialogView.spnMahler.adapter = adapterMah
             dialogView.spnMahler.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(parent: AdapterView<*>?) {
-                    Toast.makeText(this@MusterilerCorluActivity, "Lütfen Mahalle Seç", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@MusterilerActivityCerkez, "Lütfen Mahalle Seç", Toast.LENGTH_LONG).show()
                 }
 
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                     (parent!!.getChildAt(0) as TextView).setTextColor(Color.WHITE)
+
                     secilenMah = dialogView.spnMahler.selectedItem.toString()
+
                 }
+
             }
 
 //////////////////////spinner
@@ -140,25 +165,36 @@ class MusterilerCorluActivity : AppCompatActivity() {
                     var musteriAdi = "Müşteri"
                     if (!dialogView.etMusteriAdSoyad.text.toString().isNullOrEmpty()) {
                         musteriAdi = dialogView.etMusteriAdSoyad.text.toString().trim().capitalize()
+                    } else if (musteriAdi == "Müşteri") {
+                        Toast.makeText(this@MusterilerActivityCerkez, "Müşteri Adı Girmedin", Toast.LENGTH_LONG).show()
                     }
                     var musteriAdres = "Adres"
                     if (!dialogView.etAdres.text.toString().isNullOrEmpty()) {
                         musteriAdres = dialogView.etAdres.text.toString().trim()
+                    } else if (musteriAdres == "Adres") {
+                        Toast.makeText(this@MusterilerActivityCerkez, "Adres Girmedin", Toast.LENGTH_LONG).show()
                     }
+
                     var musteriApt = "Apartman"
                     if (!dialogView.etApartman.text.toString().isNullOrEmpty()) {
                         musteriApt = dialogView.etApartman.text.toString().trim()
+                    } else if (musteriAdres == "Adres") {
+                        Toast.makeText(this@MusterilerActivityCerkez, "Adres Girmedin", Toast.LENGTH_LONG).show()
                     }
+
 
                     var musteriTel = "Tel"
                     if (!dialogView.etTelefon.text.toString().isNullOrEmpty()) {
                         musteriTel = dialogView.etTelefon.text.toString()
+                    } else if (musteriTel == "Tel") {
+                        Toast.makeText(this@MusterilerActivityCerkez, "Tel Girmedin", Toast.LENGTH_LONG).show()
                     }
+
 
                     var musteriBilgileri = MusteriData(musteriAdi, secilenMah, musteriAdres, musteriApt, musteriTel, null, false, null, null)
 
-                    refCorlu.child("Musteriler").child(musteriAdi).setValue(musteriBilgileri).addOnCompleteListener {
-                        refCorlu.child("Musteriler").child(musteriAdi).child("siparis_son_zaman").setValue(ServerValue.TIMESTAMP)
+                    ref.child("Musteriler").child(musteriAdi.toString()).setValue(musteriBilgileri).addOnCompleteListener {
+                        ref.child("Musteriler").child(musteriAdi.toString()).child("siparis_son_zaman").setValue(ServerValue.TIMESTAMP)
                         setupVeri()
                     }
 
@@ -172,10 +208,11 @@ class MusterilerCorluActivity : AppCompatActivity() {
 
         imgMusteriAra.setOnClickListener {
             var arananMusteriAdi = searchMs.text.toString()
+            //  Log.e("ass1",arananMusteriAdi)
             val arananMusteriVarMi = musteriAdList.containsAll(listOf(arananMusteriAdi))
 
             if (arananMusteriVarMi) {
-                refCorlu.child("Musteriler").child(arananMusteriAdi).addListenerForSingleValueEvent(object : ValueEventListener {
+                ref.child("Musteriler").child(arananMusteriAdi).addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
                     }
 
@@ -183,8 +220,14 @@ class MusterilerCorluActivity : AppCompatActivity() {
 
                         if (p0.hasChildren()) {
                             var musteriData = p0.getValue(MusteriData::class.java)!!
-                            var builder: AlertDialog.Builder = AlertDialog.Builder(this@MusterilerCorluActivity)
-                            dialogViewSpArama = View.inflate(this@MusterilerCorluActivity, R.layout.dialog_siparis_ekle_corlu, null)
+
+                            //    Log.e("ass", musteriData.musteri_apartman)
+
+
+                            var builder: androidx.appcompat.app.AlertDialog.Builder = androidx.appcompat.app.AlertDialog.Builder(this@MusterilerActivityCerkez)
+                            dialogViewSpArama = View.inflate(this@MusterilerActivityCerkez, R.layout.dialog_siparis_ekle, null)
+
+
                             dialogViewSpArama.tvZamanEkleDialog.text = SimpleDateFormat("HH:mm dd.MM.yyyy").format(System.currentTimeMillis())
                             var cal = Calendar.getInstance()
                             val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
@@ -202,8 +245,8 @@ class MusterilerCorluActivity : AppCompatActivity() {
                                 cal.set(Calendar.MINUTE, minute)
                             }
                             dialogViewSpArama.tvZamanEkleDialog.setOnClickListener {
-                                DatePickerDialog(this@MusterilerCorluActivity, dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
-                                TimePickerDialog(this@MusterilerCorluActivity, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
+                                DatePickerDialog(this@MusterilerActivityCerkez, dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
+                                TimePickerDialog(this@MusterilerActivityCerkez, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
                             }
 
 
@@ -211,9 +254,9 @@ class MusterilerCorluActivity : AppCompatActivity() {
                             dialogViewSpArama.swPromosyon.setOnClickListener {
 
                                 if (dialogViewSpArama.swPromosyon.isChecked) {
-                                    refCorlu.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("promosyon_verildimi").setValue(true)
+                                    ref.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("promosyon_verildimi").setValue(true)
                                 } else {
-                                    refCorlu.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("promosyon_verildimi").setValue(false)
+                                    ref.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("promosyon_verildimi").setValue(false)
 
                                 }
                             }
@@ -246,23 +289,43 @@ class MusterilerCorluActivity : AppCompatActivity() {
                                     }
 
                                     var siparisNotu = dialogViewSpArama.etSiparisNotu.text.toString()
-                                    var siparisKey = refCorlu.child("Siparisler").push().key.toString()
+                                    var siparisKey = FirebaseDatabase.getInstance().reference.child("Siparisler").push().key.toString()
+
                                     var sut3ltFiyat = dialogViewSpArama.et3ltFiyat.text.toString().toDouble()
                                     var sut5ltFiyat = dialogViewSpArama.et5ltFiyat.text.toString().toDouble()
                                     var yumurtaFiyat = dialogViewSpArama.etYumurtaFiyat.text.toString().toDouble()
-
                                     var siparisData = SiparisData(
-                                        null, null, cal.timeInMillis, musteriData.musteri_adres, musteriData.musteri_apartman,
-                                        musteriData.musteri_tel, musteriData.musteri_ad_soyad, musteriData.musteri_mah, siparisNotu, siparisKey, yumurta, yumurtaFiyat, sut3lt, sut3ltFiyat,
-                                        sut5lt, sut5ltFiyat, null, musteriData.musteri_zkonum, musteriData.promosyon_verildimi, musteriData.musteri_zlat,
-                                        musteriData.musteri_zlong, kullaniciAdi
+                                        null,
+                                        null,
+                                        cal.timeInMillis,
+                                        musteriData.musteri_adres,
+                                        musteriData.musteri_apartman,
+                                        musteriData.musteri_tel,
+                                        musteriData.musteri_ad_soyad,
+                                        musteriData.musteri_mah,
+                                        siparisNotu,
+                                        siparisKey,
+                                        yumurta,
+                                        yumurtaFiyat,
+                                        sut3lt,
+                                        sut3ltFiyat,
+                                        sut5lt,
+                                        sut5ltFiyat,
+                                        0.0,
+                                        musteriData.musteri_zkonum,
+                                        musteriData.promosyon_verildimi,
+                                        musteriData.musteri_zlat,
+                                        musteriData.musteri_zlong,
+                                        kullaniciAdi
                                     )
-                                    refCorlu.child("Siparisler").child(siparisKey).setValue(siparisData)
-                                    refCorlu.child("Siparisler").child(siparisKey).child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
-                                    refCorlu.child("Siparisler").child(siparisKey).child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
-                                    refCorlu.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey).setValue(siparisData)
-                                    refCorlu.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey).child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
-                                    refCorlu.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey).child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
+                                    ref.child("Siparisler").child(siparisKey).setValue(siparisData)
+                                    ref.child("Siparisler").child(siparisKey).child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
+                                    ref.child("Siparisler").child(siparisKey).child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
+                                    ref.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey).setValue(siparisData)
+                                    ref.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey)
+                                        .child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
+                                    ref.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey)
+                                        .child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
 
 
                                 }
@@ -292,43 +355,12 @@ class MusterilerCorluActivity : AppCompatActivity() {
 
         }
     }
-
-    private fun setupVeri() {
-        musteriList.clear()
-        refCorlu.child("Musteriler").addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {}
-            override fun onDataChange(p0: DataSnapshot) {
-
-                if (p0.hasChildren()) {
-                    for (ds in p0.children) {
-                        try {
-                            var gelenData = ds.getValue(MusteriData::class.java)!!
-                            var musteriAdlari = gelenData.musteri_ad_soyad
-                            musteriList.add(gelenData)
-                            musteriAdList.add(musteriAdlari.toString())
-                        } catch (e: Exception) {
-                            refCorlu.child("Hatalar/musteriDataHata").push().setValue(e.message.toString())
-                        }
-                    }
-                    var adapterSearch = ArrayAdapter<String>(this@MusterilerCorluActivity, android.R.layout.simple_expandable_list_item_1, musteriAdList)
-                    searchMs.setAdapter(adapterSearch)
-                    tvMusteri.text = "Müşteriler " + "(" + (musteriList.size) + ")"
-                    setupRecyclerViewMusteriler()
-                } else {
-                    Toast.makeText(this@MusterilerCorluActivity, "Müşteri Bilgisi Alınamadı.", Toast.LENGTH_SHORT).show()
-                }
-            }
-        })
-    }
-
     private fun setupSpinner() {
         var siraList = ArrayList<String>()
         siraList.add("İsme A -> Z")
         siraList.add("İsme Z -> A")
         siraList.add("Zamana")
         siraList.add("Zamana ters")
-
-
 
         spinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, siraList)
 
@@ -341,27 +373,27 @@ class MusterilerCorluActivity : AppCompatActivity() {
                 var secilenMarka = siraList[position]
                 if (secilenMarka == "İsme A -> Z") {
                     musteriList.sortBy { it.musteri_ad_soyad }
-                    rcMusteri.layoutManager = LinearLayoutManager(this@MusterilerCorluActivity, LinearLayoutManager.VERTICAL, false)
-                    val Adapter = MusteriAdapter(this@MusterilerCorluActivity, musteriList, kullaniciAdi)
+                    rcMusteri.layoutManager = LinearLayoutManager(this@MusterilerActivityCerkez, LinearLayoutManager.VERTICAL, false)
+                    val Adapter = MusteriAdapterCerkez(this@MusterilerActivityCerkez, musteriList, kullaniciAdi)
                     rcMusteri.adapter = Adapter
                     rcMusteri.setHasFixedSize(true)
                 } else if (secilenMarka == "İsme Z -> A") {
                     musteriList.sortByDescending { it.musteri_ad_soyad }
-                    rcMusteri.layoutManager = LinearLayoutManager(this@MusterilerCorluActivity, LinearLayoutManager.VERTICAL, false)
-                    val Adapter = MusteriAdapter(this@MusterilerCorluActivity, musteriList, kullaniciAdi)
+                    rcMusteri.layoutManager = LinearLayoutManager(this@MusterilerActivityCerkez, LinearLayoutManager.VERTICAL, false)
+                    val Adapter = MusteriAdapterCerkez(this@MusterilerActivityCerkez, musteriList, kullaniciAdi)
                     rcMusteri.adapter = Adapter
                     rcMusteri.setHasFixedSize(true)
 
                 } else if (secilenMarka == "Zamana") {
                     musteriList.sortByDescending { it.siparis_son_zaman }
-                    rcMusteri.layoutManager = LinearLayoutManager(this@MusterilerCorluActivity, LinearLayoutManager.VERTICAL, false)
-                    val Adapter = MusteriAdapter(this@MusterilerCorluActivity, musteriList, kullaniciAdi)
+                    rcMusteri.layoutManager = LinearLayoutManager(this@MusterilerActivityCerkez, LinearLayoutManager.VERTICAL, false)
+                    val Adapter = MusteriAdapterCerkez(this@MusterilerActivityCerkez, musteriList, kullaniciAdi)
                     rcMusteri.adapter = Adapter
                     rcMusteri.setHasFixedSize(true)
                 } else if (secilenMarka == "Zamana ters") {
                     musteriList.sortBy { it.siparis_son_zaman }
-                    rcMusteri.layoutManager = LinearLayoutManager(this@MusterilerCorluActivity, LinearLayoutManager.VERTICAL, false)
-                    val Adapter = MusteriAdapter(this@MusterilerCorluActivity, musteriList, kullaniciAdi)
+                    rcMusteri.layoutManager = LinearLayoutManager(this@MusterilerActivityCerkez, LinearLayoutManager.VERTICAL, false)
+                    val Adapter = MusteriAdapterCerkez(this@MusterilerActivityCerkez, musteriList, kullaniciAdi)
                     rcMusteri.adapter = Adapter
                     rcMusteri.setHasFixedSize(true)
                 }
@@ -371,22 +403,13 @@ class MusterilerCorluActivity : AppCompatActivity() {
 
     private fun setupRecyclerViewMusteriler() {
         rcMusteri.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        val Adapter = MusteriCorluAdapter(this, musteriList, kullaniciAdi)
+        val Adapter = MusteriAdapterCerkez(this, musteriList, kullaniciAdi)
         rcMusteri.adapter = Adapter
         rcMusteri.setHasFixedSize(true)
     }
 
-    fun setupNavigationView() {
-
-        BottomNavigationViewHelperCorlu.setupBottomNavigationView(bottomNav)
-        BottomNavigationViewHelperCorlu.setupNavigation(this, bottomNav) // Bottomnavhelper içinde setupNavigationda context ve nav istiyordu verdik...
-        var menu = bottomNav.menu
-        var menuItem = menu.getItem(ACTIVITY_NO)
-        menuItem.setChecked(true)
-    }
-
     fun setupKullaniciAdi() {
-        ref.child("users").child(userID).addListenerForSingleValueEvent(object : ValueEventListener {
+        FirebaseDatabase.getInstance().reference.child("users").child(userID).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
 
@@ -394,10 +417,18 @@ class MusterilerCorluActivity : AppCompatActivity() {
                 p0.child("user_name").value.toString()?.let {
                     kullaniciAdi = it
                 }
-            }
+                progressDialog = ProgressDialog(this@MusterilerActivityCerkez)
+                progressDialog.setMessage("Müşteriler Yükleniyor.")
+                progressDialog.setCancelable(false)
+                progressDialog.show()
 
+                hndler.postDelayed({ setupVeri() }, 500)
+                hndler.postDelayed({ progressDialog.dismiss() }, 5000)
+
+            }
         })
     }
+
 
     var watcherAdres = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
@@ -422,8 +453,15 @@ class MusterilerCorluActivity : AppCompatActivity() {
     }
 
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        startActivity(Intent(this, BolgeSecimActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+
+
+    fun setupNavigationView() {
+
+        BottomNavigationViewHelperCerkez.setupBottomNavigationView(bottomNav)
+        BottomNavigationViewHelperCerkez.setupNavigation(this, bottomNav) // Bottomnavhelper içinde setupNavigationda context ve nav istiyordu verdik...
+        var menu = bottomNav.menu
+        var menuItem = menu.getItem(ACTIVITY_NO)
+        menuItem.setChecked(true)
     }
+
 }

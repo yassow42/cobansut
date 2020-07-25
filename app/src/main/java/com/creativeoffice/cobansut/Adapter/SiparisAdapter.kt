@@ -32,6 +32,7 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
     lateinit var mAuth: FirebaseAuth
     lateinit var userID: String
     lateinit var saticiYetki: String
+    var ref = FirebaseDatabase.getInstance().reference
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -98,26 +99,22 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
                                             siparisler[position].musteri_zlat,
                                             siparisler[position].musteri_zlong,
                                             kullaniciAdi
-
                                         )
 
-                                        FirebaseDatabase.getInstance().reference.child("Musteriler")
-                                            .child(siparisler[position].siparis_veren.toString())
-                                            .child("siparisleri")
-                                            .child(siparisler[position].siparis_key.toString())
-                                            .setValue(siparisData)
+                                        ref.child("Musteriler").child(siparisler[position].siparis_veren.toString())
+                                            .child("siparisleri").child(siparisler[position].siparis_key.toString()).setValue(siparisData)
 
-                                        FirebaseDatabase.getInstance().reference.child("Teslim_siparisler")
-                                            .child(siparisler[position].siparis_key.toString())
-                                            .setValue(siparisData)
+                                        ref.child("Teslim_siparisler")
+                                            .child(siparisler[position].siparis_key.toString()).setValue(siparisData)
                                             .addOnCompleteListener {
 
                                                 myContext.startActivity(Intent(myContext, SiparislerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
                                                 Toast.makeText(myContext, "Sipariş Teslim Edildi", Toast.LENGTH_LONG).show()
-                                                FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisler[position].siparis_key.toString()).removeValue()
-                                                FirebaseDatabase.getInstance().reference.child("Teslim_siparisler").child(siparisler[position].siparis_key.toString()).child("siparis_teslim_zamani")
-                                                    .setValue(ServerValue.TIMESTAMP)
-                                                FirebaseDatabase.getInstance().reference.child("Musteriler").child(siparisler[position].siparis_veren.toString()).child("siparis_son_zaman").setValue(ServerValue.TIMESTAMP)
+                                                ref.child("Siparisler").child(siparisler[position].siparis_key.toString()).removeValue()
+                                                ref.child("Teslim_siparisler").child(siparisler[position].siparis_key.toString())
+                                                    .child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
+                                                ref.child("Musteriler").child(siparisler[position].siparis_veren.toString())
+                                                    .child("siparis_son_zaman").setValue(ServerValue.TIMESTAMP)
                                             }
 
 
@@ -200,7 +197,6 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
                                     var sut5ltFiyat = viewDuzenle.et5ltFiyat.text.toString().toDouble()
                                     var yumurtaFiyat = viewDuzenle.etYumurtaFiyat.text.toString().toDouble()
 
-                                    var ref = FirebaseDatabase.getInstance().reference
                                     var not = viewDuzenle.etSiparisNotu.text.toString()
                                     var siparisKey = siparisler[position].siparis_key.toString()
                                     var siparisVeren = siparisler[position].siparis_veren.toString()
@@ -311,7 +307,6 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
             siparisTel.text = siparisData.siparis_tel
             tvNot.text = siparisData.siparis_notu
             tvFiyat.textSize = 18f
-
 
 
 
@@ -450,6 +445,8 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
 
 
         }
+
+
     }
 
 

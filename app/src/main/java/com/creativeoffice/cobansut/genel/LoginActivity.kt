@@ -1,4 +1,4 @@
-package com.creativeoffice.cobansut
+package com.creativeoffice.cobansut.genel
 
 import android.app.Dialog
 import android.content.Intent
@@ -9,8 +9,8 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.creativeoffice.cobansut.Activity.SiparislerActivity
 import com.creativeoffice.cobansut.Datalar.Users
+import com.creativeoffice.cobansut.R
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult

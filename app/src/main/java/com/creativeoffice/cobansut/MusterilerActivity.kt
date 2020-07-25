@@ -57,6 +57,7 @@ class MusterilerActivity : AppCompatActivity() {
     lateinit var progressDialog: ProgressDialog
     var hndler = Handler()
     var ref = FirebaseDatabase.getInstance().reference
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_musteriler)
@@ -262,25 +263,7 @@ class MusterilerActivity : AppCompatActivity() {
                                 TimePickerDialog(this@MusterilerActivity, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
                             }
 
-                            dialogViewSpArama.et3lt.addTextChangedListener(watcherFiyat3lt)
-                            dialogViewSpArama.et5lt.addTextChangedListener(watcherFiyat5lt)
-                            dialogViewSpArama.etYumurta.addTextChangedListener(watcherFiyatYumurta)
-                            dialogViewSpArama.imgFiyatRefresh.setOnClickListener {
-                                var fiyat3 = 0
-                                if (dialogViewSpArama.et3lt.text.isNotEmpty()) {
-                                    fiyat3 = dialogViewSpArama.et3lt.text.toString().toInt() * 16
-                                }
 
-                                var fiyat5 = 0
-                                if (dialogViewSpArama.et5lt.text.isNotEmpty()) {
-                                    fiyat5 = dialogViewSpArama.et5lt.text.toString().toInt() * 22
-                                }
-                                var fiyatYum = 0
-                                if (dialogViewSpArama.etYumurta.text.isNotEmpty()) {
-                                    fiyatYum = dialogViewSpArama.etYumurta.text.toString().toInt() * 1
-                                }
-                                dialogViewSpArama.tvFiyatSp.text = (fiyat3 + fiyat5 + fiyatYum).toString()
-                            }
 
                             dialogViewSpArama.swPromosyon.setOnClickListener {
 
@@ -394,8 +377,6 @@ class MusterilerActivity : AppCompatActivity() {
         siraList.add("Zamana")
         siraList.add("Zamana ters")
 
-
-
         spinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, siraList)
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -487,70 +468,6 @@ class MusterilerActivity : AppCompatActivity() {
     }
 
 
-    var watcherFiyat3lt = object : TextWatcher {
-        override fun afterTextChanged(s: Editable?) {
-
-        }
-
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-        }
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if (s!!.length > 0) {
-
-                dialogViewSpArama.tvFiyatSp.text = (dialogViewSpArama.tvFiyatSp.text.toString().toInt() + (s.toString().toInt() * 16)).toString()
-
-            } else {
-
-                dialogViewSpArama.tvFiyatSp.text = dialogViewSpArama.tvFiyatSp.text.toString()
-            }
-        }
-
-    }
-
-    var watcherFiyat5lt = object : TextWatcher {
-        override fun afterTextChanged(s: Editable?) {
-
-        }
-
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-        }
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if (s!!.length > 0) {
-
-                dialogViewSpArama.tvFiyatSp.text = (dialogViewSpArama.tvFiyatSp.text.toString().toInt() + (s.toString().toInt() * 22)).toString()
-
-            } else {
-
-                dialogViewSpArama.tvFiyatSp.text = dialogViewSpArama.tvFiyatSp.text.toString()
-            }
-        }
-
-    }
-
-    var watcherFiyatYumurta = object : TextWatcher {
-        override fun afterTextChanged(s: Editable?) {
-
-        }
-
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-        }
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if (s!!.length > 0) {
-
-                dialogViewSpArama.tvFiyatSp.text = (dialogViewSpArama.tvFiyatSp.text.toString().toInt() + (s.toString().toInt() * 1)).toString()
-
-            } else {
-                dialogViewSpArama.tvFiyatSp.text = dialogViewSpArama.tvFiyatSp.text.toString()
-            }
-        }
-
-    }
 
 
     fun setupNavigationView() {

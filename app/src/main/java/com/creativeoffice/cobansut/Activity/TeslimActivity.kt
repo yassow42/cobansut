@@ -16,8 +16,6 @@ import com.creativeoffice.cobansut.utils.BottomNavigationViewHelper
 import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.R
 import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.activity_siparisler.*
-import kotlinx.android.synthetic.main.activity_siparisler.bottomNav
 import kotlinx.android.synthetic.main.activity_teslim.*
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -28,7 +26,7 @@ class TeslimActivity : AppCompatActivity() {
     private val ACTIVITY_NO = 2
     lateinit var suankiTeslimList: ArrayList<SiparisData>
     lateinit var butunTeslimList: ArrayList<SiparisData>
-var ref = FirebaseDatabase.getInstance().reference
+    var ref = FirebaseDatabase.getInstance().reference
     lateinit var progressDialog: ProgressDialog
     val hndler = Handler()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,9 +53,9 @@ var ref = FirebaseDatabase.getInstance().reference
     }
 
 
-
     private fun setupVeri() {
-        FirebaseDatabase.getInstance().reference.child("Teslim_siparisler").orderByChild("siparis_teslim_zamani").addListenerForSingleValueEvent(object : ValueEventListener {
+
+        ref.child("Teslim_siparisler").orderByChild("siparis_teslim_zamani").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
             }
@@ -92,9 +90,9 @@ var ref = FirebaseDatabase.getInstance().reference
                                     yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
 
                                     try {
-                                        //   toplamFiyatlar = gelenData.toplam_fiyat!!.toDouble() + toplamFiyatlar
+                                        toplamFiyatlar = gelenData.toplam_fiyat!!.toDouble() + toplamFiyatlar
                                     } catch (e: IOException) {
-                                        Log.e("sa", "hatalar ${e.message.toString()}")
+                                        Log.e("teslim activity", "hatalar ${e.message.toString()}")
                                     }
 
 
@@ -105,10 +103,11 @@ var ref = FirebaseDatabase.getInstance().reference
                             tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
                             tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
                             tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
+
                             try {
-                                //   tvFiyatGenel.text = toplamFiyatlar.toString() + " TL"
+                                tvFiyatGenelTeslim.setText(toplamFiyatlar.toString() + " TL")
                             } catch (e: IOException) {
-                                Log.e("sa", "hatalar ${e.message.toString()}")
+                                Log.e("teslim activity", "hatalar ${e.message.toString()}")
 
                             }
 
@@ -200,12 +199,13 @@ var ref = FirebaseDatabase.getInstance().reference
                 tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
                 tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
                 tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
-                tvFiyatGenel.text = toplamFiyatlar.toString() + " TL"
+                tvFiyatGenelTeslim.text = toplamFiyatlar.toString() + " TL"
 
                 setupRecyclerView()
 
             }
         }
+        /*
         imgOptions.setOnClickListener {
 
             val popup = PopupMenu(this, imgOptions)
@@ -291,7 +291,7 @@ var ref = FirebaseDatabase.getInstance().reference
             popup.show()
 
         }
-
+*/
 
     }
 

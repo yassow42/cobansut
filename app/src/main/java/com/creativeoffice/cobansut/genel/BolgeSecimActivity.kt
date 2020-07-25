@@ -1,15 +1,15 @@
-package com.creativeoffice.cobansut
+package com.creativeoffice.cobansut.genel
 
 import android.app.ProgressDialog
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.widget.Toast
 import com.creativeoffice.cobansut.Activity.SiparislerActivity
 import com.creativeoffice.cobansut.CorluActivity.SiparislerCorluActivity
+import com.creativeoffice.cobansut.R
+import com.creativeoffice.cobansut.cerkez.SiparisActivityCerkez
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.karumi.dexter.Dexter
@@ -17,7 +17,6 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import kotlinx.android.synthetic.main.activity_bolge_secim.*
-import kotlinx.android.synthetic.main.activity_maps.*
 
 class BolgeSecimActivity : AppCompatActivity() {
     val handler = Handler()
@@ -54,6 +53,10 @@ class BolgeSecimActivity : AppCompatActivity() {
 
         tvCorlu.setOnClickListener {
             val intent = Intent(this, SiparislerCorluActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            startActivity(intent)
+        }
+        tvCerkez.setOnClickListener {
+            val intent = Intent(this, SiparisActivityCerkez::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             startActivity(intent)
         }
 

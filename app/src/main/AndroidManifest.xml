@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.creativeoffice.cobansut">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -18,7 +17,10 @@
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".cerkez.TeslimEdilenlerActivityCerkez"></activity>
+        <activity android:name=".cerkez.MusterilerActivityCerkez" />
+        <activity android:name=".cerkez.SiparisActivityCerkez" />
+        <activity android:name=".cerkez.SiparisActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -33,7 +35,7 @@
 
         <activity
             android:name=".Activity.AdresBulmaMapsActivity"
-            android:label="@string/title_activity_adres_bulma_maps"></activity>
+            android:label="@string/title_activity_adres_bulma_maps" />
         <activity
             android:name=".CorluActivity.AdresBulmaMapsCorluActivity"
             android:label="@string/title_activity_adres_bulma_maps_corlu" />
@@ -42,7 +44,7 @@
             android:label="@string/title_activity_maps_corlu" />
         <activity android:name=".CorluActivity.MusterilerCorluActivity" />
         <activity android:name=".CorluActivity.TeslimCorluActivity" />
-        <activity android:name=".BolgeSecimActivity" />
+        <activity android:name=".genel.BolgeSecimActivity" />
         <activity android:name=".CorluActivity.SiparislerCorluActivity" />
         <activity
             android:name=".MapsActivity"
@@ -51,8 +53,8 @@
         <activity android:name=".MusterilerActivity" />
         <activity android:name=".Activity.TeslimActivity" />
         <activity android:name=".Activity.SiparislerActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".SplashScreenActivity">
+        <activity android:name=".genel.LoginActivity" />
+        <activity android:name=".genel.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
