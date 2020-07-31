@@ -81,7 +81,6 @@ class MahalleAdapter(val myContext: Context, val mahalleler: ArrayList<String>,v
                             for (ds in p0.children) {
                                 try {
                                     var gelenData = ds.getValue(SiparisData::class.java)!!
-
                                         siparisList.add(gelenData)
 
 

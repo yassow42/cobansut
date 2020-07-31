@@ -13,6 +13,7 @@ import com.creativeoffice.cobansut.Datalar.MusteriData
 import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.R
 import com.creativeoffice.cobansut.cerkez.adapter.MahalleAdapter
+import com.creativeoffice.cobansut.genel.BolgeSecimActivity
 import com.creativeoffice.cobansut.genel.LoginActivity
 import com.creativeoffice.cobansut.utils.BottomNavigationViewHelperCerkez
 import com.google.firebase.auth.FirebaseAuth
@@ -58,6 +59,14 @@ class SiparisActivityCerkez : AppCompatActivity() {
         hndler.postDelayed(Runnable { setupKullaniciAdi() }, 750)
 
 
+    }
+
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, BolgeSecimActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        startActivity(intent)
+        finish()
     }
 
     private fun veri() {

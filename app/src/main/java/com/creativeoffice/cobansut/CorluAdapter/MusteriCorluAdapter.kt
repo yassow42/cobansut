@@ -92,7 +92,7 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
                 }
             }
 
-        //    dialogViewSp.swPromosyon.isChecked = musteriler[position].promosyon_verildimi.toString().toBoolean()
+            //    dialogViewSp.swPromosyon.isChecked = musteriler[position].promosyon_verildimi.toString().toBoolean()
 
             dialogViewSp.tvZamanEkleDialog.setOnClickListener {
                 DatePickerDialog(myContext, dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
@@ -177,7 +177,7 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
 
                         dialogView.imgMaps.setOnClickListener {
                             var intent = Intent(myContext, AdresBulmaMapsCorluActivity::class.java)
-
+                            intent.putExtra("musteri_konumu", "Corlu")
                             intent.putExtra("musteriAdi", musteriler[position].musteri_ad_soyad)
                             myContext.startActivity(intent)
                         }
@@ -290,7 +290,10 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
                             .setMessage("Emin Misin ?")
                             .setPositiveButton("Sil", object : DialogInterface.OnClickListener {
                                 override fun onClick(p0: DialogInterface?, p1: Int) {
-                                    FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).removeValue()
+                                    refCorlu.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).removeValue()
+                                    var musteri =
+                                        musteriler.remove(musteriler[position])
+                                    notifyDataSetChanged()
 
                                 }
                             })
@@ -330,7 +333,6 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
         }
 
 
-
         val myLocationListener = object : LocationListener {
             override fun onLocationChanged(location: Location?) {
                 var Lat = location!!.latitude
@@ -354,8 +356,6 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
 
             }
         }
-
-
 
 
     }

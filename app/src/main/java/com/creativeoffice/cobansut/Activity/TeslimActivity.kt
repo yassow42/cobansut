@@ -55,7 +55,7 @@ class TeslimActivity : AppCompatActivity() {
 
     private fun setupVeri() {
 
-        ref.child("Teslim_siparisler").orderByChild("siparis_teslim_zamani").addListenerForSingleValueEvent(object : ValueEventListener {
+        ref.child("Teslim_siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
             }
@@ -83,20 +83,25 @@ class TeslimActivity : AppCompatActivity() {
                             for (ds in data.children) {
                                 var gelenData = ds.getValue(SiparisData::class.java)!!
                                 butunTeslimList.add(gelenData)
-                                if (gece3GelenZaman - 86400000 < gelenData.siparis_teslim_zamani!!.toLong() && gelenData.siparis_teslim_zamani!!.toLong() < gece3GelenZaman) {
-                                    suankiTeslimList.add(gelenData)
-                                    sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
-                                    sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
-                                    yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
+                                Log.e("teslim activity12",  gelenData.siparis_teslim_tarihi.toString())
 
-                                    try {
-                                        toplamFiyatlar = gelenData.toplam_fiyat!!.toDouble() + toplamFiyatlar
-                                    } catch (e: IOException) {
-                                        Log.e("teslim activity", "hatalar ${e.message.toString()}")
+                                if ( gelenData.siparis_teslim_zamani.toString() !="null"){
+                                    if (gece3GelenZaman - 86400000 < gelenData.siparis_teslim_zamani!!.toLong() && gelenData.siparis_teslim_zamani!!.toLong() < gece3GelenZaman) {
+                                        suankiTeslimList.add(gelenData)
+                                        sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
+                                        sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
+                                        yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
+
+                                        try {
+                                            toplamFiyatlar = gelenData.toplam_fiyat!!.toDouble() + toplamFiyatlar
+                                        } catch (e: IOException) {
+                                            Log.e("teslim activity", "hatalar ${e.message.toString()}")
+                                        }
+
+
                                     }
-
-
                                 }
+
                             }
                             progressDialog.dismiss()
                             suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }
@@ -185,14 +190,15 @@ class TeslimActivity : AppCompatActivity() {
 
             for (ds in butunTeslimList) {
 
+                if (ds.siparis_teslim_zamani.toString() !="null"){
+                    if (calZamandan.timeInMillis < ds.siparis_teslim_zamani!!.toLong() && ds.siparis_teslim_zamani!!.toLong() < calZamana.timeInMillis) {
+                        suankiTeslimList.add(ds)
+                        sut3ltSayisi = ds.sut3lt!!.toInt() + sut3ltSayisi
+                        sut5ltSayisi = ds.sut5lt!!.toInt() + sut5ltSayisi
+                        yumurtaSayisi = ds.yumurta!!.toInt() + yumurtaSayisi
+                        toplamFiyatlar = ds.toplam_fiyat!!.toDouble() + toplamFiyatlar
 
-                if (calZamandan.timeInMillis < ds.siparis_teslim_zamani!!.toLong() && ds.siparis_teslim_zamani!!.toLong() < calZamana.timeInMillis) {
-                    suankiTeslimList.add(ds)
-                    sut3ltSayisi = ds.sut3lt!!.toInt() + sut3ltSayisi
-                    sut5ltSayisi = ds.sut5lt!!.toInt() + sut5ltSayisi
-                    yumurtaSayisi = ds.yumurta!!.toInt() + yumurtaSayisi
-                    toplamFiyatlar = ds.toplam_fiyat!!.toDouble() + toplamFiyatlar
-
+                    }
                 }
 
                 suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }

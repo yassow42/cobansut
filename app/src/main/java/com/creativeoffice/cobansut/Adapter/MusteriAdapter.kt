@@ -11,8 +11,6 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.inflate
@@ -22,7 +20,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.creativeoffice.cobansut.Activity.AdresBulmaMapsActivity
 import com.creativeoffice.cobansut.CorluActivity.AdresBulmaMapsCorluActivity
 import com.creativeoffice.cobansut.Datalar.MusteriData
 import com.creativeoffice.cobansut.Datalar.SiparisData
@@ -189,8 +186,8 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                             dialogMsDznle = builder.create()
 
                             dialogView.imgMaps.setOnClickListener {
-                                var intent = Intent(myContext, AdresBulmaMapsActivity::class.java)
-
+                                var intent = Intent(myContext, AdresBulmaMapsCorluActivity::class.java)
+                                intent.putExtra("musteri_konumu", "Burgaz")
                                 intent.putExtra("musteriAdi", musteriler[position].musteri_ad_soyad)
                                 myContext.startActivity(intent)
                             }

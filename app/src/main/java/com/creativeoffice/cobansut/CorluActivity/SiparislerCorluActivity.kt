@@ -368,6 +368,12 @@ class SiparislerCorluActivity : AppCompatActivity() {
 
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, BolgeSecimActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        startActivity(intent)
+        finish()
+    }
 
     private fun setupBtn() {
 /*
@@ -676,10 +682,7 @@ class SiparislerCorluActivity : AppCompatActivity() {
 
         })
     }
-    override fun onBackPressed() {
-        super.onBackPressed()
-        startActivity(Intent(this, BolgeSecimActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
-    }
+
     private fun initMyAuthStateListener() {
         mAuthListener = object : FirebaseAuth.AuthStateListener {
             override fun onAuthStateChanged(p0: FirebaseAuth) {

@@ -65,7 +65,7 @@ class SiparislerActivity : AppCompatActivity() {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
         mAuth = FirebaseAuth.getInstance()
-    //    mAuth.signOut()
+        //    mAuth.signOut()
         initMyAuthStateListener()
         userID = mAuth.currentUser!!.uid
         setupKullaniciAdi()
@@ -78,7 +78,7 @@ class SiparislerActivity : AppCompatActivity() {
         progressDialog.setCancelable(false)
         progressDialog.show()
 
-        
+
         hndler.postDelayed(Runnable { setupVeri() }, 750)
         hndler.postDelayed(Runnable { progressDialog.dismiss() }, 5000)
 
@@ -88,7 +88,9 @@ class SiparislerActivity : AppCompatActivity() {
         super.onBackPressed()
         val intent = Intent(this, BolgeSecimActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
         startActivity(intent)
+        finish()
     }
+
     private fun zamanAyarı() {
         FirebaseMessaging.getInstance().subscribeToTopic("msgNotification");
         FirebaseDatabase.getInstance().reference.child("Zaman").addListenerForSingleValueEvent(object : ValueEventListener {
@@ -352,7 +354,7 @@ class SiparislerActivity : AppCompatActivity() {
                                 ilerilist.add(gelenData)
                                 tvileriTarihliSayi.text = ilerilist.size.toString() + " Sipariş"
 
-                                recyclerView(rcileriTarih,ilerilist)
+                                recyclerView(rcileriTarih, ilerilist)
                                 //recyclerViewileriTarihli()
                             }
                         } catch (e: Exception) {
@@ -769,7 +771,6 @@ class SiparislerActivity : AppCompatActivity() {
     }
 
 
-
     fun recyclerView(recyclerView: RecyclerView, siparisListesi: ArrayList<SiparisData>) {
         recyclerView.layoutManager = LinearLayoutManager(this@SiparislerActivity, LinearLayoutManager.VERTICAL, false)
         val Adapter = SiparisAdapter(this@SiparislerActivity, siparisListesi, kullaniciAdi)
@@ -786,6 +787,7 @@ class SiparislerActivity : AppCompatActivity() {
         var menuItem = menu.getItem(ACTIVITY_NO)
         menuItem.setChecked(true)
     }
+
     fun setupKullaniciAdi() {
         FirebaseDatabase.getInstance().reference.child("users").child(userID).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -797,6 +799,7 @@ class SiparislerActivity : AppCompatActivity() {
 
         })
     }
+
     private fun initMyAuthStateListener() {
         mAuthListener = object : FirebaseAuth.AuthStateListener {
             override fun onAuthStateChanged(p0: FirebaseAuth) {

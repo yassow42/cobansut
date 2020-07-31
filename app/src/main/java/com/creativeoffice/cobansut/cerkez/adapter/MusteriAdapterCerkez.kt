@@ -11,8 +11,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.inflate
@@ -22,7 +21,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.creativeoffice.cobansut.Activity.AdresBulmaMapsActivity
 import com.creativeoffice.cobansut.Adapter.MusteriSiparisleriAdapter
 import com.creativeoffice.cobansut.CorluActivity.AdresBulmaMapsCorluActivity
 import com.creativeoffice.cobansut.Datalar.MusteriData
@@ -190,8 +188,8 @@ class MusteriAdapterCerkez(val myContext: Context, val musteriler: ArrayList<Mus
                             dialogMsDznle = builder.create()
 
                             dialogView.imgMaps.setOnClickListener {
-                                var intent = Intent(myContext, AdresBulmaMapsActivity::class.java)
-
+                                var intent = Intent(myContext, AdresBulmaMapsCorluActivity::class.java)
+                                intent.putExtra("musteri_konumu", "Cerkez")
                                 intent.putExtra("musteriAdi", musteriler[position].musteri_ad_soyad)
                                 myContext.startActivity(intent)
                             }
@@ -329,6 +327,7 @@ class MusteriAdapterCerkez(val myContext: Context, val musteriler: ArrayList<Mus
                 return@setOnLongClickListener true
             }
         } catch (e: Exception) {
+            Log.e("Hatalar","Musteri Adapter Cerkez: ${e.message}")
             Toast.makeText(myContext, "332. satır hatasıMusteriAdapter", Toast.LENGTH_LONG).show()
         }
 

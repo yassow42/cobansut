@@ -5,6 +5,7 @@ import android.content.Intent
 import android.view.MenuItem
 import android.widget.Toast
 import com.creativeoffice.cobansut.R
+import com.creativeoffice.cobansut.cerkez.MapsActivityCerkez
 import com.creativeoffice.cobansut.cerkez.MusterilerActivityCerkez
 import com.creativeoffice.cobansut.cerkez.SiparisActivityCerkez
 import com.creativeoffice.cobansut.cerkez.TeslimEdilenlerActivityCerkez
@@ -52,10 +53,10 @@ class BottomNavigationViewHelperCerkez {
                                 context.startActivity(intent)
 
                             }
-                            R.id.ic_maps -> {/*
-                                val intent = Intent(context, MapsCorluActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                            R.id.ic_maps -> {
+                                val intent = Intent(context, MapsActivityCerkez::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
 
-                                context.startActivity(intent)*/
+                                context.startActivity(intent)
                             }
 
                         }

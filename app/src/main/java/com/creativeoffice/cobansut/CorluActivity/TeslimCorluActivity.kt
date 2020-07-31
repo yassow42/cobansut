@@ -95,16 +95,19 @@ class TeslimCorluActivity : AppCompatActivity() {
                             for (ds in data.children) {
                                 var gelenData = ds.getValue(SiparisData::class.java)!!
                                 butunTeslimList.add(gelenData)
-                                if (gece3GelenZaman - 86400000 < gelenData.siparis_teslim_zamani!!.toLong() && gelenData.siparis_teslim_zamani!!.toLong() < gece3GelenZaman) {
-                                    suankiTeslimList.add(gelenData)
-                                    sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
-                                    sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
-                                    yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
-                                    try {
-                                        toplamFiyatlar = gelenData.toplam_fiyat!!.toDouble() + toplamFiyatlar
-                                    } catch (e: IOException) {
-                                        Log.e("teslim corlu activity", "hatalar ${e.message.toString()}")
-                                    }
+                                if (gelenData.siparis_teslim_zamani.toString() != "null") {
+                                    if (gece3GelenZaman - 86400000 < gelenData.siparis_teslim_zamani!!.toLong() && gelenData.siparis_teslim_zamani!!.toLong() < gece3GelenZaman) {
+                                        suankiTeslimList.add(gelenData)
+                                        sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
+                                        sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
+                                        yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
+                                        try {
+                                            toplamFiyatlar = gelenData.toplam_fiyat!!.toDouble() + toplamFiyatlar
+                                        } catch (e: IOException) {
+                                            Log.e("teslim corlu activity", "hatalar ${e.message.toString()}")
+                                        }
+                                }
+
                                 }
                             }
                             progressDialog.dismiss()
@@ -130,6 +133,7 @@ class TeslimCorluActivity : AppCompatActivity() {
             }
         })
     }
+
     private fun setupBtn() {
         val zaman: Long = System.currentTimeMillis() - 86400000
         val zamana: Long = System.currentTimeMillis()
@@ -193,13 +197,15 @@ class TeslimCorluActivity : AppCompatActivity() {
 
             for (ds in butunTeslimList) {
 
+                if (ds.siparis_teslim_zamani.toString() != "null") {
+                    if (calZamandan.timeInMillis < ds.siparis_teslim_zamani!!.toLong() && ds.siparis_teslim_zamani!!.toLong() < calZamana.timeInMillis) {
+                        suankiTeslimList.add(ds)
+                        sut3ltSayisi = ds.sut3lt!!.toInt() + sut3ltSayisi
+                        sut5ltSayisi = ds.sut5lt!!.toInt() + sut5ltSayisi
+                        yumurtaSayisi = ds.yumurta!!.toInt() + yumurtaSayisi
+                        toplamFiyatlar = ds.toplam_fiyat!!.toDouble() + toplamFiyatlar
 
-                if (calZamandan.timeInMillis < ds.siparis_teslim_zamani!!.toLong() && ds.siparis_teslim_zamani!!.toLong() < calZamana.timeInMillis) {
-                    suankiTeslimList.add(ds)
-                    sut3ltSayisi = ds.sut3lt!!.toInt() + sut3ltSayisi
-                    sut5ltSayisi = ds.sut5lt!!.toInt() + sut5ltSayisi
-                    yumurtaSayisi = ds.yumurta!!.toInt() + yumurtaSayisi
-                    toplamFiyatlar = ds.toplam_fiyat!!.toDouble() + toplamFiyatlar
+                    }
 
                 }
 
@@ -304,7 +310,7 @@ class TeslimCorluActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         rcTeslimEdilenler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        val Adapter = TeslimEdilenlerAdapter(this, suankiTeslimList,"Corlu")
+        val Adapter = TeslimEdilenlerAdapter(this, suankiTeslimList, "Corlu")
         rcTeslimEdilenler.adapter = Adapter
         rcTeslimEdilenler.setHasFixedSize(true)
     }

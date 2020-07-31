@@ -37,7 +37,8 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
     lateinit var userID: String
     lateinit var saticiYetki: String
 
-    var ref = FirebaseDatabase.getInstance().reference.child("Cerkez")
+    var refCerkez = FirebaseDatabase.getInstance().reference.child("Cerkez")
+    var ref = FirebaseDatabase.getInstance().reference
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MahalleSiparisleriAdapter.SiparisHolder {
         val view = LayoutInflater.from(myContext).inflate(R.layout.item_siparisler, parent, false)
 
@@ -109,19 +110,19 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
                                         kullaniciAdi
                                     )
 
-                                    ref.child("Musteriler").child(siparisler[position].siparis_veren.toString())
+                                    refCerkez.child("Musteriler").child(siparisler[position].siparis_veren.toString())
                                         .child("siparisleri").child(siparisler[position].siparis_key.toString()).setValue(siparisData)
 
-                                    ref.child("Teslim_siparisler")
+                                    refCerkez.child("Teslim_siparisler")
                                         .child(siparisler[position].siparis_key.toString()).setValue(siparisData)
                                         .addOnCompleteListener {
 
                                             myContext.startActivity(Intent(myContext, SiparisActivityCerkez::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
                                             Toast.makeText(myContext, "Sipariş Teslim Edildi", Toast.LENGTH_LONG).show()
-                                            ref.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisler[position].siparis_key.toString()).removeValue()
-                                            ref.child("Teslim_siparisler").child(siparisler[position].siparis_key.toString())
+                                            refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisler[position].siparis_key.toString()).removeValue()
+                                            refCerkez.child("Teslim_siparisler").child(siparisler[position].siparis_key.toString())
                                                 .child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
-                                            ref.child("Musteriler").child(siparisler[position].siparis_veren.toString())
+                                            refCerkez.child("Musteriler").child(siparisler[position].siparis_veren.toString())
                                                 .child("siparis_son_zaman").setValue(ServerValue.TIMESTAMP)
                                         }
 
@@ -208,19 +209,19 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
                                 var not = viewDuzenle.etSiparisNotu.text.toString()
                                 var siparisKey = siparisler[position].siparis_key.toString()
                                 var siparisVeren = siparisler[position].siparis_veren.toString()
-                                ref.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("sut3lt").setValue(sut3lt)
-                                ref.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("sut3lt_fiyat").setValue(sut3ltFiyat)
-                                ref.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("sut5lt").setValue(sut5lt)
-                                ref.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("sut5lt_fiyat").setValue(sut5ltFiyat)
-                                ref.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("yumurta").setValue(yumurta)
-                                ref.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("yumurta_fiyat").setValue(yumurtaFiyat)
-                                ref.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("siparis_notu").setValue(not)
-                                ref.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("siparis_teslim_tarihi").setValue(cal.timeInMillis)
+                                refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("sut3lt").setValue(sut3lt)
+                                refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("sut3lt_fiyat").setValue(sut3ltFiyat)
+                                refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("sut5lt").setValue(sut5lt)
+                                refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("sut5lt_fiyat").setValue(sut5ltFiyat)
+                                refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("yumurta").setValue(yumurta)
+                                refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("yumurta_fiyat").setValue(yumurtaFiyat)
+                                refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("siparis_notu").setValue(not)
+                                refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("siparis_teslim_tarihi").setValue(cal.timeInMillis)
 
-                                ref.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("sut3lt").setValue(sut3lt)
-                                ref.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("sut5lt").setValue(sut5lt)
-                                ref.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("yumurta").setValue(yumurta)
-                                ref.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("siparis_notu").setValue(not)
+                                refCerkez.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("sut3lt").setValue(sut3lt)
+                                refCerkez.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("sut5lt").setValue(sut5lt)
+                                refCerkez.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("yumurta").setValue(yumurta)
+                                refCerkez.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("siparis_notu").setValue(not)
                                 var intent = Intent(myContext, SiparisActivityCerkez::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
 
 
@@ -245,11 +246,11 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
                                 .setPositiveButton("Sil", object : DialogInterface.OnClickListener {
                                     override fun onClick(p0: DialogInterface?, p1: Int) {
 
-                                        ref.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisler[position].siparis_key.toString()).removeValue().addOnCompleteListener {
+                                        refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisler[position].siparis_key.toString()).removeValue().addOnCompleteListener {
                                             Toast.makeText(myContext, "Sipariş Silindi...", Toast.LENGTH_LONG).show()
                                         }
 
-                                        ref.child("Musteriler").child(siparisler[position].siparis_veren.toString()).child("siparisleri")
+                                        refCerkez.child("Musteriler").child(siparisler[position].siparis_veren.toString()).child("siparisleri")
                                             .child(siparisler[position].siparis_key.toString()).removeValue()
 
                                         myContext.startActivity(Intent(myContext, SiparisActivityCerkez::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
@@ -307,9 +308,10 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
 
         fun setData(siparisData: SiparisData) {
             if (siparisData.siparis_teslim_tarihi!!.compareTo(System.currentTimeMillis()) == -1) {
+                tumLayout.background = ContextCompat.getDrawable(myContext, R.color.mavi)
 
             } else if (siparisData.siparis_teslim_tarihi!!.compareTo(System.currentTimeMillis()) == 1) {
-                tumLayout.background = ContextCompat.getDrawable(myContext,R.color.kirmizi)
+                tumLayout.background = ContextCompat.getDrawable(myContext, R.color.kirmizi)
 
             }
 
@@ -330,9 +332,9 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
 
             swSiparisPromosyon.setOnClickListener {
                 if (swSiparisPromosyon.isChecked) {
-                    ref.child("Musteriler").child(siparisData.siparis_veren.toString()).child("promosyon_verildimi").setValue(true)
+                    refCerkez.child("Musteriler").child(siparisData.siparis_veren.toString()).child("promosyon_verildimi").setValue(true)
                 } else {
-                    ref.child("Musteriler").child(siparisData.siparis_veren.toString()).child("promosyon_verildimi").setValue(false)
+                    refCerkez.child("Musteriler").child(siparisData.siparis_veren.toString()).child("promosyon_verildimi").setValue(false)
 
                 }
             }
@@ -340,7 +342,6 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
 
             if (siparisData.promosyon_verildimi != null) {
                 var boolean = siparisData.promosyon_verildimi
-
                 swSiparisPromosyon.isChecked = boolean.toString().toBoolean()
             }
             if (siparisData.siparis_zamani != null) {
