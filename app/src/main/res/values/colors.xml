@@ -10,5 +10,6 @@
     <color name="mavi">#2837C8</color>
     <color name="gri">#E13A3A3A</color>
     <color name="yesil">#E145C811</color>
+    <color name="transpan">#0FFF0000</color>
 
 </resources>

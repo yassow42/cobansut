@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Color
 import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
@@ -12,6 +13,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.os.postDelayed
 import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.R
 import com.creativeoffice.cobansut.utils.BottomNavigationViewHelperCerkez
@@ -22,6 +25,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
@@ -46,7 +50,8 @@ class MapsActivityCerkez : AppCompatActivity(), OnMapReadyCallback {
 
     var mahalleList = ArrayList<String>()
     var konum: Boolean = false
-    val handler = Handler()
+    val hand = Handler()
+    lateinit var mRunnable: Runnable
     val ref = FirebaseDatabase.getInstance().reference
     val refCerkez = FirebaseDatabase.getInstance().reference.child("Cerkez")
 
@@ -57,6 +62,11 @@ class MapsActivityCerkez : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
         setupNavigationView()
 
+        imgRefresh.setOnClickListener {
+            mMap.clear()
+
+            setupKullaniciAdiVeVeriler()
+        }
 
     }
 
@@ -64,7 +74,7 @@ class MapsActivityCerkez : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
         val cerkez = LatLng(41.282571, 28.000692)
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cerkez, 13.0f))
-        handler.postDelayed(Runnable { progressDialog.dismiss() }, 5000)
+        //handler.postDelayed(Runnable { progressDialog.dismiss() }, 5000)
 
 
         progressDialog = ProgressDialog(this)
@@ -87,6 +97,7 @@ class MapsActivityCerkez : AppCompatActivity(), OnMapReadyCallback {
 
             override fun onDataChange(p0: DataSnapshot) {
                 kullaniciAdi = p0.child("user_name").value.toString()
+
                 verilerCerkez()
             }
         })
@@ -125,6 +136,7 @@ class MapsActivityCerkez : AppCompatActivity(), OnMapReadyCallback {
                                                         var lat = gelenData.musteri_zlat!!.toDouble()
                                                         var long = gelenData.musteri_zlong!!.toDouble()
                                                         val adres = LatLng(lat, long)
+                                                      //  mMap.addCircle(CircleOptions().center(adres).radius(100.0).strokeWidth(2f).strokeColor(Color.BLUE).fillColor(ContextCompat.getColor(applicationContext, R.color.transpan)))
                                                         var myMarker = mMap.addMarker(MarkerOptions().position(adres).title(gelenData.siparis_veren).snippet(gelenData.siparis_adres + " / " + gelenData.siparis_apartman))
 
                                                         myMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.order_map))
@@ -135,6 +147,7 @@ class MapsActivityCerkez : AppCompatActivity(), OnMapReadyCallback {
                                                         var lat = convertAddressLat(gelenData.siparis_mah + " mahallesi " + gelenData.siparis_adres + " Çerkezköy 59500")!!.toDouble()
                                                         var long = convertAddressLng(gelenData.siparis_mah + " mahallesi " + gelenData.siparis_adres + " Çerkezköy 59500")!!.toDouble()
                                                         val adres = LatLng(lat, long)
+                                                        mMap.addCircle(CircleOptions().center(adres).radius(100.0).strokeWidth(6f).strokeColor(Color.BLUE).fillColor(ContextCompat.getColor(applicationContext, R.color.transpan)))
                                                         var myMarker = mMap.addMarker(MarkerOptions().position(adres).title(gelenData.siparis_veren).snippet(gelenData.siparis_adres + " / " + gelenData.siparis_apartman))
 
                                                         myMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.order_map))
@@ -150,7 +163,7 @@ class MapsActivityCerkez : AppCompatActivity(), OnMapReadyCallback {
                                                             }
 
                                                             override fun onDataChange(p0: DataSnapshot) {
-                                                                if (p0.hasChildren()){
+                                                                if (p0.hasChildren()) {
                                                                     var gelenData = p0.getValue(SiparisData::class.java)!!
                                                                     view.tvSiparisVeren.text = gelenData!!.siparis_veren
                                                                     view.tvSiparisAdres.text = gelenData!!.siparis_mah + " mah. " + gelenData!!.siparis_adres + " " + gelenData!!.siparis_apartman
@@ -262,7 +275,7 @@ class MapsActivityCerkez : AppCompatActivity(), OnMapReadyCallback {
                                     }
                                     progressDialog.dismiss()
                                 } else {
-                                    handler.postDelayed(Runnable { progressDialog.dismiss() }, 2000)
+                                    hand.postDelayed(Runnable { progressDialog.dismiss() }, 2000)
                                 }
                             }
                         })
@@ -270,8 +283,6 @@ class MapsActivityCerkez : AppCompatActivity(), OnMapReadyCallback {
                 }
             }
         })
-
-
 
 
     }
