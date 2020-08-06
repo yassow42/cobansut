@@ -132,7 +132,7 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
                     var yumurtaFiyat = dialogViewSp.etYumurtaFiyat.text.toString().toDouble()
 
                     var siparisData = SiparisData(
-                        null, null, cal.timeInMillis, musteriler[position].musteri_adres, musteriler[position].musteri_apartman,
+                        1596663085901, 1596663085901, cal.timeInMillis, musteriler[position].musteri_adres, musteriler[position].musteri_apartman,
                         musteriler[position].musteri_tel, musteriler[position].musteri_ad_soyad, musteriler[position].musteri_mah, siparisNotu, siparisKey, yumurta, yumurtaFiyat, sut3lt, sut3ltFiyat,
                         sut5lt, sut5ltFiyat, 0.0, musteriler[position].musteri_zkonum, musteriler[position].promosyon_verildimi, musteriler[position].musteri_zlat,
                         musteriler[position].musteri_zlong, kullaniciAdi

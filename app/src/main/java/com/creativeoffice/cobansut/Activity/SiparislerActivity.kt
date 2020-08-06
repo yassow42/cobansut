@@ -65,21 +65,19 @@ class SiparislerActivity : AppCompatActivity() {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
         mAuth = FirebaseAuth.getInstance()
+        userID = mAuth.currentUser!!.uid
         //    mAuth.signOut()
         initMyAuthStateListener()
-        userID = mAuth.currentUser!!.uid
         setupKullaniciAdi()
         setupListeler()
         setupNavigationView()
         setupBtn()
         zamanAyarı()
+
         progressDialog = ProgressDialog(this)
         progressDialog.setMessage("Yükleniyor...")
         progressDialog.setCancelable(false)
         progressDialog.show()
-
-
-        hndler.postDelayed(Runnable { setupVeri() }, 750)
         hndler.postDelayed(Runnable { progressDialog.dismiss() }, 5000)
 
     }
@@ -358,7 +356,9 @@ class SiparislerActivity : AppCompatActivity() {
                                 //recyclerViewileriTarihli()
                             }
                         } catch (e: Exception) {
-                            ref.child("Hatalar/siparisDataHata").push().setValue(e.message.toString())
+                            ref.child("Hatalar/siparisDataHataSiparislerActivity").push().setValue(e.message.toString())
+                            ref.child("Hatalar/siparisDataHataSiparislerActivity").push().setValue(e.localizedMessage.toString())
+
                         }
                     }
                     progressDialog.dismiss()
@@ -377,6 +377,49 @@ class SiparislerActivity : AppCompatActivity() {
         })
 
 
+    }
+
+
+    private fun recyclerView(recyclerView: RecyclerView, siparisListesi: ArrayList<SiparisData>) {
+        recyclerView.layoutManager = LinearLayoutManager(this@SiparislerActivity, LinearLayoutManager.VERTICAL, false)
+        val Adapter = SiparisAdapter(this@SiparislerActivity, siparisListesi, kullaniciAdi)
+        recyclerView.adapter = Adapter
+        recyclerView.setHasFixedSize(true)
+    }
+
+
+    private fun setupNavigationView() {
+
+        BottomNavigationViewHelper.setupBottomNavigationView(bottomNav)
+        BottomNavigationViewHelper.setupNavigation(this, bottomNav) // Bottomnavhelper içinde setupNavigationda context ve nav istiyordu verdik...
+        var menu = bottomNav.menu
+        var menuItem = menu.getItem(ACTIVITY_NO)
+        menuItem.setChecked(true)
+    }
+
+    private fun setupKullaniciAdi() {
+        FirebaseDatabase.getInstance().reference.child("users").child(userID).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                kullaniciAdi = p0.child("user_name").value.toString()
+                setupVeri()
+            }
+
+        })
+    }
+
+    private fun initMyAuthStateListener() {
+        mAuthListener = object : FirebaseAuth.AuthStateListener {
+            override fun onAuthStateChanged(p0: FirebaseAuth) {
+                val kullaniciGirisi = p0.currentUser
+                if (kullaniciGirisi != null) { //eğer kişi giriş yaptıysa nul gorunmez. giriş yapmadıysa null olur
+                } else {
+                    startActivity(Intent(this@SiparislerActivity, LoginActivity::class.java))
+                }
+            }
+        }
     }
 
     private fun setupBtn() {
@@ -769,48 +812,5 @@ class SiparislerActivity : AppCompatActivity() {
         ilerilist = ArrayList()
 
     }
-
-
-    fun recyclerView(recyclerView: RecyclerView, siparisListesi: ArrayList<SiparisData>) {
-        recyclerView.layoutManager = LinearLayoutManager(this@SiparislerActivity, LinearLayoutManager.VERTICAL, false)
-        val Adapter = SiparisAdapter(this@SiparislerActivity, siparisListesi, kullaniciAdi)
-        recyclerView.adapter = Adapter
-        recyclerView.setHasFixedSize(true)
-    }
-
-
-    fun setupNavigationView() {
-
-        BottomNavigationViewHelper.setupBottomNavigationView(bottomNav)
-        BottomNavigationViewHelper.setupNavigation(this, bottomNav) // Bottomnavhelper içinde setupNavigationda context ve nav istiyordu verdik...
-        var menu = bottomNav.menu
-        var menuItem = menu.getItem(ACTIVITY_NO)
-        menuItem.setChecked(true)
-    }
-
-    fun setupKullaniciAdi() {
-        FirebaseDatabase.getInstance().reference.child("users").child(userID).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                kullaniciAdi = p0.child("user_name").value.toString()
-            }
-
-        })
-    }
-
-    private fun initMyAuthStateListener() {
-        mAuthListener = object : FirebaseAuth.AuthStateListener {
-            override fun onAuthStateChanged(p0: FirebaseAuth) {
-                val kullaniciGirisi = p0.currentUser
-                if (kullaniciGirisi != null) { //eğer kişi giriş yaptıysa nul gorunmez. giriş yapmadıysa null olur
-                } else {
-                    startActivity(Intent(this@SiparislerActivity, LoginActivity::class.java))
-                }
-            }
-        }
-    }
-
 
 }

@@ -393,7 +393,7 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
                 tv5ltFiyat.text = siparisData.sut5lt_fiyat.toString()
                 tvYumurtaFiyat.text = siparisData.yumurta_fiyat.toString()
                 var toplamFiyat = (sut3ltAdet * sut3ltFiyat!!) + (sut5ltAdet * sut5ltFiyat!!) + (yumurtaAdet * yumurtaFiyat!!)
-                ref.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisData.siparis_key.toString()).child("toplam_fiyat").setValue(toplamFiyat)
+                refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisData.siparis_key.toString()).child("toplam_fiyat").setValue(toplamFiyat)
                 tvFiyat.text = ((sut3ltAdet * sut3ltFiyat!!) + (sut5ltAdet * sut5ltFiyat!!) + (yumurtaAdet * yumurtaFiyat!!)).toString() + " tl"
             } catch (e: IOException) {
                 Toast.makeText(myContext, "Bazı fiyatlar hatalı", Toast.LENGTH_LONG).show()

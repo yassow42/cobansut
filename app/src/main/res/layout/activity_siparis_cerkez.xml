@@ -63,14 +63,51 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
+            android:id="@+id/tv3litre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3lt: 0"
+            android:textColor="@color/beyaz"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tv5litre"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv5litre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5lt: 0"
+            android:textColor="@color/beyaz"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tvYumurta"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tv3litre"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvYumurta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Yumurta: 0"
+            android:textColor="@color/beyaz"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tvFiyatGenel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tv5litre"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
             android:id="@+id/tvFiyatGenel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0 tl"
+            android:text="00 tl"
             android:textColor="@color/beyaz"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tvYumurta"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

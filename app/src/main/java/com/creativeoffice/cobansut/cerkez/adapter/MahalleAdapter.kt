@@ -22,7 +22,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MahalleAdapter(val myContext: Context, val mahalleler: ArrayList<String>,val kullaniciAdi:String) : RecyclerView.Adapter<MahalleAdapter.SiparisHolder>() {
+class MahalleAdapter(val myContext: Context, val mahalleler: ArrayList<String>, val kullaniciAdi: String) : RecyclerView.Adapter<MahalleAdapter.SiparisHolder>() {
     var ref = FirebaseDatabase.getInstance().reference.child("Cerkez")
 
     override fun onCreateViewHolder(
@@ -68,38 +68,63 @@ class MahalleAdapter(val myContext: Context, val mahalleler: ArrayList<String>,v
         val recycler = itemView.rcitemMahalle
         val switch = itemView.switchRc
 
+        val tv3lt = itemView.tv3lt
+        val tv5lt = itemView.tv5lt
+        val tvYumurta = itemView.tvYumurta
+        val tvToplam = itemView.tvToplam
+
         fun setRc(mahalleler: String) {
-           ref.child("Siparisler").child(mahalleler)
-                .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onCancelled(p0: DatabaseError) {
+            ref.child("Siparisler").child(mahalleler).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
 
-                    }
+                }
 
-                    override fun onDataChange(p0: DataSnapshot) {
-                        var siparisList = ArrayList<SiparisData>()
-                        if (p0.hasChildren()) {
-                            for (ds in p0.children) {
-                                try {
-                                    var gelenData = ds.getValue(SiparisData::class.java)!!
-                                        siparisList.add(gelenData)
+                override fun onDataChange(p0: DataSnapshot) {
+                    var siparisList = ArrayList<SiparisData>()
+                    if (p0.hasChildren()) {
+                        for (ds in p0.children) {
+                            try {
+                                var gelenData = ds.getValue(SiparisData::class.java)!!
+                                siparisList.add(gelenData)
 
 
-                                }catch (e:Exception){
-                                    FirebaseDatabase.getInstance().reference.child("Hatalar/MahalleAdapterCerkez").push().setValue(e.message.toString())
-                                }
-
+                            } catch (e: Exception) {
+                                FirebaseDatabase.getInstance().reference.child("Hatalar/MahalleAdapterCerkez").push().setValue(e.message.toString())
                             }
-                            recycler.layoutManager = LinearLayoutManager(myContext, LinearLayoutManager.VERTICAL, false)
-                            val adapter = MahalleSiparisleriAdapter(myContext, siparisList,kullaniciAdi)
-                            recycler.adapter = adapter
-                            siparisSayisi.setText("(" + siparisList.size + ")")
+
+                        }
+                        recycler.layoutManager = LinearLayoutManager(myContext, LinearLayoutManager.VERTICAL, false)
+                        val adapter = MahalleSiparisleriAdapter(myContext, siparisList, kullaniciAdi)
+                        recycler.adapter = adapter
+                        siparisSayisi.setText("(" + siparisList.size + ")")
+
+                        var sut3ltSayisi = 0
+                        var sut5ltSayisi = 0
+                        var yumurtaSayisi = 0
+                        var toplamFiyatlar = 0.0
+                        if (siparisList.size > 0) {
+                            for (ds in siparisList) {
+                                if (ds.sut3lt != null && ds.sut5lt != null && ds.yumurta != null) {
+                                    sut3ltSayisi = ds.sut3lt!!.toInt() + sut3ltSayisi
+                                    sut5ltSayisi = ds.sut5lt!!.toInt() + sut5ltSayisi
+                                    yumurtaSayisi = ds.yumurta!!.toInt() + yumurtaSayisi
+                                    toplamFiyatlar = ds.toplam_fiyat!!.toDouble() + toplamFiyatlar
+
+                                    tv3lt.setText("3lt: " +sut3ltSayisi.toString())
+                                    tv5lt.setText("5lt: " +sut5ltSayisi.toString())
+                                    tvYumurta.setText("Yum: " +yumurtaSayisi.toString())
+                                    tvToplam.setText("Toplam: " +toplamFiyatlar.toString())
+                                }
+                            }
                         }
 
-
                     }
 
 
-                })
+                }
+
+
+            })
 
         }
 

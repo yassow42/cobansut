@@ -30,12 +30,12 @@ class SiparisActivityCerkez : AppCompatActivity() {
     lateinit var mAuth: FirebaseAuth
     lateinit var userID: String
     lateinit var mAuthListener: FirebaseAuth.AuthStateListener
-    var kullaniciAdi: String?=null
+    var kullaniciAdi: String? = null
     private val ACTIVITY_NO = 0
 
     // lateinit var progressDialog: ProgressDialog
     var hndler = Handler()
-    var ref = FirebaseDatabase.getInstance().reference.child("Cerkez")
+    var refCerkez = FirebaseDatabase.getInstance().reference.child("Cerkez")
 
 
     var loading: Dialog? = null
@@ -56,8 +56,6 @@ class SiparisActivityCerkez : AppCompatActivity() {
 
         zamanAyarı()
 
-        hndler.postDelayed(Runnable { setupKullaniciAdi() }, 750)
-
 
     }
 
@@ -70,36 +68,80 @@ class SiparisActivityCerkez : AppCompatActivity() {
     }
 
     private fun veri() {
-/*
-        ref.child("Siparisler").child("2mahalle").push().setValue(
-            SiparisData(
-                1595721600000, 1595721600000, 1595721600000, "adr2es", "apart2man", "te2l"
-                , "veren2", "mahall2e", "no2tu", "ke2yy", "21", 1.0, "22", 2.0, "23", 3.0, 25.0, false, false,
-                null, null, "Ben2immm"
-            )
-        )
 
-        ref.child("Musteriler").push().setValue(MusteriData("yassow","mah","adres","apartman","tel",
-            1595721600000,false,false,null,null))
-*/
+        val mahalleList = ArrayList<String>()
+        val siparislerKeyList = mutableSetOf<String>()
+        var sut3ltSayisi = 0
+        var sut5ltSayisi = 0
+        var yumurtaSayisi = 0
+        var toplamFiyatlar = 0.0
 
-        imgSighOut.setOnClickListener {
-            mAuth.signOut()
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-        }
-
-        ref.child("Siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
+        refCerkez.child("Siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
             override fun onDataChange(p0: DataSnapshot) {
 
                 if (p0.hasChildren()) {
-                    val mahalleList = ArrayList<String>()
                     for (ds in p0.children) {
                         try {
                             mahalleList.add(ds.key.toString())
+                        /*  if (mahalleList.size > 0) {
+                                for (i in mahalleList) {
+                                    refCerkez.child("Siparisler").child(i.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
+                                        override fun onCancelled(p0: DatabaseError) {
+
+                                        }
+
+                                        override fun onDataChange(p0: DataSnapshot) {
+                                            if (p0.hasChildren()) {
+                                                for (childMahalle in p0.children) {
+                                                    // var gelenData = ds.getValue(SiparisData::class.java)!!
+                                                    siparislerKeyList.add(childMahalle.key.toString())
+                                                    Log.e("sad", siparislerKeyList.toString())
+
+                                                    if (siparislerKeyList.size > 0) {
+                                                        for (keyler in siparislerKeyList) {
+                                                            refCerkez.child("Siparisler").child(i.toString()).child(keyler.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
+                                                                override fun onCancelled(p0: DatabaseError) {
+
+                                                                }
+
+                                                                override fun onDataChange(p0: DataSnapshot) {
+                                                                    if (p0.hasChildren()) {
+                                                                        for (childKey in p0.children) {
+                                                                            var gelenData = childKey.getValue(SiparisData::class.java)!!
+                                                                            if (gelenData.sut3lt != null && gelenData.sut5lt != null && gelenData.yumurta != null) {
+                                                                                sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
+                                                                                sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
+                                                                                yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
+                                                                                //    toplamFiyatlar = gelenData.toplam_fiyat!!.toDouble() + toplamFiyatlar
+                                                                                Log.e(
+                                                                                    "sad",
+                                                                                    "3 lt: " + sut3ltSayisi.toString() + "  " +
+                                                                                            "5 lt: " + sut5ltSayisi.toString() + "  " +
+                                                                                            "Yumurta: " + yumurtaSayisi.toString() + "  " +
+                                                                                            "toplam: " + toplamFiyatlar
+                                                                                )
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                            })
+
+                                                        }
+                                                    })
+
+                                                }
+
+
+                                            }
+                                        }
+                                    })
+                                }
+                            }*/
+
                         } catch (e: Exception) {
-                            Log.e("hata", "siparişler activity ${e.message.toString()}")
+                            Log.e("hata", "siparişler activityCerkez ${e.message.toString()}")
                         }
 
                     }
@@ -107,9 +149,21 @@ class SiparisActivityCerkez : AppCompatActivity() {
                     val adapter = MahalleAdapter(this@SiparisActivityCerkez, mahalleList, kullaniciAdi.toString())
                     rcMahalleler.layoutManager = LinearLayoutManager(this@SiparisActivityCerkez, LinearLayoutManager.VERTICAL, false)
                     rcMahalleler.adapter = adapter
+                    adapter.notifyDataSetChanged()
                 }
             }
         })
+
+
+
+
+
+        imgSighOut.setOnClickListener {
+            mAuth.signOut()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
     }
 
@@ -125,8 +179,8 @@ class SiparisActivityCerkez : AppCompatActivity() {
 
                 if (gece3 < suankıZaman) {
                     var guncelGece3 = gece3 + 86400000
-                    ref.child("Zaman").child("gece3").setValue(guncelGece3).addOnCompleteListener {
-                        ref.child("Zaman").child("gerigece3").setValue(gece3)
+                    FirebaseDatabase.getInstance().reference.child("Zaman").child("gece3").setValue(guncelGece3).addOnCompleteListener {
+                        FirebaseDatabase.getInstance().reference.child("Zaman").child("gerigece3").setValue(gece3)
                     }
 
                 }
@@ -141,7 +195,6 @@ class SiparisActivityCerkez : AppCompatActivity() {
 
             override fun onDataChange(p0: DataSnapshot) {
                 kullaniciAdi = p0.child("user_name").value.toString()
-
                 veri()
             }
 
@@ -153,7 +206,7 @@ class SiparisActivityCerkez : AppCompatActivity() {
             override fun onAuthStateChanged(p0: FirebaseAuth) {
                 val kullaniciGirisi = p0.currentUser
                 if (kullaniciGirisi != null) { //eğer kişi giriş yaptıysa nul gorunmez. giriş yapmadıysa null olur
-                    ref.child("Girişler").push().setValue(kullaniciGirisi!!.uid)
+                    FirebaseDatabase.getInstance().reference.child("Girişler").push().setValue(kullaniciGirisi!!.uid)
                 } else {
                     startActivity(Intent(this@SiparisActivityCerkez, LoginActivity::class.java))
                 }

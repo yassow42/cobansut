@@ -30,15 +30,12 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class SiparisCorluAdapter(val myContext: Context, val siparisler: ArrayList<SiparisData>, val kullaniciAdi: String) : RecyclerView.Adapter<SiparisCorluAdapter.SiparisHolder>() {
-    lateinit var mAuth: FirebaseAuth
-    lateinit var userID: String
+    var mAuth: FirebaseAuth
+    var userID: String
     lateinit var saticiYetki: String
     val refCorlu = FirebaseDatabase.getInstance().reference.child("Corlu")
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): SiparisCorluAdapter.SiparisHolder {
-        val view = LayoutInflater.from(myContext).inflate(R.layout.item_siparisler, parent, false)
+
+    init {
         mAuth = FirebaseAuth.getInstance()
         userID = mAuth.currentUser!!.uid
         //Log.e("sad",userID)
@@ -51,6 +48,14 @@ class SiparisCorluAdapter(val myContext: Context, val siparisler: ArrayList<Sipa
             }
 
         })
+    }
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): SiparisCorluAdapter.SiparisHolder {
+        val view = LayoutInflater.from(myContext).inflate(R.layout.item_siparisler, parent, false)
+
 
         return SiparisHolder(view)
     }
@@ -215,7 +220,6 @@ class SiparisCorluAdapter(val myContext: Context, val siparisler: ArrayList<Sipa
 
                         dialog.show()
                     }
-
                     R.id.popSil -> {
 
                         if (saticiYetki == "Yönetici") {
@@ -310,7 +314,6 @@ class SiparisCorluAdapter(val myContext: Context, val siparisler: ArrayList<Sipa
 
             if (siparisData.promosyon_verildimi != null) {
                 var boolean = siparisData.promosyon_verildimi
-
                 swSiparisPromosyon.isChecked = boolean.toString().toBoolean()
             }
 
