@@ -437,7 +437,7 @@ class MusterilerActivity : AppCompatActivity() {
                 progressDialog.setCancelable(false)
                 progressDialog.show()
 
-                hndler.postDelayed({ setupVeri() }, 500)
+                setupVeri()
                 hndler.postDelayed({ progressDialog.dismiss() }, 5000)
 
             }

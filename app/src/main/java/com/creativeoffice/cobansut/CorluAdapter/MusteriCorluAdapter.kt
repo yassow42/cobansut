@@ -134,11 +134,12 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
                     var siparisData = SiparisData(
                         1596663085901, 1596663085901, cal.timeInMillis, musteriler[position].musteri_adres, musteriler[position].musteri_apartman,
                         musteriler[position].musteri_tel, musteriler[position].musteri_ad_soyad, musteriler[position].musteri_mah, siparisNotu, siparisKey, yumurta, yumurtaFiyat, sut3lt, sut3ltFiyat,
-                        sut5lt, sut5ltFiyat, 0.0, musteriler[position].musteri_zkonum, musteriler[position].promosyon_verildimi, musteriler[position].musteri_zlat,
+                        sut5lt, sut5ltFiyat, 0000.0, musteriler[position].musteri_zkonum, musteriler[position].promosyon_verildimi, musteriler[position].musteri_zlat,
                         musteriler[position].musteri_zlong, kullaniciAdi
                     )
 
                     refCorlu.child("Siparisler").child(siparisKey).setValue(siparisData)
+                    refCorlu.child("Siparisler").child(siparisKey).child("toplam_fiyat").setValue(0.0)
                     refCorlu.child("Siparisler").child(siparisKey).child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
                     refCorlu.child("Siparisler").child(siparisKey).child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
                     refCorlu.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey).setValue(siparisData)

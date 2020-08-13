@@ -208,6 +208,7 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
                                     ref.child("Siparisler").child(siparisKey).child("yumurta_fiyat").setValue(yumurtaFiyat)
                                     ref.child("Siparisler").child(siparisKey).child("siparis_notu").setValue(not)
                                     ref.child("Siparisler").child(siparisKey).child("siparis_teslim_tarihi").setValue(cal.timeInMillis)
+                                    ref.child("Siparisler").child(siparisKey).child("toplam_fiyat").setValue(0.0)
 
                                     ref.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("sut3lt").setValue(sut3lt)
                                     ref.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("sut5lt").setValue(sut5lt)
