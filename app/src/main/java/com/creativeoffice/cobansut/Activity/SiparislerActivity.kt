@@ -209,7 +209,6 @@ class SiparislerActivity : AppCompatActivity() {
                                     }
                                     recyclerView(rcDere, derelist)
                                 }
-
                                 if (gelenData.siparis_mah == "Durak") {
                                     duraklist.add(gelenData)
                                     tvDurakSayi.text = duraklist.size.toString() + " Sipariş"
@@ -226,7 +225,6 @@ class SiparislerActivity : AppCompatActivity() {
                                     }
                                     recyclerView(rcFatih, fatihlist)
                                 }
-
                                 if (gelenData.siparis_mah == "Gündoğu") {
                                     gunlist.add(gelenData)
                                     tvGunSayi.text = gunlist.size.toString() + " Sipariş"
@@ -235,8 +233,6 @@ class SiparislerActivity : AppCompatActivity() {
                                     }
                                     recyclerView(rcGun, gunlist)
                                 }
-
-
                                 if (gelenData.siparis_mah == "Güneş") {
                                     guneslist.add(gelenData)
                                     tvGunesSayi.text = guneslist.size.toString() + " Sipariş"
@@ -245,8 +241,6 @@ class SiparislerActivity : AppCompatActivity() {
                                     }
                                     recyclerView(rcGunes, guneslist)
                                 }
-
-
                                 if (gelenData.siparis_mah == "Hürriyet") {
                                     hurriyetlist.add(gelenData)
                                     tvHurriyetSayi.text = hurriyetlist.size.toString() + " Sipariş"
@@ -356,8 +350,8 @@ class SiparislerActivity : AppCompatActivity() {
                                 //recyclerViewileriTarihli()
                             }
                         } catch (e: Exception) {
-                            ref.child("Hatalar/siparisDataHataSiparislerActivity").push().setValue(e.message.toString())
-                            ref.child("Hatalar/siparisDataHataSiparislerActivity").push().setValue(e.localizedMessage.toString())
+                            ref.child("Hatalar/siparisDataBurgazHataSiparislerActivity").push().setValue(e.message.toString())
+                            ref.child("Hatalar/siparisDataBurgazHataSiparislerActivity").push().setValue(e.localizedMessage.toString())
 
                         }
                     }

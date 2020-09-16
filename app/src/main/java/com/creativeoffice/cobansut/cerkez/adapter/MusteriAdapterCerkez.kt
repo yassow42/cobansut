@@ -71,6 +71,7 @@ class MusteriAdapterCerkez(val myContext: Context, val musteriler: ArrayList<Mus
                 var builder: AlertDialog.Builder = AlertDialog.Builder(this.myContext)
                 dialogViewSp = inflate(myContext, R.layout.dialog_siparis_ekle, null)
 
+                dialogViewSp.et5ltFiyat.setText("24.0")
 
                 dialogViewSp.tvZamanEkleDialog.text = SimpleDateFormat("HH:mm dd.MM.yyyy").format(System.currentTimeMillis())
                 var cal = Calendar.getInstance()
@@ -344,7 +345,9 @@ class MusteriAdapterCerkez(val myContext: Context, val musteriler: ArrayList<Mus
         fun setData(musteriData: MusteriData) {
             musteriAdiGnl = musteriData.musteri_ad_soyad.toString()
             musteriAdi.text = musteriData.musteri_ad_soyad
-            sonSiparisZamani.text = TimeAgo.getTimeAgo(musteriData.siparis_son_zaman!!).toString()
+            musteriData.siparis_son_zaman?.let {
+                sonSiparisZamani.text = TimeAgo.getTimeAgo(it!!).toString()
+            }
         }
 
 

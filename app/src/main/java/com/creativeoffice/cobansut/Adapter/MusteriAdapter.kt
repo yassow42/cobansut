@@ -88,6 +88,10 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                     cal.set(Calendar.HOUR_OF_DAY, hourOfDay)
                     cal.set(Calendar.MINUTE, minute)
                 }
+                dialogViewSp.tvZamanEkleDialog.setOnClickListener {
+                    DatePickerDialog(myContext, dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
+                    TimePickerDialog(myContext, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
+                }
 
                 dialogViewSp.swPromosyon.setOnClickListener {
 
@@ -101,10 +105,7 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
 
                 dialogViewSp.swPromosyon.isChecked = musteriler[position].promosyon_verildimi.toString().toBoolean()
 
-                dialogViewSp.tvZamanEkleDialog.setOnClickListener {
-                    DatePickerDialog(myContext, dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
-                    TimePickerDialog(myContext, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
-                }
+
 
 
 

@@ -41,7 +41,6 @@ import java.io.IOException
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
-    private lateinit var bottomSheetDialog: BottomSheetDialog
     lateinit var progressDialog: ProgressDialog
     private val ACTIVITY_NO = 1
 

@@ -205,6 +205,7 @@ class SiparisCorluAdapter(val myContext: Context, val siparisler: ArrayList<Sipa
                                 refCorlu.child("Siparisler").child(siparisKey).child("yumurta").setValue(yumurta)
                                 refCorlu.child("Siparisler").child(siparisKey).child("yumurta_fiyat").setValue(yumurtaFiyat)
                                 refCorlu.child("Siparisler").child(siparisKey).child("siparis_notu").setValue(not)
+                                refCorlu.child("Siparisler").child(siparisKey).child("toplam_fiyat").setValue(0.0)
                                 refCorlu.child("Siparisler").child(siparisKey).child("siparis_teslim_tarihi").setValue(cal.timeInMillis)
 
                                 refCorlu.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("sut3lt").setValue(sut3lt)

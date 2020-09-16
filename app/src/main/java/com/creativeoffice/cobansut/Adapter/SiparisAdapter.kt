@@ -208,6 +208,7 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
                                     ref.child("Siparisler").child(siparisKey).child("yumurta_fiyat").setValue(yumurtaFiyat)
                                     ref.child("Siparisler").child(siparisKey).child("siparis_notu").setValue(not)
                                     ref.child("Siparisler").child(siparisKey).child("siparis_teslim_tarihi").setValue(cal.timeInMillis)
+                                    ref.child("Siparisler").child(siparisKey).child("toplam_fiyat").setValue(0.0)
 
                                     ref.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("sut3lt").setValue(sut3lt)
                                     ref.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("sut5lt").setValue(sut5lt)
@@ -384,16 +385,16 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
             }
 
 
-            try {
+            var toplamFiyat = (sut3ltAdet * sut3ltFiyat!!) + (sut5ltAdet * sut5ltFiyat!!) + (yumurtaAdet * yumurtaFiyat!!)
+            //   FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisData.siparis_key.toString()).child("toplam_fiyat").setValue(toplamFiyat)
+            if (sut3ltAdet.toString() != "null" && sut5ltAdet.toString() != "null" && yumurtaAdet.toString() != "null" && sut3ltFiyat.toString() != "null" && sut5ltFiyat.toString() != "null" && yumurtaFiyat.toString() != "null") {
+                tvFiyat.text = ((sut3ltAdet * sut3ltFiyat!!) + (sut5ltAdet * sut5ltFiyat!!) + (yumurtaAdet * yumurtaFiyat!!)).toString() + " tl"
                 tv3ltFiyat.text = siparisData.sut3lt_fiyat.toString()
                 tv5ltFiyat.text = siparisData.sut5lt_fiyat.toString()
                 tvYumurtaFiyat.text = siparisData.yumurta_fiyat.toString()
-                var toplamFiyat = (sut3ltAdet * sut3ltFiyat!!) + (sut5ltAdet * sut5ltFiyat!!) + (yumurtaAdet * yumurtaFiyat!!)
-                FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisData.siparis_key.toString()).child("toplam_fiyat").setValue(toplamFiyat)
-                tvFiyat.text = ((sut3ltAdet * sut3ltFiyat!!) + (sut5ltAdet * sut5ltFiyat!!) + (yumurtaAdet * yumurtaFiyat!!)).toString() + " tl"
-            } catch (e: IOException) {
-                Toast.makeText(myContext, "Bazı fiyatlar hatalı", Toast.LENGTH_LONG).show()
             }
+
+
 
 
 

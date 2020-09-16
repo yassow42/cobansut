@@ -23,6 +23,7 @@ class BolgeSecimActivity : AppCompatActivity() {
     lateinit var progressDialog: ProgressDialog
 
     lateinit var mAuth: FirebaseAuth
+
     lateinit var mAuthListener: FirebaseAuth.AuthStateListener
 
 
@@ -30,16 +31,14 @@ class BolgeSecimActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bolge_secim)
         konumIzni()
-        progressDialog = ProgressDialog(this)
-        progressDialog.setMessage(" Bölgeler Yükleniyor... Lütfen bekleyin...")
-        progressDialog.setCancelable(false)
-        progressDialog.show()
-        handler.postDelayed(Runnable { progressDialog.dismiss() }, 350)
-
         mAuth = FirebaseAuth.getInstance()
         //    mAuth.signOut()
-        initMyAuthStateListener()
 
+        var user = mAuth.currentUser
+        if (user == null) {
+            startActivity(Intent(this@BolgeSecimActivity, LoginActivity::class.java))
+        }
+        initMyAuthStateListener()
         setupButon()
 
     }
