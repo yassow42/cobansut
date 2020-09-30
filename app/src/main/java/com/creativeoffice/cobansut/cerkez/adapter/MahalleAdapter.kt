@@ -22,8 +22,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MahalleAdapter(val myContext: Context, val mahalleler: ArrayList<String>, val kullaniciAdi: String) : RecyclerView.Adapter<MahalleAdapter.SiparisHolder>() {
-    var ref = FirebaseDatabase.getInstance().reference.child("Cerkez")
+class MahalleAdapter(val myContext: Context, val mahalleler: ArrayList<String>, val kullaniciAdi: String, var bolge: String) : RecyclerView.Adapter<MahalleAdapter.SiparisHolder>() {
+    var ref = FirebaseDatabase.getInstance().reference.child(bolge)
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -89,12 +89,12 @@ class MahalleAdapter(val myContext: Context, val mahalleler: ArrayList<String>, 
 
 
                             } catch (e: Exception) {
-                                FirebaseDatabase.getInstance().reference.child("Hatalar/MahalleAdapterCerkez").push().setValue(e.message.toString())
+                               // FirebaseDatabase.getInstance().reference.child("Hatalar/MahalleAdapterCerkez").push().setValue(e.message.toString())
                             }
 
                         }
                         recycler.layoutManager = LinearLayoutManager(myContext, LinearLayoutManager.VERTICAL, false)
-                        val adapter = MahalleSiparisleriAdapter(myContext, siparisList, kullaniciAdi)
+                        val adapter = MahalleSiparisleriAdapter(myContext, siparisList, kullaniciAdi,bolge)
                         recycler.adapter = adapter
                         siparisSayisi.setText("(" + siparisList.size + ")")
 
@@ -110,10 +110,10 @@ class MahalleAdapter(val myContext: Context, val mahalleler: ArrayList<String>, 
                                     yumurtaSayisi = ds.yumurta!!.toInt() + yumurtaSayisi
                                     toplamFiyatlar = ds.toplam_fiyat!!.toDouble() + toplamFiyatlar
 
-                                    tv3lt.setText("3lt: " +sut3ltSayisi.toString())
-                                    tv5lt.setText("5lt: " +sut5ltSayisi.toString())
-                                    tvYumurta.setText("Yum: " +yumurtaSayisi.toString())
-                                    tvToplam.setText("Toplam: " +toplamFiyatlar.toString())
+                                    tv3lt.setText("3lt: " + sut3ltSayisi.toString())
+                                    tv5lt.setText("5lt: " + sut5ltSayisi.toString())
+                                    tvYumurta.setText("Yum: " + yumurtaSayisi.toString())
+                                    tvToplam.setText("Toplam: " + toplamFiyatlar.toString())
                                 }
                             }
                         }

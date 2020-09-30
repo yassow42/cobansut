@@ -1,6 +1,5 @@
 package com.creativeoffice.cobansut.CorluAdapter
 
-import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
@@ -9,10 +8,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.location.Location
 import android.location.LocationListener
-import android.location.LocationManager
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -109,18 +105,17 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
             builder.setPositiveButton("Sipariş Ekle", object : DialogInterface.OnClickListener {
                 override fun onClick(dialog: DialogInterface?, which: Int) {
 
-                    var sut3lt = "0"
+                    var sut3ltAdet = "0"
                     if (dialogViewSp.et3lt.text.toString().isNotEmpty()) {
-                        sut3lt = dialogViewSp.et3lt.text.toString()
+                        sut3ltAdet = dialogViewSp.et3lt.text.toString()
                     }
-                    var sut5lt = "0"
-
+                    var sut5ltAdet = "0"
                     if (dialogViewSp.et5lt.text.toString().isNotEmpty()) {
-                        sut5lt = dialogViewSp.et5lt.text.toString()
+                        sut5ltAdet = dialogViewSp.et5lt.text.toString()
                     }
-                    var yumurta = "0"
+                    var yumurtaAdet = "0"
                     if (dialogViewSp.etYumurta.text.toString().isNotEmpty()) {
-                        yumurta = dialogViewSp.etYumurta.text.toString()
+                        yumurtaAdet = dialogViewSp.etYumurta.text.toString()
                     }
 
                     var siparisNotu = dialogViewSp.etSiparisNotu.text.toString()
@@ -131,17 +126,18 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
                     var sut5ltFiyat = dialogViewSp.et5ltFiyat.text.toString().toDouble()
                     var yumurtaFiyat = dialogViewSp.etYumurtaFiyat.text.toString().toDouble()
 
+                    var toplamFiyat = (sut3ltAdet.toDouble() * sut3ltFiyat!!) + (sut5ltAdet.toDouble() * sut5ltFiyat!!) + (yumurtaAdet.toDouble() * yumurtaFiyat!!)
+
                     var siparisData = SiparisData(
-                        1596663085901, 1596663085901, cal.timeInMillis, musteriler[position].musteri_adres, musteriler[position].musteri_apartman,
-                        musteriler[position].musteri_tel, musteriler[position].musteri_ad_soyad, musteriler[position].musteri_mah, siparisNotu, siparisKey, yumurta, yumurtaFiyat, sut3lt, sut3ltFiyat,
-                        sut5lt, sut5ltFiyat, 0000.0, musteriler[position].musteri_zkonum, musteriler[position].promosyon_verildimi, musteriler[position].musteri_zlat,
+                        System.currentTimeMillis(), System.currentTimeMillis(), cal.timeInMillis, musteriler[position].musteri_adres, musteriler[position].musteri_apartman,
+                        musteriler[position].musteri_tel, musteriler[position].musteri_ad_soyad, musteriler[position].musteri_mah, siparisNotu, siparisKey, yumurtaAdet, yumurtaFiyat, sut3ltAdet, sut3ltFiyat,
+                        sut5ltAdet, sut5ltFiyat, toplamFiyat, musteriler[position].musteri_zkonum, musteriler[position].promosyon_verildimi, musteriler[position].musteri_zlat,
                         musteriler[position].musteri_zlong, kullaniciAdi
                     )
-
-                    refCorlu.child("Siparisler").child(siparisKey).setValue(siparisData)
-                    refCorlu.child("Siparisler").child(siparisKey).child("toplam_fiyat").setValue(0.0)
-                    refCorlu.child("Siparisler").child(siparisKey).child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
-                    refCorlu.child("Siparisler").child(siparisKey).child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
+                    refCorlu.child("Siparisler").child(musteriler[position].musteri_mah.toString()).child(siparisKey).child("toplam_fiyat").setValue(0.0)
+                    refCorlu.child("Siparisler").child(musteriler[position].musteri_mah.toString()).child(siparisKey).setValue(siparisData)
+                  //  refCorlu.child("Siparisler").child(siparisKey).child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
+                 //   refCorlu.child("Siparisler").child(siparisKey).child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
                     refCorlu.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey).setValue(siparisData)
                     refCorlu.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey).child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
                     refCorlu.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey).child("siparis_zamani").setValue(ServerValue.TIMESTAMP)

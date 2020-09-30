@@ -27,6 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,8 +38,9 @@
             android:id="@+id/tvSiparisAdres"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
             android:text="Adres"
             android:textColor="@color/beyaz"
             android:textSize="15sp"
@@ -57,6 +59,7 @@
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/tv5litre"
             app:layout_constraintTop_toTopOf="@+id/tv5litre" />
+
         <TextView
             android:id="@+id/tv5ltFiyat"
             android:layout_width="wrap_content"
@@ -125,18 +128,21 @@
             android:id="@+id/tvSiparisTel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
             android:text="Numara"
             android:textColor="@color/beyaz"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tvSiparisVeren" />
 
         <View
             android:id="@+id/view"
             android:layout_width="0dp"
             android:layout_height="2dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:background="#000"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -147,7 +153,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:text="3 Litre Süt:"
             android:textColor="@color/beyaz"
             android:textSize="12sp"
@@ -227,7 +233,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/btnTeslim"
-        app:layout_constraintEnd_toStartOf="@+id/btnTeslim"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/btnTeslim" />
 
@@ -235,8 +241,8 @@
         android:id="@+id/swMapPro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/btnTeslim"
-        app:layout_constraintEnd_toStartOf="@+id/tvSiparisVeren"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/btnTeslim" />
 

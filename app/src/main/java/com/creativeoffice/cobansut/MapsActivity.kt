@@ -2,14 +2,14 @@ package com.creativeoffice.cobansut
 
 import android.Manifest
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.location.Address
-import android.location.Geocoder
+import android.location.*
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -19,6 +19,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.location.LocationManagerCompat.isLocationEnabled
 import com.creativeoffice.cobansut.Activity.SiparislerActivity
 import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.utils.BottomNavigationViewHelper
@@ -26,10 +28,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.CircleOptions
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -52,6 +51,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     var konum: Boolean = false
     val hndler = Handler()
     val ref = FirebaseDatabase.getInstance().reference
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +79,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val burgaz = LatLng(41.400897, 27.356983)
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(burgaz, 13.7f))
 
-        if (ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+          //  aracTakip()
             setupKullaniciAdi()
             swKonum.setOnClickListener {
                 val sharedPreferences = getPreferences(Context.MODE_PRIVATE)
@@ -96,22 +97,61 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     Toast.makeText(this, "Konum kapalı", Toast.LENGTH_SHORT).show()
                 }
             }
-
-
             val sharedPreferences = getPreferences(Context.MODE_PRIVATE)
             val editor = sharedPreferences.edit()
             konum = sharedPreferences.getBoolean("Konum", false)
             swKonum.isChecked = konum
             mMap.isMyLocationEnabled = konum
 
-        }else{
-            Toast.makeText(this,"İzinleri Kontrol et.",Toast.LENGTH_LONG).show()
-            ActivityCompat.requestPermissions(this,arrayOf(ACCESS_FINE_LOCATION),1)
+        } else {
+            Toast.makeText(this, "İzinleri Kontrol et.", Toast.LENGTH_LONG).show()
+            ActivityCompat.requestPermissions(this, arrayOf(ACCESS_FINE_LOCATION), 1)
         }
 
 
     }
 
+
+    fun aracTakip() {
+
+        var locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 1f, myLocationListener)
+
+
+    }
+
+
+    val myLocationListener = object : LocationListener {
+        override fun onLocationChanged(location: Location?) {
+            mMap.clear()
+            var lat = location!!.latitude
+            var long = location!!.longitude
+
+
+            ref.child("users").child(userID).child("lat").setValue(lat)
+            ref.child("users").child(userID).child("long").setValue(long)
+
+
+            var konum = LatLng(lat, long)
+            Log.e("konum", lat.toString())
+            Log.e("konum", long.toString())
+            mMap.addMarker(MarkerOptions().position(konum).title("araç"))
+
+
+        }
+
+        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+            TODO("Not yet implemented")
+        }
+
+        override fun onProviderEnabled(provider: String?) {
+            TODO("Not yet implemented")
+        }
+
+        override fun onProviderDisabled(provider: String?) {
+            TODO("Not yet implemented")
+        }
+    }
 
     fun veriler() {
         var gelenData: SiparisData
@@ -123,7 +163,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     for (ds in p0.children) {
                         try {
                             gelenData = ds.getValue(SiparisData::class.java)!!
-                            if (gelenData.siparis_teslim_tarihi!=null){
+                            if (gelenData.siparis_teslim_tarihi != null) {
                                 if (gelenData.siparis_teslim_tarihi!!.compareTo(System.currentTimeMillis()) == -1) {
                                     var konumVarMi = gelenData.musteri_zkonum.toString().toBoolean()
                                     if (konumVarMi) {
@@ -201,6 +241,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                                         Intent(Intent.ACTION_DIAL)//Bu kod satırımız bizi rehbere telefon numarası ile yönlendiri.
                                                     arama.data = Uri.parse("tel:" + gelenData.siparis_tel)
                                                     startActivity(arama)
+                                                }
+                                                view.tvSiparisAdres.setOnClickListener {
+                                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q= " + gelenData.siparis_mah + " " + gelenData.siparis_adres))
+                                                    startActivity(intent)
                                                 }
                                                 view.btnTeslim.setOnClickListener {
                                                     var alert = AlertDialog.Builder(this@MapsActivity)
@@ -281,10 +325,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         })
 
 
-
     }
-
-
 
 
     fun convertAddressLat(adres: String): Double? {

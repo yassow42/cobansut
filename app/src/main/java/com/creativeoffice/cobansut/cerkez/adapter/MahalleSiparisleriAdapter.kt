@@ -32,12 +32,12 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayList<SiparisData>, val kullaniciAdi: String) : RecyclerView.Adapter<MahalleSiparisleriAdapter.SiparisHolder>() {
+class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayList<SiparisData>, val kullaniciAdi: String,var bolge:String) : RecyclerView.Adapter<MahalleSiparisleriAdapter.SiparisHolder>() {
     lateinit var mAuth: FirebaseAuth
     lateinit var userID: String
     lateinit var saticiYetki: String
 
-    var refCerkez = FirebaseDatabase.getInstance().reference.child("Cerkez")
+    var refCerkez = FirebaseDatabase.getInstance().reference.child(bolge)
     var ref = FirebaseDatabase.getInstance().reference
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MahalleSiparisleriAdapter.SiparisHolder {
         val view = LayoutInflater.from(myContext).inflate(R.layout.item_siparisler, parent, false)
@@ -116,9 +116,8 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
                                     refCerkez.child("Teslim_siparisler")
                                         .child(siparisler[position].siparis_key.toString()).setValue(siparisData)
                                         .addOnCompleteListener {
-
-                                            myContext.startActivity(Intent(myContext, SiparisActivityCerkez::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
-                                            Toast.makeText(myContext, "Sipariş Teslim Edildi", Toast.LENGTH_LONG).show()
+                                            Toast.makeText(myContext, "Sipariş Teslim Edildi. Kontrol et.", Toast.LENGTH_LONG).show()
+                                            notifyDataSetChanged()
                                             refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisler[position].siparis_key.toString()).removeValue()
                                             refCerkez.child("Teslim_siparisler").child(siparisler[position].siparis_key.toString())
                                                 .child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
@@ -308,7 +307,7 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
 
         fun setData(siparisData: SiparisData) {
             if (siparisData.siparis_teslim_tarihi!!.compareTo(System.currentTimeMillis()) == -1) {
-                tumLayout.background = ContextCompat.getDrawable(myContext, R.color.mavi)
+                tumLayout.background = ContextCompat.getDrawable(myContext, R.drawable.bg_siparisler)
 
             } else if (siparisData.siparis_teslim_tarihi!!.compareTo(System.currentTimeMillis()) == 1) {
                 tumLayout.background = ContextCompat.getDrawable(myContext, R.color.kirmizi)
@@ -393,8 +392,8 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
                 tv5ltFiyat.text = siparisData.sut5lt_fiyat.toString()
                 tvYumurtaFiyat.text = siparisData.yumurta_fiyat.toString()
                 var toplamFiyat = (sut3ltAdet * sut3ltFiyat!!) + (sut5ltAdet * sut5ltFiyat!!) + (yumurtaAdet * yumurtaFiyat!!)
-                refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisData.siparis_key.toString()).child("toplam_fiyat").setValue(toplamFiyat)
-                tvFiyat.text = ((sut3ltAdet * sut3ltFiyat!!) + (sut5ltAdet * sut5ltFiyat!!) + (yumurtaAdet * yumurtaFiyat!!)).toString() + " tl"
+              //  refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisData.siparis_key.toString()).child("toplam_fiyat").setValue(toplamFiyat)
+                tvFiyat.text = toplamFiyat.toString()+ " tl"
             } catch (e: IOException) {
                 Toast.makeText(myContext, "Bazı fiyatlar hatalı", Toast.LENGTH_LONG).show()
             }
@@ -425,7 +424,7 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
             }
 
             siparisAdres.setOnClickListener {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q= " + siparisData.siparis_mah + " " + siparisData.siparis_adres + " Amasya 05000"))
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q= " + siparisData.siparis_mah + " " + siparisData.siparis_adres ))
                 myContext.startActivity(intent)
             }
         }

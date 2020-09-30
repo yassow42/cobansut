@@ -231,18 +231,18 @@ class MusterilerCorluActivity : AppCompatActivity() {
                             builder.setPositiveButton("Sipariş Ekle", object : DialogInterface.OnClickListener {
                                 override fun onClick(dialog: DialogInterface?, which: Int) {
 
-                                    var sut3lt = "0"
+                                    var sut3ltAdet = "0"
                                     if (dialogViewSpArama.et3lt.text.toString().isNotEmpty()) {
-                                        sut3lt = dialogViewSpArama.et3lt.text.toString()
+                                        sut3ltAdet = dialogViewSpArama.et3lt.text.toString()
                                     }
-                                    var sut5lt = "0"
+                                    var sut5ltAdet = "0"
 
                                     if (dialogViewSpArama.et5lt.text.toString().isNotEmpty()) {
-                                        sut5lt = dialogViewSpArama.et5lt.text.toString()
+                                        sut5ltAdet = dialogViewSpArama.et5lt.text.toString()
                                     }
-                                    var yumurta = "0"
+                                    var yumurtaAdet = "0"
                                     if (dialogViewSpArama.etYumurta.text.toString().isNotEmpty()) {
-                                        yumurta = dialogViewSpArama.etYumurta.text.toString()
+                                        yumurtaAdet = dialogViewSpArama.etYumurta.text.toString()
                                     }
 
                                     var siparisNotu = dialogViewSpArama.etSiparisNotu.text.toString()
@@ -251,15 +251,18 @@ class MusterilerCorluActivity : AppCompatActivity() {
                                     var sut5ltFiyat = dialogViewSpArama.et5ltFiyat.text.toString().toDouble()
                                     var yumurtaFiyat = dialogViewSpArama.etYumurtaFiyat.text.toString().toDouble()
 
+                                    var toplamFiyat = (sut3ltAdet.toDouble() * sut3ltFiyat!!) + (sut5ltAdet.toDouble() * sut5ltFiyat!!) + (yumurtaAdet.toDouble() * yumurtaFiyat!!)
+
                                     var siparisData = SiparisData(
-                                        null, null, cal.timeInMillis, musteriData.musteri_adres, musteriData.musteri_apartman,
-                                        musteriData.musteri_tel, musteriData.musteri_ad_soyad, musteriData.musteri_mah, siparisNotu, siparisKey, yumurta, yumurtaFiyat, sut3lt, sut3ltFiyat,
-                                        sut5lt, sut5ltFiyat, null, musteriData.musteri_zkonum, musteriData.promosyon_verildimi, musteriData.musteri_zlat,
+                                        System.currentTimeMillis(), System.currentTimeMillis(), cal.timeInMillis, musteriData.musteri_adres, musteriData.musteri_apartman,
+                                        musteriData.musteri_tel, musteriData.musteri_ad_soyad, musteriData.musteri_mah, siparisNotu, siparisKey, yumurtaAdet, yumurtaFiyat, sut3ltAdet, sut3ltFiyat,
+                                        sut5ltAdet, sut5ltFiyat, toplamFiyat, musteriData.musteri_zkonum, musteriData.promosyon_verildimi, musteriData.musteri_zlat,
                                         musteriData.musteri_zlong, kullaniciAdi
                                     )
-                                    refCorlu.child("Siparisler").child(siparisKey).setValue(siparisData)
-                                    refCorlu.child("Siparisler").child(siparisKey).child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
-                                    refCorlu.child("Siparisler").child(siparisKey).child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
+                                    refCorlu.child("Siparisler").child(musteriData.musteri_mah.toString()).child(siparisKey).child("toplam_fiyat").setValue(0.0)
+                                    refCorlu.child("Siparisler").child(musteriData.musteri_mah.toString()).child(siparisKey).setValue(siparisData)
+                                //    refCorlu.child("Siparisler").child(siparisKey).child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
+                                //    refCorlu.child("Siparisler").child(siparisKey).child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
                                     refCorlu.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey).setValue(siparisData)
                                     refCorlu.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey).child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
                                     refCorlu.child("Musteriler").child(musteriData.musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey).child("siparis_zamani").setValue(ServerValue.TIMESTAMP)

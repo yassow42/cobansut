@@ -146,7 +146,7 @@ class SiparisActivityCerkez : AppCompatActivity() {
 
                     }
 
-                    val adapter = MahalleAdapter(this@SiparisActivityCerkez, mahalleList, kullaniciAdi.toString())
+                    val adapter = MahalleAdapter(this@SiparisActivityCerkez, mahalleList, kullaniciAdi.toString(),"Cerkez")
                     rcMahalleler.layoutManager = LinearLayoutManager(this@SiparisActivityCerkez, LinearLayoutManager.VERTICAL, false)
                     rcMahalleler.adapter = adapter
                     adapter.notifyDataSetChanged()
