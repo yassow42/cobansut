@@ -103,14 +103,13 @@
         app:layout_constraintStart_toStartOf="@+id/etApartman"
         app:layout_constraintTop_toBottomOf="@+id/etApartman" />
 
-    <TextView
+    <EditText
         android:id="@+id/tvMahalle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Mahalle"
-        android:textAlignment="center"
-        android:textColor="@color/siyah"
+        android:hint="Mahalle"
+    android:textColor="@color/siyah"
         app:layout_constraintEnd_toEndOf="@+id/etAdresGidilen"
         app:layout_constraintStart_toStartOf="@+id/etAdresGidilen"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout6" />

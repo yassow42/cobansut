@@ -198,11 +198,13 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
                         dialogView.imgCheck.setOnClickListener {
 
                             if (dialogView.etAdresGidilen.text.toString().isNotEmpty() && dialogView.etTelefonGidilen.text.toString().isNotEmpty()) {
+                                var mahalle = dialogView.tvMahalle.text.toString()
                                 var adres = dialogView.etAdresGidilen.text.toString()
                                 var telefon = dialogView.etTelefonGidilen.text.toString()
                                 var apartman = dialogView.etApartman.text.toString()
 
 
+                                ref.child("Musteriler").child(musteriAdi).child("musteri_mah").setValue(mahalle)
                                 refCorlu.child("Musteriler").child(musteriAdi).child("musteri_adres").setValue(adres)
                                 refCorlu.child("Musteriler").child(musteriAdi).child("musteri_apartman").setValue(apartman)
                                 refCorlu.child("Musteriler").child(musteriAdi).child("musteri_tel").setValue(telefon).addOnCompleteListener {
@@ -224,7 +226,7 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
                         }
 
                         dialogView.tvAdSoyad.text = musteriler[position].musteri_ad_soyad.toString()
-                        dialogView.tvMahalle.text = musteriler[position].musteri_mah.toString() + " Mahallesi"
+                        dialogView.tvMahalle.setText( musteriler[position].musteri_mah.toString())
                         dialogView.etApartman.setText(musteriler[position].musteri_apartman.toString())
                         refCorlu.child("Musteriler").child(musteriAdi).addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onCancelled(p0: DatabaseError) {

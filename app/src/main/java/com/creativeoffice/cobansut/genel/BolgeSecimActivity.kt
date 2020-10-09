@@ -2,16 +2,21 @@ package com.creativeoffice.cobansut.genel
 
 import android.app.ProgressDialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.creativeoffice.cobansut.Activity.SiparislerActivity
+import com.creativeoffice.cobansut.BuildConfig
 import com.creativeoffice.cobansut.CorluActivity.SiparislerCorluActivity
 import com.creativeoffice.cobansut.R
 import com.creativeoffice.cobansut.cerkez.SiparisActivityCerkez
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -26,20 +31,41 @@ class BolgeSecimActivity : AppCompatActivity() {
 
     lateinit var mAuthListener: FirebaseAuth.AuthStateListener
 
-
+    var ref = FirebaseDatabase.getInstance().reference
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bolge_secim)
         konumIzni()
         mAuth = FirebaseAuth.getInstance()
         //    mAuth.signOut()
+        val versionCode: Int = BuildConfig.VERSION_CODE
+        val versionName: String = BuildConfig.VERSION_NAME
 
         var user = mAuth.currentUser
         if (user == null) {
+
             startActivity(Intent(this@BolgeSecimActivity, LoginActivity::class.java))
         }
+        ref.child("users").child(mAuth.currentUser!!.uid).child("Version").setValue(versionCode)
+      //  ref.child("versiyon").setValue(4)
+
         initMyAuthStateListener()
         setupButon()
+
+        ref.child("versiyon").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+                if (p0.value !=null){
+                    var genelVersion = p0.value.toString().toInt()
+                    if (genelVersion > versionCode) Toast.makeText(this@BolgeSecimActivity, "Eski Sürüm Kullanıyorsun. Lütfen Güncelle",Toast.LENGTH_LONG).show()
+                }
+                   
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+        })
 
     }
 

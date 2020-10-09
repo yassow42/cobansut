@@ -55,31 +55,7 @@ import kotlinx.android.synthetic.main.activity_siparis_corlu.tvileriTarihliSayi
 
 
 class SiparislerCorluActivity : AppCompatActivity() {
-    lateinit var marketlist: ArrayList<SiparisData>
-    lateinit var aliList: ArrayList<SiparisData>
-    lateinit var cemaliyeList: ArrayList<SiparisData>
-    lateinit var cobanList: ArrayList<SiparisData>
-    lateinit var esenList: ArrayList<SiparisData>
-    lateinit var hatipList: ArrayList<SiparisData>
-    lateinit var cumhuriyetlist: ArrayList<SiparisData>
-    lateinit var derelist: ArrayList<SiparisData>
-    lateinit var havuzList: ArrayList<SiparisData>
-    lateinit var hidirList: ArrayList<SiparisData>
-    lateinit var kazimList: ArrayList<SiparisData>
-    lateinit var kemalList: ArrayList<SiparisData>
-    lateinit var hurriyetlist: ArrayList<SiparisData>
-    lateinit var muhitList: ArrayList<SiparisData>
-    lateinit var nusratList: ArrayList<SiparisData>
-    lateinit var resadList: ArrayList<SiparisData>
-    lateinit var rumeliList: ArrayList<SiparisData>
-    lateinit var seyhList: ArrayList<SiparisData>
-    lateinit var silahList: ArrayList<SiparisData>
-    lateinit var yenilist: ArrayList<SiparisData>
-    lateinit var yildirimlist: ArrayList<SiparisData>
-    lateinit var yildizlist: ArrayList<SiparisData>
-    lateinit var yilmazlist: ArrayList<SiparisData>
-    lateinit var zaferlist: ArrayList<SiparisData>
-    lateinit var ilerilist: ArrayList<SiparisData>
+
 
     val handler = Handler()
     lateinit var progressDialog: ProgressDialog
@@ -97,38 +73,18 @@ class SiparislerCorluActivity : AppCompatActivity() {
         initMyAuthStateListener()
         userID = mAuth.currentUser!!.uid
         setupKullaniciAdi()
-        setupBtn()
+      //  setupBtn()
 
         progressDialog = ProgressDialog(this)
         progressDialog.setMessage("Yükleniyor...")
         progressDialog.setCancelable(false)
         progressDialog.show()
 
-        handler.postDelayed(Runnable { progressDialog.dismiss() }, 5000)
+        handler.postDelayed(Runnable { progressDialog.dismiss() }, 4000)
     }
 
     private fun setupVeri() {
-        marketlist = ArrayList()
-        aliList = ArrayList()
-        cemaliyeList = ArrayList()
-        cobanList = ArrayList()
-        esenList = ArrayList()
-        hatipList = ArrayList()
-        cumhuriyetlist = ArrayList()
-        derelist = ArrayList()
-        havuzList = ArrayList()
-        hidirList = ArrayList()
-        kemalList = ArrayList()
-        kazimList = ArrayList()
-        hurriyetlist = ArrayList()
-        muhitList = ArrayList()
-        nusratList = ArrayList()
-        resadList = ArrayList()
-        rumeliList = ArrayList()
-        seyhList = ArrayList()
-        silahList = ArrayList()
-        zaferlist = ArrayList()
-        ilerilist = ArrayList()
+
 
         var mahalleList = ArrayList<String>()
 
@@ -384,7 +340,7 @@ class SiparislerCorluActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
-
+/*
     private fun setupBtn() {
 /*
         imgCikis.setOnClickListener {
@@ -392,7 +348,31 @@ class SiparislerCorluActivity : AppCompatActivity() {
             startActivity(Intent(this, LoginActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
         }
 */
-
+        lateinit var marketlist: ArrayList<SiparisData>
+        lateinit var aliList: ArrayList<SiparisData>
+        lateinit var cemaliyeList: ArrayList<SiparisData>
+        lateinit var cobanList: ArrayList<SiparisData>
+        lateinit var esenList: ArrayList<SiparisData>
+        lateinit var hatipList: ArrayList<SiparisData>
+        lateinit var cumhuriyetlist: ArrayList<SiparisData>
+        lateinit var derelist: ArrayList<SiparisData>
+        lateinit var havuzList: ArrayList<SiparisData>
+        lateinit var hidirList: ArrayList<SiparisData>
+        lateinit var kazimList: ArrayList<SiparisData>
+        lateinit var kemalList: ArrayList<SiparisData>
+        lateinit var hurriyetlist: ArrayList<SiparisData>
+        lateinit var muhitList: ArrayList<SiparisData>
+        lateinit var nusratList: ArrayList<SiparisData>
+        lateinit var resadList: ArrayList<SiparisData>
+        lateinit var rumeliList: ArrayList<SiparisData>
+        lateinit var seyhList: ArrayList<SiparisData>
+        lateinit var silahList: ArrayList<SiparisData>
+        lateinit var yenilist: ArrayList<SiparisData>
+        lateinit var yildirimlist: ArrayList<SiparisData>
+        lateinit var yildizlist: ArrayList<SiparisData>
+        lateinit var yilmazlist: ArrayList<SiparisData>
+        lateinit var zaferlist: ArrayList<SiparisData>
+        lateinit var ilerilist: ArrayList<SiparisData>
 
 
         imgMarketDown.setOnClickListener {
@@ -671,7 +651,7 @@ class SiparislerCorluActivity : AppCompatActivity() {
         recyclerView.adapter = Adapter
         recyclerView.setHasFixedSize(true)
     }
-
+*/
     fun setupNavigationView() {
 
         BottomNavigationViewHelperCorlu.setupBottomNavigationView(bottomNav)

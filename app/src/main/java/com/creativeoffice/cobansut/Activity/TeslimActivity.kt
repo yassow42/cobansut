@@ -83,8 +83,6 @@ class TeslimActivity : AppCompatActivity() {
                             for (ds in data.children) {
                                 var gelenData = ds.getValue(SiparisData::class.java)!!
                                 butunTeslimList.add(gelenData)
-                                Log.e("teslim activity12",  gelenData.siparis_teslim_tarihi.toString())
-
                                 if ( gelenData.siparis_teslim_zamani.toString() !="null"){
                                     if (gece3GelenZaman - 86400000 < gelenData.siparis_teslim_zamani!!.toLong() && gelenData.siparis_teslim_zamani!!.toLong() < gece3GelenZaman) {
                                         suankiTeslimList.add(gelenData)

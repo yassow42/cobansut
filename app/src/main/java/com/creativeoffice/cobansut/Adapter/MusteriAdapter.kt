@@ -119,42 +119,42 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                 builder.setPositiveButton("Sipariş Ekle", object : DialogInterface.OnClickListener {
                     override fun onClick(dialog: DialogInterface?, which: Int) {
 
-                        var sut3lt = "0"
+
+                        var sut3ltAdet = "0"
                         if (dialogViewSp.et3lt.text.toString().isNotEmpty()) {
-                            sut3lt = dialogViewSp.et3lt.text.toString()
+                            sut3ltAdet = dialogViewSp.et3lt.text.toString()
                         }
-                        var sut5lt = "0"
 
+                        var sut5ltAdet = "0"
                         if (dialogViewSp.et5lt.text.toString().isNotEmpty()) {
-                            sut5lt = dialogViewSp.et5lt.text.toString()
-                        }
-                        var yumurta = "0"
-                        if (dialogViewSp.etYumurta.text.toString().isNotEmpty()) {
-                            yumurta = dialogViewSp.etYumurta.text.toString()
+                            sut5ltAdet = dialogViewSp.et5lt.text.toString()
                         }
 
-                        var siparisNotu = dialogViewSp.etSiparisNotu.text.toString()
-                        var siparisKey = FirebaseDatabase.getInstance().reference.child("Siparisler").push().key.toString()
+                        var yumurtaAdet = "0"
+                        if (dialogViewSp.etYumurta.text.toString().isNotEmpty()) {
+                            yumurtaAdet = dialogViewSp.etYumurta.text.toString()
+                        }
 
                         var sut3ltFiyat = dialogViewSp.et3ltFiyat.text.toString().toDouble()
                         var sut5ltFiyat = dialogViewSp.et5ltFiyat.text.toString().toDouble()
                         var yumurtaFiyat = dialogViewSp.etYumurtaFiyat.text.toString().toDouble()
 
+                        var siparisNotu = dialogViewSp.etSiparisNotu.text.toString()
+                        var siparisKey = FirebaseDatabase.getInstance().reference.child("Siparisler").push().key.toString()
+
+                        var toplamFiyat = (sut3ltAdet.toDouble() * sut3ltFiyat) + (sut5ltAdet.toDouble() * sut5ltFiyat) + (yumurtaAdet.toDouble() * yumurtaFiyat)
+
                         var siparisData = SiparisData(
-                            null, null, cal.timeInMillis, musteriler[position].musteri_adres, musteriler[position].musteri_apartman,
-                            musteriler[position].musteri_tel, musteriler[position].musteri_ad_soyad, musteriler[position].musteri_mah, siparisNotu, siparisKey, yumurta, yumurtaFiyat, sut3lt, sut3ltFiyat,
-                            sut5lt, sut5ltFiyat, 0.0, musteriler[position].musteri_zkonum, musteriler[position].promosyon_verildimi, musteriler[position].musteri_zlat,
+                            System.currentTimeMillis(), System.currentTimeMillis(), cal.timeInMillis, musteriler[position].musteri_adres, musteriler[position].musteri_apartman,
+                            musteriler[position].musteri_tel, musteriler[position].musteri_ad_soyad, musteriler[position].musteri_mah, siparisNotu, siparisKey, yumurtaAdet, yumurtaFiyat, sut3ltAdet, sut3ltFiyat,
+                            sut5ltAdet, sut5ltFiyat, toplamFiyat, musteriler[position].musteri_zkonum, musteriler[position].promosyon_verildimi, musteriler[position].musteri_zlat,
                             musteriler[position].musteri_zlong, kullaniciAdi
                         )
 
-                        FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisKey).setValue(siparisData)
-                        FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisKey).child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
-                        FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisKey).child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
-                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey).setValue(siparisData)
-                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey)
-                            .child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
-                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey)
-                            .child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
+                        ref.child("Siparisler").child(siparisKey).setValue(siparisData)
+                        ref.child("Siparisler").child(siparisKey).child("siparis_zamani").setValue(ServerValue.TIMESTAMP)
+                        ref.child("Siparisler").child(siparisKey).child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
+                        ref.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).child("siparisleri").child(siparisKey).setValue(siparisData)
 
 
                     }
@@ -212,11 +212,13 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                             dialogView.imgCheck.setOnClickListener {
 
                                 if (dialogView.etAdresGidilen.text.toString().isNotEmpty() && dialogView.etTelefonGidilen.text.toString().isNotEmpty()) {
+                                    var mahalle = dialogView.tvMahalle.text.toString()
                                     var adres = dialogView.etAdresGidilen.text.toString()
                                     var telefon = dialogView.etTelefonGidilen.text.toString()
                                     var apartman = dialogView.etApartman.text.toString()
 
 
+                                    ref.child("Musteriler").child(musteriAdi).child("musteri_mah").setValue(mahalle)
                                     ref.child("Musteriler").child(musteriAdi).child("musteri_adres").setValue(adres)
                                     ref.child("Musteriler").child(musteriAdi).child("musteri_apartman").setValue(apartman)
                                     ref.child("Musteriler").child(musteriAdi).child("musteri_tel").setValue(telefon).addOnCompleteListener {
@@ -238,7 +240,7 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                             }
 
                             dialogView.tvAdSoyad.text = musteriler[position].musteri_ad_soyad.toString()
-                            dialogView.tvMahalle.text = musteriler[position].musteri_mah.toString() + " Mahallesi"
+                            dialogView.tvMahalle.setText( musteriler[position].musteri_mah.toString())
                             dialogView.etApartman.setText(musteriler[position].musteri_apartman.toString())
                             FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onCancelled(p0: DatabaseError) {

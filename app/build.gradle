@@ -11,8 +11,8 @@ android {
         applicationId "com.creativeoffice.cobansut"
         minSdkVersion 20
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "1.40"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -215,19 +215,17 @@ class MusteriAdapterCerkez(val myContext: Context, val musteriler: ArrayList<Mus
                             dialogView.imgCheck.setOnClickListener {
 
                                 if (dialogView.etAdresGidilen.text.toString().isNotEmpty() && dialogView.etTelefonGidilen.text.toString().isNotEmpty()) {
+                                    var mahalle = dialogView.tvMahalle.text.toString()
                                     var adres = dialogView.etAdresGidilen.text.toString()
                                     var telefon = dialogView.etTelefonGidilen.text.toString()
                                     var apartman = dialogView.etApartman.text.toString()
 
 
+                                    ref.child("Musteriler").child(musteriAdi).child("musteri_mah").setValue(mahalle)
                                     ref.child("Musteriler").child(musteriAdi).child("musteri_adres").setValue(adres)
                                     ref.child("Musteriler").child(musteriAdi).child("musteri_apartman").setValue(apartman)
                                     ref.child("Musteriler").child(musteriAdi).child("musteri_tel").setValue(telefon).addOnCompleteListener {
-///locationsu durduruyruz
-                                        //    holder.locationManager.removeUpdates(holder.myLocationListener)
-///
                                         dialogMsDznle.dismiss()
-
                                         Toast.makeText(myContext, "Müşteri Bilgileri Güncellendi", Toast.LENGTH_LONG).show()
                                     }.addOnFailureListener { Toast.makeText(myContext, "Müşteri Bilgileri Güncellenemedi", Toast.LENGTH_LONG).show() }
                                 } else {
@@ -241,7 +239,7 @@ class MusteriAdapterCerkez(val myContext: Context, val musteriler: ArrayList<Mus
                             }
 
                             dialogView.tvAdSoyad.text = musteriler[position].musteri_ad_soyad.toString()
-                            dialogView.tvMahalle.text = musteriler[position].musteri_mah.toString() + " Mahallesi"
+                            dialogView.tvMahalle.setText( musteriler[position].musteri_mah.toString())
                             dialogView.etApartman.setText(musteriler[position].musteri_apartman.toString())
                             ref.child("Musteriler").child(musteriAdi).addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onCancelled(p0: DatabaseError) {
@@ -251,11 +249,13 @@ class MusteriAdapterCerkez(val myContext: Context, val musteriler: ArrayList<Mus
                                 override fun onDataChange(p0: DataSnapshot) {
                                     var adres = p0.child("musteri_adres").value.toString()
                                     var telefon = p0.child("musteri_tel").value.toString()
+                                    var mahalle = p0.child("musteri_mah").value.toString()
                                     var konum = p0.child("musteri_zkonum").value.toString().toBoolean()
 
                                     dialogView.swKonumKaydet.isChecked = konum
                                     dialogView.etAdresGidilen.setText(adres)
                                     dialogView.etTelefonGidilen.setText(telefon)
+                                    dialogView.tvMahalle.setText(mahalle)
 
                                     var list = ArrayList<SiparisData>()
                                     list = ArrayList()
