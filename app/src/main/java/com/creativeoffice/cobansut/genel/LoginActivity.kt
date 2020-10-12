@@ -1,5 +1,6 @@
 package com.creativeoffice.cobansut.genel
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.creativeoffice.cobansut.Datalar.Users
@@ -105,6 +107,9 @@ class LoginActivity : AppCompatActivity() {
 
 
         btnLogin.setOnClickListener {
+            val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(it.windowToken, 0)
+
             var kullaniciAdi = etKullaniciAdiLogin.text.toString()
             var kullaniciAdiEmail = kullaniciAdi + "@gmail.com"
             var kullaniciSifre = etSifreLogin.text.toString()

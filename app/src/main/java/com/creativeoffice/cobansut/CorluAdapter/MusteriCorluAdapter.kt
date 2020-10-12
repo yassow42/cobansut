@@ -333,7 +333,7 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
             }
 
         }
-
+/*
 
         val myLocationListener = object : LocationListener {
             override fun onLocationChanged(location: Location?) {
@@ -359,7 +359,7 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
             }
         }
 
-
+*/
     }
 
 

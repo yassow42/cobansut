@@ -352,7 +352,7 @@ class MusteriAdapterCerkez(val myContext: Context, val musteriler: ArrayList<Mus
             }
         }
 
-
+/*
         var locationManager = myContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         @SuppressLint("MissingPermission")
@@ -397,7 +397,7 @@ class MusteriAdapterCerkez(val myContext: Context, val musteriler: ArrayList<Mus
                 TODO("Not yet implemented")
             }
         }
-
+*/
 
     }
 

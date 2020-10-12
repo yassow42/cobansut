@@ -135,7 +135,6 @@ class MapsActivityCerkez : AppCompatActivity(), OnMapReadyCallback {
 
                                             if (gelenData.siparis_teslim_tarihi != null) {
                                                 if (gelenData.siparis_teslim_tarihi!!.compareTo(System.currentTimeMillis()) == -1) {
-                                                    Log.e("konum", gelenData.siparis_veren)
                                                     var konumVarMi = gelenData.musteri_zkonum.toString().toBoolean()
                                                     if (konumVarMi) {
                                                         var lat = gelenData.musteri_zlat!!.toDouble()

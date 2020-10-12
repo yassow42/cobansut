@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/samet"
-        android:title="Samet" />
+        android:id="@+id/yasin"
+        android:title="Yasin" />
 
     <item
-        android:id="@+id/Engin"
-        android:title="Engin" />
+        android:id="@+id/murat"
+        android:title="Murat" />
     <item
-        android:id="@+id/nihat"
-        android:title="Nihat" />
+        android:id="@+id/corlumurat"
+        android:title="Corlu Murat" />
+    <item
+        android:id="@+id/herkes"
+        android:title="Herkes" />
 </menu>

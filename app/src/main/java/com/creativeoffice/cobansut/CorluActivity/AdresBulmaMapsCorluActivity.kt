@@ -40,7 +40,7 @@ class AdresBulmaMapsCorluActivity : AppCompatActivity(), OnMapReadyCallback {
         setupNavigationView()
 
         musteriAdi = intent.getStringExtra("musteriAdi")
-        yer = intent.getStringExtra("musteri_konumu")
+        yer = intent.getStringExtra("musteri_konumu").toString()
         Log.e("sad", yer)
     }
 

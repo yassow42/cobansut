@@ -348,7 +348,7 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
             sonSiparisZamani.text = TimeAgo.getTimeAgo(musteriData.siparis_son_zaman!!).toString()
         }
 
-
+/*
         var locationManager = myContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         @SuppressLint("MissingPermission")
@@ -368,7 +368,6 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                 LocationManager.NETWORK_PROVIDER
             )
         }
-
 
         val myLocationListener = object : LocationListener {
             override fun onLocationChanged(location: Location?) {
@@ -394,7 +393,7 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
             }
         }
 
-
+*/
     }
 
 

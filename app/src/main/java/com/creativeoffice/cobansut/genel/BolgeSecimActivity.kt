@@ -45,8 +45,8 @@ class BolgeSecimActivity : AppCompatActivity() {
         if (user == null) {
 
             startActivity(Intent(this@BolgeSecimActivity, LoginActivity::class.java))
-        }
-        ref.child("users").child(mAuth.currentUser!!.uid).child("Version").setValue(versionCode)
+        }else   ref.child("users").child(mAuth.currentUser!!.uid).child("Version").setValue(versionCode)
+
       //  ref.child("versiyon").setValue(4)
 
         initMyAuthStateListener()

@@ -115,12 +115,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     fun aracTakip() {
 
         var locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 1f, myLocationListener)
+      //  locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 1f, myLocationListener)
 
 
     }
 
-
+/*
     val myLocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location?) {
             mMap.clear()
@@ -152,7 +152,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             TODO("Not yet implemented")
         }
     }
-
+*/
     fun veriler() {
         var gelenData: SiparisData
         ref.child("Siparisler").addListenerForSingleValueEvent(object : ValueEventListener {

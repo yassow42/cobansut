@@ -9,7 +9,6 @@ import android.os.Handler
 import android.util.Log
 import android.view.WindowManager
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.creativeoffice.cobansut.Adapter.TeslimEdilenlerAdapter
 import com.creativeoffice.cobansut.utils.BottomNavigationViewHelper
@@ -46,7 +45,7 @@ class TeslimActivity : AppCompatActivity() {
 
 
 
-        hndler.postDelayed(Runnable { setupVeri() }, 2000)
+        hndler.postDelayed(Runnable { setupVeri() }, 500)
         hndler.postDelayed(Runnable { progressDialog.dismiss() }, 5000)
 
 
@@ -55,7 +54,7 @@ class TeslimActivity : AppCompatActivity() {
 
     private fun setupVeri() {
 
-        ref.child("Teslim_siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
+        ref.child("Teslim_siparisler").limitToLast(1000).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
             }
@@ -83,7 +82,7 @@ class TeslimActivity : AppCompatActivity() {
                             for (ds in data.children) {
                                 var gelenData = ds.getValue(SiparisData::class.java)!!
                                 butunTeslimList.add(gelenData)
-                                if ( gelenData.siparis_teslim_zamani.toString() !="null"){
+                                if (gelenData.siparis_teslim_zamani.toString() != "null") {
                                     if (gece3GelenZaman - 86400000 < gelenData.siparis_teslim_zamani!!.toLong() && gelenData.siparis_teslim_zamani!!.toLong() < gece3GelenZaman) {
                                         suankiTeslimList.add(gelenData)
                                         sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
@@ -101,6 +100,7 @@ class TeslimActivity : AppCompatActivity() {
                                 }
 
                             }
+
                             progressDialog.dismiss()
                             suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }
                             tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
@@ -128,7 +128,7 @@ class TeslimActivity : AppCompatActivity() {
     }
 
     private fun setupBtn() {
-        tvZamandan.text = SimpleDateFormat("HH:mm dd.MM.yyyy").format(System.currentTimeMillis())
+        tvZamandan.text = SimpleDateFormat("HH:mm dd.MM.yyyy").format(System.currentTimeMillis() - (24 * 60 * 60 * 1000))
         tvZamana.text = SimpleDateFormat("HH:mm dd.MM.yyyy").format(System.currentTimeMillis())
 
         var calZamandan = Calendar.getInstance()
@@ -188,7 +188,7 @@ class TeslimActivity : AppCompatActivity() {
 
             for (ds in butunTeslimList) {
 
-                if (ds.siparis_teslim_zamani.toString() !="null"){
+                if (ds.siparis_teslim_zamani.toString() != "null") {
                     if (calZamandan.timeInMillis < ds.siparis_teslim_zamani!!.toLong() && ds.siparis_teslim_zamani!!.toLong() < calZamana.timeInMillis) {
                         suankiTeslimList.add(ds)
                         sut3ltSayisi = ds.sut3lt!!.toInt() + sut3ltSayisi
@@ -209,22 +209,26 @@ class TeslimActivity : AppCompatActivity() {
 
             }
         }
-        /*
+
         imgOptions.setOnClickListener {
 
             val popup = PopupMenu(this, imgOptions)
             popup.inflate(R.menu.popup_menu_teslim)
             popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener {
+
                 var sut3ltSayisi = 0
                 var sut5ltSayisi = 0
                 var yumurtaSayisi = 0
                 when (it.itemId) {
-                    R.id.samet -> {
+                    R.id.yasin -> {
                         suankiTeslimList.clear()
 
+
                         for (ds in butunTeslimList) {
-                            if (calZamandan.timeInMillis < ds.siparis_teslim_zamani!!.toLong() && ds.siparis_teslim_zamani!!.toLong() < calZamana.timeInMillis) {
-                                if (ds.siparisi_giren == "Samet") {
+
+                            if (ds.siparisi_giren == "yasin123") {
+
+                                if (calZamandan.timeInMillis < ds.siparis_teslim_zamani!!.toLong() && ds.siparis_teslim_zamani!!.toLong() < calZamana.timeInMillis) {
                                     suankiTeslimList.add(ds)
                                     sut3ltSayisi = ds.sut3lt!!.toInt() + sut3ltSayisi
                                     sut5ltSayisi = ds.sut5lt!!.toInt() + sut5ltSayisi
@@ -240,13 +244,12 @@ class TeslimActivity : AppCompatActivity() {
                         suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }
                         setupRecyclerView()
                     }
-                    R.id.Engin -> {
+                    R.id.murat -> {
                         suankiTeslimList.clear()
-
                         for (ds in butunTeslimList) {
                             if (calZamandan.timeInMillis < ds.siparis_teslim_zamani!!.toLong() && ds.siparis_teslim_zamani!!.toLong() < calZamana.timeInMillis) {
 
-                                if (ds.siparisi_giren == "Umit") {
+                                if (ds.siparisi_giren == "Murat") {
                                     suankiTeslimList.add(ds)
                                     sut3ltSayisi = ds.sut3lt!!.toInt() + sut3ltSayisi
                                     sut5ltSayisi = ds.sut5lt!!.toInt() + sut5ltSayisi
@@ -264,18 +267,35 @@ class TeslimActivity : AppCompatActivity() {
                         setupRecyclerView()
                     }
 
-                    R.id.nihat -> {
+                    R.id.corlumurat -> {
                         suankiTeslimList.clear()
-
                         for (ds in butunTeslimList) {
-                            if (calZamandan.timeInMillis < ds.siparis_teslim_zamani!!.toLong() && ds.siparis_teslim_zamani!!.toLong() < calZamana.timeInMillis) {
-
-                                if (ds.siparisi_giren == "Nihat") {
+                            if (ds.siparisi_giren == "Corlumurat") {
+                                if (calZamandan.timeInMillis < ds.siparis_teslim_zamani!!.toLong() && ds.siparis_teslim_zamani!!.toLong() < calZamana.timeInMillis) {
                                     suankiTeslimList.add(ds)
                                     sut3ltSayisi = ds.sut3lt!!.toInt() + sut3ltSayisi
                                     sut5ltSayisi = ds.sut5lt!!.toInt() + sut5ltSayisi
                                     yumurtaSayisi = ds.yumurta!!.toInt() + yumurtaSayisi
                                 }
+
+                            }
+                        }
+
+                        tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
+                        tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
+                        tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
+                        tvFiyatGenelTeslim.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
+                        suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }
+                        setupRecyclerView()
+                    }
+                    R.id.herkes -> {
+                        suankiTeslimList.clear()
+                        for (ds in butunTeslimList) {
+                            if (calZamandan.timeInMillis < ds.siparis_teslim_zamani!!.toLong() && ds.siparis_teslim_zamani!!.toLong() < calZamana.timeInMillis) {
+                                suankiTeslimList.add(ds)
+                                sut3ltSayisi = ds.sut3lt!!.toInt() + sut3ltSayisi
+                                sut5ltSayisi = ds.sut5lt!!.toInt() + sut5ltSayisi
+                                yumurtaSayisi = ds.yumurta!!.toInt() + yumurtaSayisi
 
                             }
                         }
@@ -295,7 +315,7 @@ class TeslimActivity : AppCompatActivity() {
             popup.show()
 
         }
-*/
+
 
     }
 
