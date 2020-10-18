@@ -26,6 +26,15 @@ import com.creativeoffice.cobansut.TimeAgo
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.dialog_gidilen_musteri.view.*
 import kotlinx.android.synthetic.main.dialog_siparis_ekle_corlu.view.*
+import kotlinx.android.synthetic.main.dialog_siparis_ekle_corlu.view.et3lt
+import kotlinx.android.synthetic.main.dialog_siparis_ekle_corlu.view.et3ltFiyat
+import kotlinx.android.synthetic.main.dialog_siparis_ekle_corlu.view.et5lt
+import kotlinx.android.synthetic.main.dialog_siparis_ekle_corlu.view.et5ltFiyat
+import kotlinx.android.synthetic.main.dialog_siparis_ekle_corlu.view.etSiparisNotu
+import kotlinx.android.synthetic.main.dialog_siparis_ekle_corlu.view.etYumurta
+import kotlinx.android.synthetic.main.dialog_siparis_ekle_corlu.view.etYumurtaFiyat
+import kotlinx.android.synthetic.main.dialog_siparis_ekle_corlu.view.swPromosyon
+import kotlinx.android.synthetic.main.dialog_siparis_ekle_corlu.view.tvZamanEkleDialog
 import kotlinx.android.synthetic.main.item_musteri.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -117,21 +126,27 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
                     if (dialogViewSp.etYumurta.text.toString().isNotEmpty()) {
                         yumurtaAdet = dialogViewSp.etYumurta.text.toString()
                     }
+                    var dokmeSutAdet = "0"
+                    if (dialogViewSp.etDokmeSut.text.toString().isNotEmpty()) {
+                        dokmeSutAdet = dialogViewSp.etDokmeSut.text.toString()
+                    }
+
+
+                    var dokmeSutFiyat = dialogViewSp.etDokmeSutFiyat.text.toString().toDouble()
 
                     var siparisNotu = dialogViewSp.etSiparisNotu.text.toString()
-
-                    var siparisKey = refCorlu.child("Siparisler").push().key.toString()
-
+                    var siparisKey = FirebaseDatabase.getInstance().reference.child("Siparisler").push().key.toString()
                     var sut3ltFiyat = dialogViewSp.et3ltFiyat.text.toString().toDouble()
                     var sut5ltFiyat = dialogViewSp.et5ltFiyat.text.toString().toDouble()
                     var yumurtaFiyat = dialogViewSp.etYumurtaFiyat.text.toString().toDouble()
 
-                    var toplamFiyat = (sut3ltAdet.toDouble() * sut3ltFiyat!!) + (sut5ltAdet.toDouble() * sut5ltFiyat!!) + (yumurtaAdet.toDouble() * yumurtaFiyat!!)
+                    var toplamFiyat = (sut3ltAdet.toDouble() * sut3ltFiyat) + (sut5ltAdet.toDouble() * sut5ltFiyat) + (yumurtaAdet.toDouble() * yumurtaFiyat) + (dokmeSutAdet.toDouble() * dokmeSutFiyat)
+
 
                     var siparisData = SiparisData(
                         System.currentTimeMillis(), System.currentTimeMillis(), cal.timeInMillis, musteriler[position].musteri_adres, musteriler[position].musteri_apartman,
                         musteriler[position].musteri_tel, musteriler[position].musteri_ad_soyad, musteriler[position].musteri_mah, siparisNotu, siparisKey, yumurtaAdet, yumurtaFiyat, sut3ltAdet, sut3ltFiyat,
-                        sut5ltAdet, sut5ltFiyat, toplamFiyat, musteriler[position].musteri_zkonum, musteriler[position].promosyon_verildimi, musteriler[position].musteri_zlat,
+                        sut5ltAdet, sut5ltFiyat,dokmeSutAdet,dokmeSutFiyat, toplamFiyat, musteriler[position].musteri_zkonum, musteriler[position].promosyon_verildimi, musteriler[position].musteri_zlat,
                         musteriler[position].musteri_zlong, kullaniciAdi
                     )
                     refCorlu.child("Siparisler").child(musteriler[position].musteri_mah.toString()).child(siparisKey).child("toplam_fiyat").setValue(0.0)
@@ -290,8 +305,7 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
                             .setPositiveButton("Sil", object : DialogInterface.OnClickListener {
                                 override fun onClick(p0: DialogInterface?, p1: Int) {
                                     refCorlu.child("Musteriler").child(musteriler[position].musteri_ad_soyad.toString()).removeValue()
-                                    var musteri =
-                                        musteriler.remove(musteriler[position])
+                                   musteriler.remove(musteriler[position])
                                     notifyDataSetChanged()
 
                                 }
@@ -322,7 +336,7 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
         var musteriAdi = itemView.tvMusteriAdi
         var btnSiparisEkle = itemView.tvSiparisEkle
         var sonSiparisZamani = itemView.tvMusteriSonZaman
-        var swKonumKaydet = itemView.swKonumKaydet
+
 
         var musteriAdiGnl = ""
         fun setData(musteriData: MusteriData) {
@@ -333,33 +347,7 @@ class MusteriCorluAdapter(val myContext: Context, val musteriler: ArrayList<Must
             }
 
         }
-/*
 
-        val myLocationListener = object : LocationListener {
-            override fun onLocationChanged(location: Location?) {
-                var Lat = location!!.latitude
-                var Long = location!!.longitude
-
-                refCorlu.child("Musteriler").child(musteriAdiGnl).child("musteri_zlat").setValue(Lat)
-                refCorlu.child("Musteriler").child(musteriAdiGnl).child("musteri_zlong").setValue(Long).addOnCompleteListener {
-                    Toast.makeText(myContext, "Konum Kaydedildi.", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-
-            }
-
-            override fun onProviderEnabled(provider: String?) {
-
-            }
-
-            override fun onProviderDisabled(provider: String?) {
-
-            }
-        }
-
-*/
     }
 
 

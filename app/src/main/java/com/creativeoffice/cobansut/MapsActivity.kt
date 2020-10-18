@@ -271,6 +271,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                                                     gelenData.sut3lt_fiyat,
                                                                     gelenData.sut5lt,
                                                                     gelenData.sut5lt_fiyat,
+                                                                    gelenData.dokme_sut,
+                                                                    gelenData.dokme_sut_fiyat,
                                                                     gelenData.toplam_fiyat,
                                                                     gelenData.musteri_zkonum,
                                                                     gelenData.promosyon_verildimi,

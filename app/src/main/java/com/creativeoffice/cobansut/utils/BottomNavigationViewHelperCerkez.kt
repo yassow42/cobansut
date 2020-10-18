@@ -10,6 +10,11 @@ import com.creativeoffice.cobansut.cerkez.MusterilerActivityCerkez
 import com.creativeoffice.cobansut.cerkez.SiparisActivityCerkez
 import com.creativeoffice.cobansut.cerkez.TeslimEdilenlerActivityCerkez
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
 
 
@@ -23,6 +28,8 @@ class BottomNavigationViewHelperCerkez {
             bottomNavigationViewEx.enableItemShiftingMode(false)
             bottomNavigationViewEx.enableShiftingMode(false)
             bottomNavigationViewEx.setTextVisibility(true)
+
+
 
         }
 

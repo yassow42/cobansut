@@ -10,7 +10,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -53,27 +55,6 @@
                 app:layout_constraintTop_toTopOf="@+id/et5lt" />
 
 
-            <EditText
-                android:id="@+id/et3ltFiyat"
-                android:layout_width="75dp"
-                android:layout_height="45dp"
-
-                android:layout_margin="8dp"
-
-                android:background="@drawable/bg_edittext"
-                android:ems="10"
-
-                android:gravity="center"
-                android:inputType="number"
-                android:text="16.0"
-                android:textAlignment="center"
-                android:textColor="#ffffff"
-                android:textColorHint="#ffffff"
-                app:layout_constraintEnd_toEndOf="@+id/et3lt"
-                app:layout_constraintStart_toStartOf="@+id/et3lt"
-                app:layout_constraintTop_toBottomOf="@+id/textView7" />
-
-
         </LinearLayout>
 
         <LinearLayout
@@ -103,23 +84,6 @@
                 android:ems="10"
                 android:gravity="center"
                 android:inputType="number"
-                android:textAlignment="center"
-                android:textColor="#ffffff"
-                android:textColorHint="#ffffff" />
-
-            <EditText
-                android:id="@+id/et5ltFiyat"
-                android:layout_width="75dp"
-                android:layout_height="45dp"
-
-                android:layout_margin="8dp"
-
-                android:background="@drawable/bg_edittext"
-                android:ems="10"
-
-                android:gravity="center"
-                android:inputType="number"
-                android:text="22.0"
                 android:textAlignment="center"
                 android:textColor="#ffffff"
                 android:textColorHint="#ffffff" />
@@ -158,21 +122,6 @@
                 android:textColor="#ffffff"
                 android:textColorHint="#ffffff" />
 
-            <EditText
-                android:id="@+id/etYumurtaFiyat"
-                android:layout_width="75dp"
-                android:layout_height="45dp"
-                android:layout_margin="8dp"
-
-                android:background="@drawable/bg_edittext"
-                android:ems="10"
-                android:gravity="center"
-                android:inputType="number"
-
-                android:text="1.0"
-                android:textAlignment="center"
-                android:textColor="#ffffff"
-                android:textColorHint="#ffffff" />
         </LinearLayout>
 
         <LinearLayout
@@ -207,75 +156,9 @@
                 android:textColor="#ffffff"
                 android:textColorHint="#ffffff" />
 
-            <EditText
-                android:id="@+id/etDokmeSutFiyat"
-                android:layout_width="75dp"
-                android:layout_height="45dp"
-                android:layout_margin="8dp"
-
-                android:background="@drawable/bg_edittext"
-                android:ems="10"
-
-                android:gravity="center"
-                android:inputType="number"
-                android:text="1.0"
-                android:textAlignment="center"
-                android:textColor="#ffffff"
-                android:textColorHint="#ffffff" />
-
         </LinearLayout>
 
     </LinearLayout>
 
-
-    <EditText
-        android:id="@+id/etSiparisNotu"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-
-        android:layout_marginBottom="2dp"
-        android:background="@drawable/bg_edittext"
-        android:drawableLeft="@drawable/note"
-        android:drawablePadding="8dp"
-        android:ems="10"
-
-        android:hint="Sipariş Notu"
-        android:inputType="none"
-        android:paddingLeft="17dp"
-        android:paddingTop="10dp"
-        android:paddingRight="15dp"
-        android:paddingBottom="10dp"
-        android:textColor="#ffffff"
-        android:textColorHint="#ffffff"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvZamanEkleDialog" />
-
-    <TextView
-        android:id="@+id/tvZamanEkleDialog"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="12:21"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
-
-    <Switch
-        android:id="@+id/swPromosyon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tvZamanEkleDialog"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvZamanEkleDialog" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,7 +14,12 @@
         android:icon="@drawable/ic_teslim"
         android:title="Teslim Edildi" />
     <item
+        android:id="@+id/ic_hesap"
+        android:icon="@drawable/ic_musteriler"
+        android:title="Hesap" />
+    <item
         android:id="@+id/ic_musteri"
         android:icon="@drawable/ic_musteriler"
         android:title="Müşteriler" />
+
 </menu>

@@ -2,6 +2,7 @@ package com.creativeoffice.cobansut.cerkez.adapter
 
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,8 +30,7 @@ class MahalleAdapter(val myContext: Context, val mahalleler: ArrayList<String>, 
         parent: ViewGroup,
         viewType: Int
     ): MahalleAdapter.SiparisHolder {
-        val view =
-            LayoutInflater.from(myContext).inflate(R.layout.item_siparisler_mahalle, parent, false)
+        val view = LayoutInflater.from(myContext).inflate(R.layout.item_siparisler_mahalle, parent, false)
 
         SiparisHolder(view).recycler.visibility = View.GONE
 
@@ -71,6 +71,7 @@ class MahalleAdapter(val myContext: Context, val mahalleler: ArrayList<String>, 
         val tv3lt = itemView.tv3lt
         val tv5lt = itemView.tv5lt
         val tvYumurta = itemView.tvYumurta
+        val tvDokme = itemView.tvDokmeSut
         val tvToplam = itemView.tvToplam
 
         fun setRc(mahalleler: String) {
@@ -89,30 +90,34 @@ class MahalleAdapter(val myContext: Context, val mahalleler: ArrayList<String>, 
 
 
                             } catch (e: Exception) {
-                               // FirebaseDatabase.getInstance().reference.child("Hatalar/MahalleAdapterCerkez").push().setValue(e.message.toString())
+                                ref.child("Hatalar/MahalleAdapter").push().setValue(e.message.toString())
                             }
 
                         }
                         recycler.layoutManager = LinearLayoutManager(myContext, LinearLayoutManager.VERTICAL, false)
-                        val adapter = MahalleSiparisleriAdapter(myContext, siparisList, kullaniciAdi,bolge)
+                        val adapter = MahalleSiparisleriAdapter(myContext, siparisList, kullaniciAdi, bolge)
                         recycler.adapter = adapter
                         siparisSayisi.setText("(" + siparisList.size + ")")
 
                         var sut3ltSayisi = 0
                         var sut5ltSayisi = 0
                         var yumurtaSayisi = 0
+                        var dokmeSayisi = 0
                         var toplamFiyatlar = 0.0
+
                         if (siparisList.size > 0) {
                             for (ds in siparisList) {
-                                if (ds.sut3lt != null && ds.sut5lt != null && ds.yumurta != null) {
+                                if (ds.sut3lt != null && ds.sut5lt != null && ds.yumurta != null && ds.dokme_sut != null) {
                                     sut3ltSayisi = ds.sut3lt!!.toInt() + sut3ltSayisi
                                     sut5ltSayisi = ds.sut5lt!!.toInt() + sut5ltSayisi
                                     yumurtaSayisi = ds.yumurta!!.toInt() + yumurtaSayisi
+                                    dokmeSayisi = ds.dokme_sut!!.toInt() + dokmeSayisi
                                     toplamFiyatlar = ds.toplam_fiyat!!.toDouble() + toplamFiyatlar
 
                                     tv3lt.setText("3lt: " + sut3ltSayisi.toString())
                                     tv5lt.setText("5lt: " + sut5ltSayisi.toString())
                                     tvYumurta.setText("Yum: " + yumurtaSayisi.toString())
+                                    tvDokme.setText("Dokme: " + dokmeSayisi.toString())
                                     tvToplam.setText("Toplam: " + toplamFiyatlar.toString())
                                 }
                             }

@@ -17,7 +17,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.item_teslim.view.*
-import java.io.IOException
 
 class TeslimEdilenlerAdapter(val myContext: Context, val siparisler: ArrayList<SiparisData>, val bolge: String) : RecyclerView.Adapter<TeslimEdilenlerAdapter.SiparisHolder>() {
     lateinit var mAuth: FirebaseAuth
@@ -96,6 +95,8 @@ class TeslimEdilenlerAdapter(val myContext: Context, val siparisler: ArrayList<S
         val sut3ltf = itemView.tv3ltFiyat
         val sut5lt = itemView.tv5lt
         val sut5ltf = itemView.tv5ltFiyat
+        val dokmeSut = itemView.tvDokumSut
+        val dokmeSutFiyat = itemView.tvDokumSutFiyat
         val yumurta = itemView.tvYumurta
         var yumurtaf = itemView.tvYumurtaFiyat
         val zaman = itemView.tvZaman
@@ -106,10 +107,12 @@ class TeslimEdilenlerAdapter(val myContext: Context, val siparisler: ArrayList<S
             musteriAdSoyad.text = siparisData.siparis_veren
             sut3lt.text = siparisData.sut3lt
             sut5lt.text = siparisData.sut5lt
+            dokmeSut.text = siparisData.dokme_sut
             yumurta.text = siparisData.yumurta
 
             sut3ltf.text = siparisData.sut3lt_fiyat.toString()
             sut5ltf.text = siparisData.sut5lt_fiyat.toString()
+            dokmeSutFiyat.text = siparisData.dokme_sut_fiyat.toString()
             yumurtaf.text = siparisData.yumurta_fiyat.toString()
 
             siparisFiyatı.setText(siparisData.toplam_fiyat.toString())
@@ -126,13 +129,15 @@ class TeslimEdilenlerAdapter(val myContext: Context, val siparisler: ArrayList<S
             var sut3ltFiyat: Double = siparisData.sut3lt_fiyat.toString().toDouble()
             var sut5ltAdet = siparisData.sut5lt.toString().toDouble()
             var sut5ltFiyat: Double = siparisData.sut5lt_fiyat.toString().toDouble()
+            var dokmeSutAdet = siparisData.dokme_sut.toString().toDouble()
+            var dokmeSutFiyat: Double = siparisData.dokme_sut_fiyat.toString().toDouble()
             var yumurtaAdet = siparisData.yumurta.toString().toDouble()
             var yumurtaFiyat: Double = siparisData.yumurta_fiyat.toString().toDouble()
 
 
-            var toplamFiyat = (sut3ltAdet * sut3ltFiyat!!) + (sut5ltAdet * sut5ltFiyat!!) + (yumurtaAdet * yumurtaFiyat!!)
+            var toplamFiyat = (sut3ltAdet * sut3ltFiyat) + (sut5ltAdet * sut5ltFiyat) + (yumurtaAdet * yumurtaFiyat) +(dokmeSutAdet*dokmeSutFiyat)
             ref.child("Teslim_siparisler").child(siparisData.siparis_key.toString()).child("toplam_fiyat").setValue(toplamFiyat)
-            siparisFiyatı.text = ((sut3ltAdet * sut3ltFiyat!!) + (sut5ltAdet * sut5ltFiyat!!) + (yumurtaAdet * yumurtaFiyat!!)).toString() + " tl"
+            siparisFiyatı.text = toplamFiyat.toString() + " tl"
 
         }
 

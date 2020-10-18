@@ -283,20 +283,25 @@ class MusterilerActivityCerkez : AppCompatActivity() {
                                     if (dialogViewSpArama.etYumurta.text.toString().isNotEmpty()) {
                                         yumurtaAdet = dialogViewSpArama.etYumurta.text.toString()
                                     }
-
-                                    var siparisNotu = dialogViewSpArama.etSiparisNotu.text.toString()
-                                    var siparisKey = FirebaseDatabase.getInstance().reference.child("Siparisler").push().key.toString()
+                                    var dokmeSutAdet = "0"
+                                    if (dialogViewSpArama.etDokmeSut.text.toString().isNotEmpty()) {
+                                        dokmeSutAdet = dialogViewSpArama.etDokmeSut.text.toString()
+                                    }
 
                                     var sut3ltFiyat = dialogViewSpArama.et3ltFiyat.text.toString().toDouble()
                                     var sut5ltFiyat = dialogViewSpArama.et5ltFiyat.text.toString().toDouble()
                                     var yumurtaFiyat = dialogViewSpArama.etYumurtaFiyat.text.toString().toDouble()
+                                    var dokmeSutFiyat = dialogViewSpArama.etDokmeSutFiyat.text.toString().toDouble()
 
-                                    var toplamFiyat = (sut3ltAdet.toDouble() * sut3ltFiyat!!) + (sut5ltAdet.toDouble() * sut5ltFiyat!!) + (yumurtaAdet.toDouble() * yumurtaFiyat!!)
+                                    var siparisNotu = dialogViewSpArama.etSiparisNotu.text.toString()
+                                    var siparisKey = FirebaseDatabase.getInstance().reference.child("Siparisler").push().key.toString()
+
+                                    var toplamFiyat = (sut3ltAdet.toDouble() * sut3ltFiyat) + (sut5ltAdet.toDouble() * sut5ltFiyat) + (yumurtaAdet.toDouble() * yumurtaFiyat) + (dokmeSutAdet.toDouble() * dokmeSutFiyat)
 
                                     var siparisData = SiparisData(
                                         System.currentTimeMillis(), System.currentTimeMillis(), cal.timeInMillis, musteriData.musteri_adres, musteriData.musteri_apartman, musteriData.musteri_tel,
                                         musteriData.musteri_ad_soyad, musteriData.musteri_mah, siparisNotu, siparisKey, yumurtaAdet, yumurtaFiyat, sut3ltAdet, sut3ltFiyat, sut5ltAdet, sut5ltFiyat,
-                                        toplamFiyat, musteriData.musteri_zkonum, musteriData.promosyon_verildimi, musteriData.musteri_zlat, musteriData.musteri_zlong, kullaniciAdi
+                                      dokmeSutAdet,dokmeSutFiyat,  toplamFiyat, musteriData.musteri_zkonum, musteriData.promosyon_verildimi, musteriData.musteri_zlat, musteriData.musteri_zlong, kullaniciAdi
                                     )
 
 

@@ -18,6 +18,8 @@ class SiparisData(
     var sut3lt_fiyat: Double? = null,
     var sut5lt: String? = null,
     var sut5lt_fiyat: Double? = null,
+    var dokme_sut: String? = null,
+    var dokme_sut_fiyat: Double? = null,
     var toplam_fiyat: Double? = null,
     var musteri_zkonum: Boolean?=null,
     var promosyon_verildimi: Boolean?=null,

@@ -40,7 +40,7 @@ import kotlin.collections.ArrayList
 class MusterilerActivity : AppCompatActivity() {
 
 
-    private val ACTIVITY_NO = 3
+    private val ACTIVITY_NO = 4
     var secilenMah: String? = null
     lateinit var musteriList: ArrayList<MusteriData>
     lateinit var musteriAdList: ArrayList<String>
@@ -300,19 +300,26 @@ class MusterilerActivity : AppCompatActivity() {
                                     if (dialogViewSpArama.etYumurta.text.toString().isNotEmpty()) {
                                         yumurtaAdet = dialogViewSpArama.etYumurta.text.toString()
                                     }
+
+                                    var dokmeSutAdet = "0"
+                                    if (dialogViewSpArama.etDokmeSut.text.toString().isNotEmpty()) {
+                                        dokmeSutAdet = dialogViewSpArama.etDokmeSut.text.toString()
+                                    }
                                     var sut3ltFiyat = dialogViewSpArama.et3ltFiyat.text.toString().toDouble()
                                     var sut5ltFiyat = dialogViewSpArama.et5ltFiyat.text.toString().toDouble()
                                     var yumurtaFiyat = dialogViewSpArama.etYumurtaFiyat.text.toString().toDouble()
+                                    var dokmeSutFiyat = dialogViewSpArama.etDokmeSutFiyat.text.toString().toDouble()
+
 
                                     var siparisNotu = dialogViewSpArama.etSiparisNotu.text.toString()
                                     var siparisKey = FirebaseDatabase.getInstance().reference.child("Siparisler").push().key.toString()
 
-                                    var toplamFiyat = (sut3ltAdet.toDouble() * sut3ltFiyat) + (sut5ltAdet.toDouble() * sut5ltFiyat) + (yumurtaAdet.toDouble() * yumurtaFiyat)
+                                    var toplamFiyat = (sut3ltAdet.toDouble() * sut3ltFiyat) + (sut5ltAdet.toDouble() * sut5ltFiyat) + (yumurtaAdet.toDouble() * yumurtaFiyat) + (dokmeSutAdet.toDouble() * dokmeSutFiyat)
 
 
                                     var siparisData = SiparisData(System.currentTimeMillis(), System.currentTimeMillis(), cal.timeInMillis, musteriData.musteri_adres, musteriData.musteri_apartman,
                                         musteriData.musteri_tel, musteriData.musteri_ad_soyad, musteriData.musteri_mah, siparisNotu, siparisKey, yumurtaAdet, yumurtaFiyat, sut3ltAdet, sut3ltFiyat, sut5ltAdet,
-                                        sut5ltFiyat, toplamFiyat, musteriData.musteri_zkonum, musteriData.promosyon_verildimi, musteriData.musteri_zlat, musteriData.musteri_zlong, kullaniciAdi)
+                                        sut5ltFiyat, dokmeSutAdet,dokmeSutFiyat,toplamFiyat, musteriData.musteri_zkonum, musteriData.promosyon_verildimi, musteriData.musteri_zlat, musteriData.musteri_zlong, kullaniciAdi)
 
                                     ref.child("Siparisler").child(siparisKey).setValue(siparisData)
                                     ref.child("Siparisler").child(siparisKey).child("siparis_zamani").setValue(ServerValue.TIMESTAMP)

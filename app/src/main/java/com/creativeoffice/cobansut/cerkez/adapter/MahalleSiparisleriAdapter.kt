@@ -102,6 +102,8 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
                                         siparisler[position].sut3lt_fiyat,
                                         siparisler[position].sut5lt,
                                         siparisler[position].sut5lt_fiyat,
+                                        siparisler[position].dokme_sut,
+                                        siparisler[position].dokme_sut_fiyat,
                                         siparisler[position].toplam_fiyat,
                                         siparisler[position].musteri_zkonum,
                                         siparisler[position].promosyon_verildimi,
@@ -110,12 +112,9 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
                                         kullaniciAdi
                                     )
 
-                                    refCerkez.child("Musteriler").child(siparisler[position].siparis_veren.toString())
-                                        .child("siparisleri").child(siparisler[position].siparis_key.toString()).setValue(siparisData)
+                                    refCerkez.child("Musteriler").child(siparisler[position].siparis_veren.toString()).child("siparisleri").child(siparisler[position].siparis_key.toString()).setValue(siparisData)
 
-                                    refCerkez.child("Teslim_siparisler")
-                                        .child(siparisler[position].siparis_key.toString()).setValue(siparisData)
-                                        .addOnCompleteListener {
+                                    refCerkez.child("Teslim_siparisler").child(siparisler[position].siparis_key.toString()).setValue(siparisData).addOnCompleteListener {
                                             Toast.makeText(myContext, "Sipariş Teslim Edildi. Kontrol et.", Toast.LENGTH_LONG).show()
                                             notifyDataSetChanged()
                                             refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisler[position].siparis_key.toString()).removeValue()
@@ -291,6 +290,8 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
         val tv3ltFiyat = itemView.tv3ltFiyat
         val tv5lt = itemView.tv5lt
         val tv5ltFiyat = itemView.tv5ltFiyat
+        val tvDokmeSut = itemView.tvDokmeSut
+        val tvDokmeSutFiyat = itemView.tvDokmeSutFiyat
         val tvYumurta = itemView.tvYumurta
         val tvYumurtaFiyat = itemView.tvYumurtaFiyat
         val tvZaman = itemView.tvZaman
@@ -364,6 +365,9 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
             var sut5ltFiyat: Double? = null
             var yumurtaAdet = 0
             var yumurtaFiyat: Double? = null
+            var dokmeSutAdet = 0
+            var dokmeSutFiyat: Double? = null
+
 
             if (!siparisData.sut3lt.isNullOrEmpty()) {
                 tv3lt.text = siparisData.sut3lt
@@ -386,31 +390,30 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
             } else {
                 hataMesajiYazdir("yumurta yok ${siparisData.siparis_key}", siparisData.siparis_veren.toString())
             }
+            if (!siparisData.dokme_sut.isNullOrEmpty() && siparisData.dokme_sut_fiyat != null) {
+                tvDokmeSut.text = siparisData.dokme_sut
+                dokmeSutAdet = siparisData.dokme_sut.toString().toInt()
+                dokmeSutFiyat = siparisData.dokme_sut_fiyat
+            } else {
+                hataMesajiYazdir("dokme yok ${siparisData.siparis_key}", siparisData.siparis_veren.toString())
+                Log.e("dokme","dokme yok ${siparisData.siparis_key} siparisData.siparis_veren.toString()")
+            }
 
-            try {
+
+
+            if (sut3ltAdet.toString() != "null" && sut5ltAdet.toString() != "null" && yumurtaAdet.toString() != "null" && sut3ltFiyat.toString() != "null"
+                && sut5ltFiyat.toString() != "null" && yumurtaFiyat.toString() != "null" && dokmeSutAdet.toString() != "null" && dokmeSutFiyat != null
+            ) {
+                var toplamFiyat = ((sut3ltAdet * sut3ltFiyat!!) + (sut5ltAdet * sut5ltFiyat!!) + (yumurtaAdet * yumurtaFiyat!!) + (dokmeSutAdet * dokmeSutFiyat!!))
+                tvFiyat.text = toplamFiyat.toString() + " tl"
                 tv3ltFiyat.text = siparisData.sut3lt_fiyat.toString()
                 tv5ltFiyat.text = siparisData.sut5lt_fiyat.toString()
+                tvDokmeSutFiyat.text = siparisData.dokme_sut_fiyat.toString()
                 tvYumurtaFiyat.text = siparisData.yumurta_fiyat.toString()
-                var toplamFiyat = (sut3ltAdet * sut3ltFiyat!!) + (sut5ltAdet * sut5ltFiyat!!) + (yumurtaAdet * yumurtaFiyat!!)
-              //  refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisData.siparis_key.toString()).child("toplam_fiyat").setValue(toplamFiyat)
-                tvFiyat.text = toplamFiyat.toString()+ " tl"
-            } catch (e: IOException) {
-                Toast.makeText(myContext, "Bazı fiyatlar hatalı", Toast.LENGTH_LONG).show()
+                refCerkez.child("Siparisler").child(siparisData.siparis_mah.toString()).child(siparisData.siparis_key.toString()).child("toplam_fiyat").setValue(toplamFiyat)
+
             }
 
-            siparisTel.setOnClickListener {
-                val arama =
-                    Intent(Intent.ACTION_DIAL)//Bu kod satırımız bizi rehbere telefon numarası ile yönlendiri.
-                arama.data = Uri.parse("tel:" + siparisData.siparis_tel)
-                myContext.startActivity(arama)
-            }
-            siparisAdres.setOnClickListener {
-                val intent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("google.navigation:q= " + siparisData.siparis_adres)
-                )
-                myContext.startActivity(intent)
-            }
 
 
         }
@@ -456,6 +459,10 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
                 tvYumurta.visibility = View.VISIBLE
                 tvYumurtaYazi.visibility = View.VISIBLE
             }
+            if (siparisData.dokme_sut.isNullOrEmpty()) refCerkez.child("Siparisler").child(siparisData.siparis_mah.toString()).child(siparisData.siparis_key.toString()).child("dokme_sut").setValue("0")
+
+            if (siparisData.dokme_sut_fiyat.toString() == "null") refCerkez.child("Siparisler").child(siparisData.siparis_mah.toString()).child(siparisData.siparis_key.toString()).child("dokme_sut_fiyat").setValue(0.0)
+
 
 
         }

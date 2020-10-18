@@ -134,20 +134,25 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                         if (dialogViewSp.etYumurta.text.toString().isNotEmpty()) {
                             yumurtaAdet = dialogViewSp.etYumurta.text.toString()
                         }
+                        var dokmeSutAdet = "0"
+                        if (dialogViewSp.etDokmeSut.text.toString().isNotEmpty()) {
+                            dokmeSutAdet = dialogViewSp.etDokmeSut.text.toString()
+                        }
 
                         var sut3ltFiyat = dialogViewSp.et3ltFiyat.text.toString().toDouble()
                         var sut5ltFiyat = dialogViewSp.et5ltFiyat.text.toString().toDouble()
                         var yumurtaFiyat = dialogViewSp.etYumurtaFiyat.text.toString().toDouble()
+                        var dokmeSutFiyat = dialogViewSp.etDokmeSutFiyat.text.toString().toDouble()
 
                         var siparisNotu = dialogViewSp.etSiparisNotu.text.toString()
                         var siparisKey = FirebaseDatabase.getInstance().reference.child("Siparisler").push().key.toString()
 
-                        var toplamFiyat = (sut3ltAdet.toDouble() * sut3ltFiyat) + (sut5ltAdet.toDouble() * sut5ltFiyat) + (yumurtaAdet.toDouble() * yumurtaFiyat)
+                        var toplamFiyat = (sut3ltAdet.toDouble() * sut3ltFiyat) + (sut5ltAdet.toDouble() * sut5ltFiyat) + (yumurtaAdet.toDouble() * yumurtaFiyat) + (dokmeSutAdet.toDouble() * dokmeSutFiyat)
 
                         var siparisData = SiparisData(
                             System.currentTimeMillis(), System.currentTimeMillis(), cal.timeInMillis, musteriler[position].musteri_adres, musteriler[position].musteri_apartman,
                             musteriler[position].musteri_tel, musteriler[position].musteri_ad_soyad, musteriler[position].musteri_mah, siparisNotu, siparisKey, yumurtaAdet, yumurtaFiyat, sut3ltAdet, sut3ltFiyat,
-                            sut5ltAdet, sut5ltFiyat, toplamFiyat, musteriler[position].musteri_zkonum, musteriler[position].promosyon_verildimi, musteriler[position].musteri_zlat,
+                            sut5ltAdet, sut5ltFiyat,dokmeSutAdet,dokmeSutFiyat, toplamFiyat, musteriler[position].musteri_zkonum, musteriler[position].promosyon_verildimi, musteriler[position].musteri_zlat,
                             musteriler[position].musteri_zlong, kullaniciAdi
                         )
 

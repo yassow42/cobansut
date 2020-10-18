@@ -37,6 +37,15 @@ import kotlinx.android.synthetic.main.activity_musteriler_corlu.tvMusteri
 import kotlinx.android.synthetic.main.activity_siparis_corlu.bottomNav
 import kotlinx.android.synthetic.main.dialog_musteri_ekle.view.*
 import kotlinx.android.synthetic.main.dialog_siparis_ekle_corlu.view.*
+import kotlinx.android.synthetic.main.dialog_siparis_ekle_corlu.view.et3lt
+import kotlinx.android.synthetic.main.dialog_siparis_ekle_corlu.view.et3ltFiyat
+import kotlinx.android.synthetic.main.dialog_siparis_ekle_corlu.view.et5lt
+import kotlinx.android.synthetic.main.dialog_siparis_ekle_corlu.view.et5ltFiyat
+import kotlinx.android.synthetic.main.dialog_siparis_ekle_corlu.view.etSiparisNotu
+import kotlinx.android.synthetic.main.dialog_siparis_ekle_corlu.view.etYumurta
+import kotlinx.android.synthetic.main.dialog_siparis_ekle_corlu.view.etYumurtaFiyat
+import kotlinx.android.synthetic.main.dialog_siparis_ekle_corlu.view.swPromosyon
+import kotlinx.android.synthetic.main.dialog_siparis_ekle_corlu.view.tvZamanEkleDialog
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
@@ -245,18 +254,26 @@ class MusterilerCorluActivity : AppCompatActivity() {
                                         yumurtaAdet = dialogViewSpArama.etYumurta.text.toString()
                                     }
 
+                                    var dokmeSutAdet = "0"
+                                    if (dialogViewSpArama.etDokmeSut.text.toString().isNotEmpty()) {
+                                        dokmeSutAdet = dialogViewSpArama.etDokmeSut.text.toString()
+                                    }
+
                                     var siparisNotu = dialogViewSpArama.etSiparisNotu.text.toString()
                                     var siparisKey = refCorlu.child("Siparisler").push().key.toString()
+
                                     var sut3ltFiyat = dialogViewSpArama.et3ltFiyat.text.toString().toDouble()
                                     var sut5ltFiyat = dialogViewSpArama.et5ltFiyat.text.toString().toDouble()
                                     var yumurtaFiyat = dialogViewSpArama.etYumurtaFiyat.text.toString().toDouble()
+                                    var dokmeSutFiyat = dialogViewSpArama.etDokmeSutFiyat.text.toString().toDouble()
 
-                                    var toplamFiyat = (sut3ltAdet.toDouble() * sut3ltFiyat!!) + (sut5ltAdet.toDouble() * sut5ltFiyat!!) + (yumurtaAdet.toDouble() * yumurtaFiyat!!)
+                                    var toplamFiyat = (sut3ltAdet.toDouble() * sut3ltFiyat) + (sut5ltAdet.toDouble() * sut5ltFiyat) + (yumurtaAdet.toDouble() * yumurtaFiyat) + (dokmeSutAdet.toDouble() * dokmeSutFiyat)
+
 
                                     var siparisData = SiparisData(
                                         System.currentTimeMillis(), System.currentTimeMillis(), cal.timeInMillis, musteriData.musteri_adres, musteriData.musteri_apartman,
                                         musteriData.musteri_tel, musteriData.musteri_ad_soyad, musteriData.musteri_mah, siparisNotu, siparisKey, yumurtaAdet, yumurtaFiyat, sut3ltAdet, sut3ltFiyat,
-                                        sut5ltAdet, sut5ltFiyat, toplamFiyat, musteriData.musteri_zkonum, musteriData.promosyon_verildimi, musteriData.musteri_zlat,
+                                        sut5ltAdet, sut5ltFiyat, dokmeSutAdet,dokmeSutFiyat, toplamFiyat, musteriData.musteri_zkonum, musteriData.promosyon_verildimi, musteriData.musteri_zlat,
                                         musteriData.musteri_zlong, kullaniciAdi
                                     )
                                     refCorlu.child("Siparisler").child(musteriData.musteri_mah.toString()).child(siparisKey).child("toplam_fiyat").setValue(0.0)

@@ -3,6 +3,7 @@ package com.creativeoffice.cobansut.utils
 import android.content.Context
 import android.content.Intent
 import android.view.MenuItem
+import com.creativeoffice.cobansut.Activity.HesapActivity
 import com.creativeoffice.cobansut.Activity.SiparislerActivity
 import com.creativeoffice.cobansut.Activity.TeslimActivity
 import com.creativeoffice.cobansut.MapsActivity
@@ -56,6 +57,12 @@ class BottomNavigationViewHelper {
                             }
                             R.id.ic_maps -> {
                                 val intent = Intent(context, MapsActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+
+                                context.startActivity(intent)
+                            }
+
+                            R.id.ic_hesap->{
+                                val intent = Intent(context, HesapActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
 
                                 context.startActivity(intent)
                             }

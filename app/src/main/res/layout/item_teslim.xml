@@ -118,6 +118,35 @@
                 android:textColor="@color/beyaz"
                 android:textSize="12sp" />
         </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Doküm:  "
+                android:textColor="@color/beyaz"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tvDokumSut"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:text="5"
+                android:textAlignment="center"
+                android:textColor="@color/beyaz" />
+
+            <TextView
+                android:id="@+id/tvDokumSutFiyat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.0"
+                android:textAlignment="center"
+                android:textColor="@color/beyaz"
+                android:textSize="12sp" />
+        </TableRow>
 
         <TableRow
             android:layout_width="match_parent"

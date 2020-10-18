@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -93,6 +94,8 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
                                             siparisler[position].sut3lt_fiyat,
                                             siparisler[position].sut5lt,
                                             siparisler[position].sut5lt_fiyat,
+                                            siparisler[position].dokme_sut,
+                                            siparisler[position].dokme_sut_fiyat,
                                             siparisler[position].toplam_fiyat,
                                             siparisler[position].musteri_zkonum,
                                             siparisler[position].promosyon_verildimi,
@@ -272,7 +275,8 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
                 return@setOnLongClickListener true
             }
         } catch (e: IOException) {
-
+            ref.child("Hatalar/Siparis adapter/277.satır hatası").setValue(e.message.toString())
+            Log.e("siparis adapter", e.message.toString())
         }
 
 
@@ -288,6 +292,8 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
         val tv3ltFiyat = itemView.tv3ltFiyat
         val tv5lt = itemView.tv5lt
         val tv5ltFiyat = itemView.tv5ltFiyat
+        val tvDokmeSut = itemView.tvDokmeSut
+        val tvDokmeSutFiyat = itemView.tvDokmeSutFiyat
         val tvYumurta = itemView.tvYumurta
         val tvYumurtaFiyat = itemView.tvYumurtaFiyat
         val tvZaman = itemView.tvZaman
@@ -318,7 +324,7 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
             }
 
             siparisSayiGizle(siparisData)
-
+            swSiparisPromosyon.visibility = View.GONE
             swSiparisPromosyon.setOnClickListener {
                 if (swSiparisPromosyon.isChecked) {
                     FirebaseDatabase.getInstance().reference.child("Musteriler").child(siparisData.siparis_veren.toString()).child("promosyon_verildimi").setValue(true)
@@ -331,7 +337,6 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
 
             if (siparisData.promosyon_verildimi != null) {
                 var boolean = siparisData.promosyon_verildimi
-
                 swSiparisPromosyon.isChecked = boolean.toString().toBoolean()
             }
 
@@ -357,6 +362,8 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
             var sut5ltFiyat: Double? = null
             var yumurtaAdet = 0
             var yumurtaFiyat: Double? = null
+            var dokmeSutAdet = 0
+            var dokmeSutFiyat: Double? = null
 
 
 
@@ -384,13 +391,24 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
                 hataMesajiYazdir("yumurta yok ${siparisData.siparis_key}", siparisData.siparis_veren.toString())
             }
 
+            if (!siparisData.dokme_sut.isNullOrEmpty() && siparisData.dokme_sut_fiyat.toString() != "null") {
+                tvDokmeSut.text = siparisData.dokme_sut
+                dokmeSutAdet = siparisData.dokme_sut.toString().toInt()
+                dokmeSutFiyat = siparisData.dokme_sut_fiyat
+            } else {
+                hataMesajiYazdir("dokme yok ${siparisData.siparis_key}", siparisData.siparis_veren.toString())
+                Log.e("dokme","dokme yok ${siparisData.siparis_key} siparisData.siparis_veren.toString()")
+            }
 
-            var toplamFiyat = (sut3ltAdet * sut3ltFiyat!!) + (sut5ltAdet * sut5ltFiyat!!) + (yumurtaAdet * yumurtaFiyat!!)
-            //   FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisData.siparis_key.toString()).child("toplam_fiyat").setValue(toplamFiyat)
-            if (sut3ltAdet.toString() != "null" && sut5ltAdet.toString() != "null" && yumurtaAdet.toString() != "null" && sut3ltFiyat.toString() != "null" && sut5ltFiyat.toString() != "null" && yumurtaFiyat.toString() != "null") {
-                tvFiyat.text = ((sut3ltAdet * sut3ltFiyat!!) + (sut5ltAdet * sut5ltFiyat!!) + (yumurtaAdet * yumurtaFiyat!!)).toString() + " tl"
+
+
+            if (sut3ltAdet.toString() != "null" && sut5ltAdet.toString() != "null" && yumurtaAdet.toString() != "null" && sut3ltFiyat.toString() != "null"
+                && sut5ltFiyat.toString() != "null" && yumurtaFiyat.toString() != "null" && dokmeSutAdet.toString() != "null" && dokmeSutFiyat.toString() != "null"
+            ) {
+                tvFiyat.text = ((sut3ltAdet * sut3ltFiyat!!) + (sut5ltAdet * sut5ltFiyat!!) + (yumurtaAdet * yumurtaFiyat!!) + (dokmeSutAdet * dokmeSutFiyat!!)).toString() + " tl"
                 tv3ltFiyat.text = siparisData.sut3lt_fiyat.toString()
                 tv5ltFiyat.text = siparisData.sut5lt_fiyat.toString()
+                tvDokmeSutFiyat.text = siparisData.dokme_sut_fiyat.toString()
                 tvYumurtaFiyat.text = siparisData.yumurta_fiyat.toString()
             }
 
@@ -444,6 +462,10 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
                 tvYumurtaYazi.visibility = View.VISIBLE
             }
 
+
+            if (siparisData.dokme_sut.isNullOrEmpty()) ref.child("Siparisler").child(siparisData.siparis_key.toString()).child("dokme_sut").setValue("0")
+
+            if (siparisData.dokme_sut_fiyat.toString() == "null") ref.child("Siparisler").child(siparisData.siparis_key.toString()).child("dokme_sut_fiyat").setValue(0.0)
 
         }
 
