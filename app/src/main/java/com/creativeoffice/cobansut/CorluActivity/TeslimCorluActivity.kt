@@ -44,6 +44,7 @@ class TeslimCorluActivity : AppCompatActivity() {
     lateinit var progressDialog: ProgressDialog
     val hndler = Handler()
 
+    var refCorlu =  FirebaseDatabase.getInstance().reference.child("Corlu")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_teslim_corlu)
@@ -67,7 +68,7 @@ class TeslimCorluActivity : AppCompatActivity() {
 
 
     private fun setupVeri() {
-        FirebaseDatabase.getInstance().reference.child("Corlu").child("Teslim_siparisler").orderByChild("siparis_teslim_zamani").addListenerForSingleValueEvent(object : ValueEventListener {
+       refCorlu.child("Teslim_siparisler").orderByChild("siparis_teslim_zamani").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
             }
@@ -94,6 +95,10 @@ class TeslimCorluActivity : AppCompatActivity() {
                             }
                             for (ds in data.children) {
                                 var gelenData = ds.getValue(SiparisData::class.java)!!
+                                if (gelenData.dokme_sut==null){
+                                    refCorlu.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut").setValue("0")
+                                    refCorlu.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut_fiyat").setValue(3.5)
+                                }
                                 butunTeslimList.add(gelenData)
                                 if (gelenData.siparis_teslim_zamani.toString() != "null") {
                                     if (gece3GelenZaman - 86400000 < gelenData.siparis_teslim_zamani!!.toLong() && gelenData.siparis_teslim_zamani!!.toLong() < gece3GelenZaman) {

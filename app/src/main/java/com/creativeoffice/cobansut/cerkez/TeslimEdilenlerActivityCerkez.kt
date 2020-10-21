@@ -86,6 +86,10 @@ class TeslimEdilenlerActivityCerkez : AppCompatActivity() {
                             }
                             for (ds in data.children) {
                                 var gelenData = ds.getValue(SiparisData::class.java)!!
+                                if (gelenData.dokme_sut==null){
+                                    ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut").setValue("0")
+                                    ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut_fiyat").setValue(3.5)
+                                }
                                 butunTeslimList.add(gelenData)
                                 if (gece3GelenZaman - 86400000 < gelenData.siparis_teslim_zamani!!.toLong() && gelenData.siparis_teslim_zamani!!.toLong() < gece3GelenZaman) {
                                     suankiTeslimList.add(gelenData)

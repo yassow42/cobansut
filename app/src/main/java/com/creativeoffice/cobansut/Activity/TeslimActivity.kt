@@ -54,7 +54,7 @@ class TeslimActivity : AppCompatActivity() {
 
     private fun setupVeri() {
 
-        ref.child("Teslim_siparisler").limitToLast(250).addListenerForSingleValueEvent(object : ValueEventListener {
+        ref.child("Teslim_siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
             }
@@ -82,6 +82,10 @@ class TeslimActivity : AppCompatActivity() {
                             }
                             for (ds in data.children) {
                                 var gelenData = ds.getValue(SiparisData::class.java)!!
+                                if (gelenData.dokme_sut==null){
+                                    ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut").setValue("0")
+                                    ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut_fiyat").setValue(0)
+                                }
                                 butunTeslimList.add(gelenData)
                                 if (gelenData.siparis_teslim_zamani.toString() != "null") {
                               //      ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut").setValue("0")
@@ -91,7 +95,7 @@ class TeslimActivity : AppCompatActivity() {
                                         sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
                                         sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
                                         yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
-                                        dokumSutSayisi = gelenData.dokme_sut!!.toInt() + dokumSutSayisi
+//                                        dokumSutSayisi = gelenData.dokme_sut!!.toInt() + dokumSutSayisi
 
                                         try {
                                             toplamFiyatlar = gelenData.toplam_fiyat!!.toDouble() + toplamFiyatlar
@@ -102,7 +106,6 @@ class TeslimActivity : AppCompatActivity() {
 
                                     }
                                 }
-
                             }
 
                             progressDialog.dismiss()
@@ -114,13 +117,14 @@ class TeslimActivity : AppCompatActivity() {
 
                             try {
                                 tvFiyatGenelTeslim.setText(toplamFiyatlar.toString() + " TL")
+                             setupRecyclerView()
                             } catch (e: IOException) {
                                 Log.e("teslim activity", "hatalar ${e.message.toString()}")
 
                             }
 
 
-                            setupRecyclerView()
+
                         }
                     })
                 } else {

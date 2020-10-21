@@ -461,7 +461,7 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
             }
             if (siparisData.dokme_sut.isNullOrEmpty()) refCerkez.child("Siparisler").child(siparisData.siparis_mah.toString()).child(siparisData.siparis_key.toString()).child("dokme_sut").setValue("0")
 
-            if (siparisData.dokme_sut_fiyat.toString() == "null") refCerkez.child("Siparisler").child(siparisData.siparis_mah.toString()).child(siparisData.siparis_key.toString()).child("dokme_sut_fiyat").setValue(0.0)
+            if (siparisData.dokme_sut_fiyat.toString() == "null") refCerkez.child("Siparisler").child(siparisData.siparis_mah.toString()).child(siparisData.siparis_key.toString()).child("dokme_sut_fiyat").setValue(3.5)
 
 
 
