@@ -198,42 +198,56 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_plus" />
 
-    <TextView
-        android:id="@+id/tvAlinanPara"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Alınan: 150tl"
-        android:textColor="@color/beyaz"
-        app:layout_constraintBottom_toBottomOf="@+id/tvToplamFiyat"
-        app:layout_constraintEnd_toStartOf="@+id/tvKalanPara"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tvToplamFiyat"
-        app:layout_constraintTop_toTopOf="@+id/tvToplamFiyat" />
-
-    <TextView
-        android:id="@+id/tvToplamFiyat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:text="Toplam 1500 tl"
-        android:textColor="@color/beyaz"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tvAlinanPara"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout5" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
 
-    <TextView
-        android:id="@+id/tvKalanPara"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Kalan:250 tl"
-        android:textColor="@color/beyaz"
-        app:layout_constraintBottom_toBottomOf="@+id/tvAlinanPara"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tvAlinanPara"
-        app:layout_constraintTop_toTopOf="@+id/tvAlinanPara" />
+        <TextView
+            android:id="@+id/tvToplamFiyat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="Toplam 1500 tl"
+            android:textColor="@color/beyaz"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tvAlinanPara"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout5" />
+
+        <TextView
+            android:id="@+id/tvAlinanPara"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="Alınan: 150tl"
+            android:textColor="@color/beyaz"
+            app:layout_constraintBottom_toBottomOf="@+id/tvToplamFiyat"
+            app:layout_constraintEnd_toStartOf="@+id/tvKalanPara"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tvToplamFiyat"
+            app:layout_constraintTop_toTopOf="@+id/tvToplamFiyat" />
+
+        <TextView
+            android:id="@+id/tvKalanPara"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="Kalan:250 tl"
+            android:textColor="@color/beyaz"
+            app:layout_constraintBottom_toBottomOf="@+id/tvAlinanPara"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tvAlinanPara"
+            app:layout_constraintTop_toTopOf="@+id/tvAlinanPara" />
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

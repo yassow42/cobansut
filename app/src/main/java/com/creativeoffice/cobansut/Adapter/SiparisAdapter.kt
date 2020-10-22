@@ -145,6 +145,8 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
                             viewDuzenle.et5ltFiyat.setText(siparisler[position].sut5lt_fiyat.toString())
                             viewDuzenle.etYumurta.setText(siparisler[position].yumurta)
                             viewDuzenle.etYumurtaFiyat.setText(siparisler[position].yumurta_fiyat.toString())
+                            viewDuzenle.etDokmeSut.setText(siparisler[position].dokme_sut)
+                            viewDuzenle.etDokmeSutFiyat.setText(siparisler[position].dokme_sut_fiyat.toString())
                             viewDuzenle.etSiparisNotu.setText(siparisler[position].siparis_notu)
 
                             viewDuzenle.tvZamanEkleDialog.text = SimpleDateFormat("HH:mm dd.MM.yyyy").format(System.currentTimeMillis())
@@ -183,39 +185,44 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
                             builder.setPositiveButton("Güncelle", object : DialogInterface.OnClickListener {
                                 override fun onClick(dialog: DialogInterface?, which: Int) {
 
-                                    var sut3lt = "0"
-                                    if (viewDuzenle.et3lt.text.isNotEmpty()) {
-                                        sut3lt = viewDuzenle.et3lt.text.toString()
-                                    }
-                                    var sut5lt = "0"
-                                    if (viewDuzenle.et5lt.text.isNotEmpty()) {
-                                        sut5lt = viewDuzenle.et5lt.text.toString()
-                                    }
-                                    var yumurta = "0"
-                                    if (viewDuzenle.etYumurta.text.isNotEmpty()) {
-                                        yumurta = viewDuzenle.etYumurta.text.toString()
-                                    }
+                                    var sut3ltAdet = "0"
+                                    if (viewDuzenle.et3lt.text.isNotEmpty()) sut3ltAdet = viewDuzenle.et3lt.text.toString()
+
+                                    var sut5ltAdet = "0"
+                                    if (viewDuzenle.et5lt.text.isNotEmpty()) sut5ltAdet = viewDuzenle.et5lt.text.toString()
+
+                                    var yumurtaAdet = "0"
+                                    if (viewDuzenle.etYumurta.text.isNotEmpty()) yumurtaAdet = viewDuzenle.etYumurta.text.toString()
+
+                                    var dokmeSutAdet = "0"
+                                    if (viewDuzenle.etDokmeSut.text.isNotEmpty()) dokmeSutAdet = viewDuzenle.etDokmeSut.text.toString()
+
 
                                     var sut3ltFiyat = viewDuzenle.et3ltFiyat.text.toString().toDouble()
                                     var sut5ltFiyat = viewDuzenle.et5ltFiyat.text.toString().toDouble()
                                     var yumurtaFiyat = viewDuzenle.etYumurtaFiyat.text.toString().toDouble()
+                                    var dokmeSutFiyat = viewDuzenle.etDokmeSutFiyat.text.toString().toDouble()
 
                                     var not = viewDuzenle.etSiparisNotu.text.toString()
                                     var siparisKey = siparisler[position].siparis_key.toString()
                                     var siparisVeren = siparisler[position].siparis_veren.toString()
-                                    ref.child("Siparisler").child(siparisKey).child("sut3lt").setValue(sut3lt)
+                                    var toplamFiyat = (sut3ltAdet.toDouble() * sut3ltFiyat) + (sut5ltAdet.toDouble() * sut5ltFiyat) + (yumurtaAdet.toDouble() * yumurtaFiyat) + (dokmeSutAdet.toDouble() * dokmeSutFiyat)
+
+                                    ref.child("Siparisler").child(siparisKey).child("sut3lt").setValue(sut3ltAdet)
                                     ref.child("Siparisler").child(siparisKey).child("sut3lt_fiyat").setValue(sut3ltFiyat)
-                                    ref.child("Siparisler").child(siparisKey).child("sut5lt").setValue(sut5lt)
+                                    ref.child("Siparisler").child(siparisKey).child("sut5lt").setValue(sut5ltAdet)
                                     ref.child("Siparisler").child(siparisKey).child("sut5lt_fiyat").setValue(sut5ltFiyat)
-                                    ref.child("Siparisler").child(siparisKey).child("yumurta").setValue(yumurta)
+                                    ref.child("Siparisler").child(siparisKey).child("yumurta").setValue(yumurtaAdet)
                                     ref.child("Siparisler").child(siparisKey).child("yumurta_fiyat").setValue(yumurtaFiyat)
+                                    ref.child("Siparisler").child(siparisKey).child("dokme_sut").setValue(dokmeSutAdet)
+                                    ref.child("Siparisler").child(siparisKey).child("dokme_sut_fiyat").setValue(dokmeSutFiyat)
                                     ref.child("Siparisler").child(siparisKey).child("siparis_notu").setValue(not)
                                     ref.child("Siparisler").child(siparisKey).child("siparis_teslim_tarihi").setValue(cal.timeInMillis)
-                                    ref.child("Siparisler").child(siparisKey).child("toplam_fiyat").setValue(0.0)
+                                    ref.child("Siparisler").child(siparisKey).child("toplam_fiyat").setValue(toplamFiyat)
 
-                                    ref.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("sut3lt").setValue(sut3lt)
-                                    ref.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("sut5lt").setValue(sut5lt)
-                                    ref.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("yumurta").setValue(yumurta)
+                                    ref.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("sut3lt").setValue(sut3ltAdet)
+                                    ref.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("sut5lt").setValue(sut5ltAdet)
+                                    ref.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("yumurta").setValue(yumurtaAdet)
                                     ref.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("siparis_notu").setValue(not)
                                     var intent = Intent(myContext, SiparislerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
 

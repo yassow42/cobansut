@@ -4,17 +4,23 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.creativeoffice.cobansut.Activity.HesapActivity
 import com.creativeoffice.cobansut.Datalar.Users
 import com.creativeoffice.cobansut.R
 import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.dialog_recyclerview.view.*
 import kotlinx.android.synthetic.main.dialog_stok_ekle.view.*
 import kotlinx.android.synthetic.main.item_hesap.view.*
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class HesapAdapter(var myContext: Context, var userList: ArrayList<Users>) : RecyclerView.Adapter<HesapAdapter.ViewHolder>() {
 
@@ -64,11 +70,11 @@ class HesapAdapter(var myContext: Context, var userList: ArrayList<Users>) : Rec
 
         fun setData(item: Users) {
 
-            stokBilgisiAlveGuncelle(item)
+            stokBilgisiAlveGuncelleAlinanParaList(item)
 
         }
 
-        fun stokBilgisiAlveGuncelle(item: Users) {
+        fun stokBilgisiAlveGuncelleAlinanParaList(item: Users) {
             var refStok = refUsers.child(item.user_id.toString()).child("Stok")
             refUsers.child(item.user_id.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(p0: DataSnapshot) {
@@ -174,9 +180,50 @@ class HesapAdapter(var myContext: Context, var userList: ArrayList<Users>) : Rec
                 override fun onCancelled(error: DatabaseError) {
 
                 }
-
-
             })
+
+            tvAlinanPara.setOnClickListener {
+                var builder: AlertDialog.Builder = AlertDialog.Builder(myContext)
+                var dialogView = View.inflate(myContext, R.layout.dialog_recyclerview, null)
+
+                ref.child("Depo_Alinan_Para").addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if (p0.hasChildren()) {
+                            var alinanParaList = ArrayList<String>()
+                            for (ds in p0.children) {
+
+                                var kimdenAlindi = p0.child(ds.key.toString()).child("kimden_alindi").value.toString()
+                                var alinanPara = p0.child(ds.key.toString()).child("alinan_para").value.toString()
+                                var alinanParaZaman = p0.child(ds.key.toString()).child("alinma_zamani").value.toString().toLong()
+
+                                var tumListString = "Alınan Para: $alinanPara \n${formatDate(alinanParaZaman).toString()}"
+                                if (item.user_name.equals(kimdenAlindi)) alinanParaList.add(tumListString)
+
+
+                            }
+                            val adapter = ArrayAdapter<String>(myContext, android.R.layout.simple_list_item_1, alinanParaList)
+                            dialogView.dialogRC.adapter = adapter
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+
+                    }
+                })
+
+
+                builder.setNegativeButton("Çık", object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+                        dialog!!.dismiss()
+                    }
+
+                })
+                builder.setView(dialogView)
+                var dialog: Dialog = builder.create()
+                dialog.show()
+
+            }
+
         }
 
 
@@ -203,6 +250,12 @@ class HesapAdapter(var myContext: Context, var userList: ArrayList<Users>) : Rec
 
             }
 
+        }
+        fun formatDate(miliSecond: Long?): String? {
+            if (miliSecond == null) return "0"
+            val date = Date(miliSecond)
+            val sdf = SimpleDateFormat("HH:mm - d MMM", Locale("tr"))
+            return sdf.format(date)
         }
     }
 }

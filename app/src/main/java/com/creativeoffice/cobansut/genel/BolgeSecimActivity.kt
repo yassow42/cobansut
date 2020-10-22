@@ -30,7 +30,7 @@ class BolgeSecimActivity : AppCompatActivity() {
     lateinit var mAuth: FirebaseAuth
 
     lateinit var mAuthListener: FirebaseAuth.AuthStateListener
-
+    var  versionCode: Int = 0
     var ref = FirebaseDatabase.getInstance().reference
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,8 +38,7 @@ class BolgeSecimActivity : AppCompatActivity() {
         konumIzni()
         mAuth = FirebaseAuth.getInstance()
         //    mAuth.signOut()
-        val versionCode: Int = BuildConfig.VERSION_CODE
-        val versionName: String = BuildConfig.VERSION_NAME
+         versionCode = BuildConfig.VERSION_CODE
 
         var user = mAuth.currentUser
         if (user == null) {
@@ -47,28 +46,33 @@ class BolgeSecimActivity : AppCompatActivity() {
             startActivity(Intent(this@BolgeSecimActivity, LoginActivity::class.java))
         }else   ref.child("users").child(mAuth.currentUser!!.uid).child("Version").setValue(versionCode)
 
-      //  ref.child("versiyon").setValue(4)
 
         initMyAuthStateListener()
         setupButon()
 
-        ref.child("versiyon").addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(p0: DataSnapshot) {
-                if (p0.value !=null){
-                    var genelVersion = p0.value.toString().toInt()
-                    if (genelVersion > versionCode) Toast.makeText(this@BolgeSecimActivity, "Eski Sürüm Kullanıyorsun. Lütfen Güncelle",Toast.LENGTH_LONG).show()
-                }
-                   
-            }
-
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
-
-        })
+        ref.addListenerForSingleValueEvent(versiyonveusername)
 
     }
 
+    var versiyonveusername = object : ValueEventListener {
+        override fun onDataChange(p0: DataSnapshot) {
+            if (p0.child("versiyon").value !=null){
+                var genelVersion = p0.child("versiyon").value.toString().toInt()
+                if (genelVersion > versionCode) Toast.makeText(this@BolgeSecimActivity, "Eski Sürüm Kullanıyorsun. Lütfen Güncelle",Toast.LENGTH_LONG).show()
+            }
+            if (p0.child("users").child(mAuth.currentUser!!.uid).value!=null){
+                val userName =    p0.child("users").child(mAuth.currentUser!!.uid).child("user_name").value.toString()
+                Toast.makeText(this@BolgeSecimActivity, "Hoşgeldin... $userName",Toast.LENGTH_SHORT).show()
+            }
+
+
+        }
+
+        override fun onCancelled(p0: DatabaseError) {
+
+        }
+
+    }
     private fun setupButon() {
 
         tvBurgaz.setOnClickListener {

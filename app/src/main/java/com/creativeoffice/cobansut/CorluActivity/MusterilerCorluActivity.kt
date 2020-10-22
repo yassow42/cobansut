@@ -52,7 +52,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class MusterilerCorluActivity : AppCompatActivity() {
-    private val ACTIVITY_NO = 3
+    private val ACTIVITY_NO = 4
     var secilenMah: String? = null
     lateinit var musteriList: ArrayList<MusteriData>
     lateinit var musteriAdList: ArrayList<String>

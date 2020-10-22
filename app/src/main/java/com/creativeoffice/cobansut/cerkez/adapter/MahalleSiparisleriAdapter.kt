@@ -410,7 +410,7 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
                 tv5ltFiyat.text = siparisData.sut5lt_fiyat.toString()
                 tvDokmeSutFiyat.text = siparisData.dokme_sut_fiyat.toString()
                 tvYumurtaFiyat.text = siparisData.yumurta_fiyat.toString()
-                refCerkez.child("Siparisler").child(siparisData.siparis_mah.toString()).child(siparisData.siparis_key.toString()).child("toplam_fiyat").setValue(toplamFiyat)
+             //   refCerkez.child("Siparisler").child(siparisData.siparis_mah.toString()).child(siparisData.siparis_key.toString()).child("toplam_fiyat").setValue(toplamFiyat)
 
             }
 

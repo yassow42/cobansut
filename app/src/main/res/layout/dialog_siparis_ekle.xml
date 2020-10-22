@@ -218,7 +218,7 @@
 
                 android:gravity="center"
                 android:inputType="number"
-                android:text="1.0"
+                android:text="3.5"
                 android:textAlignment="center"
                 android:textColor="#ffffff"
                 android:textColorHint="#ffffff" />

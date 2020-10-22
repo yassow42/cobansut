@@ -43,6 +43,9 @@ class HesapActivity : AppCompatActivity() {
     var stok5lt: Int = 0
     var stokDokmeSut: Int = 0
     var stokYumurta: Int = 0
+
+    var teslimList = ArrayList<SiparisData>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hesap)
@@ -94,49 +97,48 @@ class HesapActivity : AppCompatActivity() {
             }
         })
 
+        var ibrahim39Satis3ltSayisi = 0
+        var ibrahim39Satis5ltSayisi = 0
+        var ibrahim39SatisDokmeSayisi = 0
+        var ibrahim39SatisYumurtaSayisi = 0
+        var ibrahim39SatisFiyat = 0.0
 
-
+        var CorluMuratSatis3ltSayisi = 0
+        var CorluMuratSatis5ltSayisi = 0
+        var CorluMuratSatisDokmeSayisi = 0
+        var CorluMuratSatisYumurtaSayisi = 0
+        var CorluMuratSatisFiyat = 0.0
+        ref.child("Corlu").child("Teslim_siparisler").addListenerForSingleValueEvent(teslimEdilenler)
+        ref.child("Cerkez").child("Teslim_siparisler").addListenerForSingleValueEvent(teslimEdilenler)
         ref.child("Teslim_siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.hasChildren()) {
-                    var teslimList = ArrayList<SiparisData>()
-
-                    var ibrahim39Satis3ltSayisi = 0
-                    var ibrahim39Satis5ltSayisi = 0
-                    var ibrahim39SatisDokmeSayisi = 0
-                    var ibrahim39SatisYumurtaSayisi = 0
-                    var ibrahim39SatisFiyat = 0.0
-
-                    var CorluMuratSatis3ltSayisi = 0
-                    var CorluMuratSatis5ltSayisi = 0
-                    var CorluMuratSatisDokmeSayisi = 0
-                    var CorluMuratSatisYumurtaSayisi = 0
-                    var CorluMuratSatisFiyat = 0.0
-
 
                     for (ds in p0.children) {
                         var gelenData = ds.getValue(SiparisData::class.java)!!
                         if (gelenData.siparis_teslim_tarihi != null) {
-                            if (geriZaman!! < gelenData.siparis_teslim_tarihi!! && gelenData.siparis_teslim_tarihi!! < ileriZaman!!) {
-                                teslimList.add(gelenData)
-                            }
+                            teslimList.add(gelenData)
+                        }
+                    }
+
+
+
+                    for (item in teslimList){
+                        if (item.siparisi_giren == "ibrahim39") {
+                            ibrahim39Satis3ltSayisi = ibrahim39Satis3ltSayisi + item.sut3lt.toString().toInt()
+                            ibrahim39Satis5ltSayisi = ibrahim39Satis5ltSayisi + item.sut5lt.toString().toInt()
+                            ibrahim39SatisDokmeSayisi = ibrahim39SatisDokmeSayisi + item.dokme_sut.toString().toInt()
+                            ibrahim39SatisYumurtaSayisi = ibrahim39SatisYumurtaSayisi + item.yumurta.toString().toInt()
+                            ibrahim39SatisFiyat = ibrahim39SatisFiyat + item.toplam_fiyat.toString().toDouble()
+
                         }
 
-                        if (gelenData.siparisi_giren == "ibrahim39") {
-                            ibrahim39Satis3ltSayisi = ibrahim39Satis3ltSayisi + gelenData.sut3lt.toString().toInt()
-                            ibrahim39Satis5ltSayisi = ibrahim39Satis5ltSayisi + gelenData.sut5lt.toString().toInt()
-                            ibrahim39SatisDokmeSayisi = ibrahim39SatisDokmeSayisi + gelenData.dokme_sut.toString().toInt()
-                            ibrahim39SatisYumurtaSayisi = ibrahim39SatisYumurtaSayisi + gelenData.yumurta.toString().toInt()
-                            ibrahim39SatisFiyat = ibrahim39SatisFiyat + gelenData.toplam_fiyat.toString().toDouble()
-
-                        }
-
-                        if (gelenData.siparisi_giren == "Corlumurat") {
-                            CorluMuratSatis3ltSayisi = CorluMuratSatis3ltSayisi + gelenData.sut3lt.toString().toInt()
-                            CorluMuratSatis5ltSayisi = CorluMuratSatis5ltSayisi + gelenData.sut5lt.toString().toInt()
-                            CorluMuratSatisDokmeSayisi = CorluMuratSatisDokmeSayisi + gelenData.dokme_sut.toString().toInt()
-                            CorluMuratSatisYumurtaSayisi = CorluMuratSatisYumurtaSayisi + gelenData.yumurta.toString().toInt()
-                            CorluMuratSatisFiyat = CorluMuratSatisFiyat + gelenData.toplam_fiyat.toString().toDouble()
+                        if (item.siparisi_giren == "Corlumurat") {
+                            CorluMuratSatis3ltSayisi = CorluMuratSatis3ltSayisi + item.sut3lt.toString().toInt()
+                            CorluMuratSatis5ltSayisi = CorluMuratSatis5ltSayisi + item.sut5lt.toString().toInt()
+                            CorluMuratSatisDokmeSayisi = CorluMuratSatisDokmeSayisi + item.dokme_sut.toString().toInt()
+                            CorluMuratSatisYumurtaSayisi = CorluMuratSatisYumurtaSayisi + item.yumurta.toString().toInt()
+                            CorluMuratSatisFiyat = CorluMuratSatisFiyat + item.toplam_fiyat.toString().toDouble()
                         }
                     }
                     ref.child("users").child("IwSSK7TVUFRqnex9weLnLhoTz3n2").child("Satis").child("3lt").setValue(ibrahim39Satis3ltSayisi)
@@ -168,7 +170,8 @@ class HesapActivity : AppCompatActivity() {
                     ref.child("users").child("sV2MFbOueZgU1gqNrRuB4Ab2GPW2").child("Satis").child("dokme_sut").setValue(0)
                     ref.child("users").child("sV2MFbOueZgU1gqNrRuB4Ab2GPW2").child("Satis").child("yumurta").setValue(0)
                     ref.child("users").child("sV2MFbOueZgU1gqNrRuB4Ab2GPW2").child("Satis").child("toplam_fiyat").setValue(0.0)
-
+                    Log.e("burgaz21 3lt",CorluMuratSatis3ltSayisi.toString())
+                    Log.e("burgaz21 5lt",CorluMuratSatis5ltSayisi.toString())
 
                 }
 
@@ -183,6 +186,66 @@ class HesapActivity : AppCompatActivity() {
         //   ref.child("Depo").child("5lt").setValue(0)
         //   ref.child("Depo").child("dokme_sut").setValue(0)
         ///   ref.child("Depo").child("yumurta").setValue(0)
+
+    }
+
+    var teslimEdilenler = object : ValueEventListener {
+        override fun onDataChange(p0: DataSnapshot) {
+            for (ds in p0.children) {
+                var gelenData = ds.getValue(SiparisData::class.java)!!
+                if (gelenData.siparis_teslim_tarihi != null) {
+                    teslimList.add(gelenData)
+                }
+
+            }
+
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+
+        }
+
+    }
+
+    var zamanAl = object : ValueEventListener {
+
+
+        override fun onDataChange(p0: DataSnapshot) {
+            ileriZaman = p0.child("gece3").value.toString().toLong()
+            geriZaman = p0.child("gerigece3").value.toString().toLong()
+            Log.e("zamann", ileriZaman.toString() + "  " + geriZaman.toString())
+            veriler()
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+
+        }
+    }
+    var stokGetir = object : ValueEventListener {
+        override fun onDataChange(p0: DataSnapshot) {
+            p0.child("3lt").value.toString().toInt().let {
+                stok3lt = it
+            }
+            p0.child("5lt").value.toString().toInt().let {
+                stok5lt = it
+            }
+
+            p0.child("dokme_sut").value.toString().toInt().let {
+                stokDokmeSut = it
+            }
+            p0.child("yumurta").value.toString().toInt().let {
+                stokYumurta = it
+            }
+
+            tvStokSayisi.text = " Depoda Bulunan Ürünler: \n3lt: $stok3lt \r 5lt: $stok5lt\r Dökme: $stokDokmeSut\r Yum: $stokYumurta"
+            imgPlus.visibility = View.VISIBLE
+
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+
+        }
+
 
     }
 
@@ -272,8 +335,6 @@ class HesapActivity : AppCompatActivity() {
                     dialogView.dialogRC.adapter = adapter
 
 
-
-
                 }
             }
 
@@ -296,47 +357,6 @@ class HesapActivity : AppCompatActivity() {
 
     }
 
-    var zamanAl = object : ValueEventListener {
-
-
-        override fun onDataChange(p0: DataSnapshot) {
-            ileriZaman = p0.child("gece3").value.toString().toLong()
-            geriZaman = p0.child("gerigece3").value.toString().toLong()
-            Log.e("zamann", ileriZaman.toString() + "  " + geriZaman.toString())
-            veriler()
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-
-        }
-    }
-    var stokGetir = object : ValueEventListener {
-        override fun onDataChange(p0: DataSnapshot) {
-            p0.child("3lt").value.toString().toInt().let {
-                stok3lt = it
-            }
-            p0.child("5lt").value.toString().toInt().let {
-                stok5lt = it
-            }
-
-            p0.child("dokme_sut").value.toString().toInt().let {
-                stokDokmeSut = it
-            }
-            p0.child("yumurta").value.toString().toInt().let {
-                stokYumurta = it
-            }
-
-            tvStokSayisi.text = " Depoda Bulunan Ürünler: \n3lt: $stok3lt \r 5lt: $stok5lt\r Dökme: $stokDokmeSut\r Yum: $stokYumurta"
-            imgPlus.visibility = View.VISIBLE
-
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-
-        }
-
-
-    }
 
     fun formatDate(miliSecond: Long?): String? {
         if (miliSecond == null) return "0"
