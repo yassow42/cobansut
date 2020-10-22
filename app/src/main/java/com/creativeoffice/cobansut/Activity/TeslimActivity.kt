@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +15,7 @@ import com.creativeoffice.cobansut.Adapter.TeslimEdilenlerAdapter
 import com.creativeoffice.cobansut.utils.BottomNavigationViewHelper
 import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.R
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_teslim.*
 import java.io.IOException
@@ -28,6 +30,8 @@ class TeslimActivity : AppCompatActivity() {
     var ref = FirebaseDatabase.getInstance().reference
     lateinit var progressDialog: ProgressDialog
     val hndler = Handler()
+
+    var yetki2 = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_teslim)
@@ -44,8 +48,8 @@ class TeslimActivity : AppCompatActivity() {
         progressDialog.show()
 
 
-
-        hndler.postDelayed(Runnable { setupVeri() }, 100)
+        ref.child("users").child(FirebaseAuth.getInstance().currentUser!!.uid.toString()).addListenerForSingleValueEvent(userYetki)
+        setupVeri()
         hndler.postDelayed(Runnable { progressDialog.dismiss() }, 3000)
 
 
@@ -67,7 +71,7 @@ class TeslimActivity : AppCompatActivity() {
                     var dokumSutSayisi = 0
                     var toplamFiyatlar = 0.0
 
-                   ref.child("Zaman").addListenerForSingleValueEvent(object : ValueEventListener {
+                    ref.child("Zaman").addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onCancelled(p0: DatabaseError) {
                         }
 
@@ -82,14 +86,20 @@ class TeslimActivity : AppCompatActivity() {
                             }
                             for (ds in data.children) {
                                 var gelenData = ds.getValue(SiparisData::class.java)!!
-                                if (gelenData.dokme_sut==null){
-                                    ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut").setValue("0")
-                                    ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut_fiyat").setValue(0)
-                                }
                                 butunTeslimList.add(gelenData)
                                 if (gelenData.siparis_teslim_zamani.toString() != "null") {
-                              //      ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut").setValue("0")
-                              //      ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut_fiyat").setValue(0)
+                                    if (gelenData.dokme_sut == null) {
+                                        Log.e("sad", "dokme eksik ${gelenData.siparis_key}")
+                                        ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut").setValue("0")
+                                        ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut_fiyat").setValue(3.5)
+                                    }
+                                    if (gelenData.dokme_sut_fiyat == null) {
+                                        Log.e("sad", "dokme eksik ${gelenData.siparis_key}")
+                                        ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut").setValue("0")
+                                        ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut_fiyat").setValue(3.5)
+                                    }
+                                    //      ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut").setValue("0")
+                                    //      ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut_fiyat").setValue(0)
                                     if (gece3GelenZaman - 86400000 < gelenData.siparis_teslim_zamani!!.toLong() && gelenData.siparis_teslim_zamani!!.toLong() < gece3GelenZaman) {
                                         suankiTeslimList.add(gelenData)
                                         sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
@@ -117,12 +127,11 @@ class TeslimActivity : AppCompatActivity() {
 
                             try {
                                 tvFiyatGenelTeslim.setText(toplamFiyatlar.toString() + " TL")
-                             setupRecyclerView()
+                                setupRecyclerView()
                             } catch (e: IOException) {
                                 Log.e("teslim activity", "hatalar ${e.message.toString()}")
 
                             }
-
 
 
                         }
@@ -298,7 +307,6 @@ class TeslimActivity : AppCompatActivity() {
                     }
 
 
-
                 }
                 return@OnMenuItemClickListener true
             })
@@ -324,5 +332,22 @@ class TeslimActivity : AppCompatActivity() {
         var menu = bottomNav.menu
         var menuItem = menu.getItem(ACTIVITY_NO)
         menuItem.setChecked(true)
+    }
+
+
+    var userYetki = object : ValueEventListener {
+        override fun onDataChange(p0: DataSnapshot) {
+            if (p0.value != null) {
+                yetki2 = p0.child("yetki2").value.toString()
+                if (yetki2 != "Patron") imgTarih.visibility = View.GONE
+            }
+
+
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+
+        }
+
     }
 }

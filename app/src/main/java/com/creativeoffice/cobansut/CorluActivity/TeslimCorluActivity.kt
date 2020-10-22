@@ -99,6 +99,11 @@ class TeslimCorluActivity : AppCompatActivity() {
                                     refCorlu.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut").setValue("0")
                                     refCorlu.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut_fiyat").setValue(3.5)
                                 }
+                                if (gelenData.dokme_sut_fiyat==null){
+                                    Log.e("sad","dokme eksik ${gelenData.siparis_key}")
+                                    refCorlu.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut").setValue("0")
+                                    refCorlu.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut_fiyat").setValue(3.5)
+                                }
                                 butunTeslimList.add(gelenData)
                                 if (gelenData.siparis_teslim_zamani.toString() != "null") {
                                     if (gece3GelenZaman - 86400000 < gelenData.siparis_teslim_zamani!!.toLong() && gelenData.siparis_teslim_zamani!!.toLong() < gece3GelenZaman) {
