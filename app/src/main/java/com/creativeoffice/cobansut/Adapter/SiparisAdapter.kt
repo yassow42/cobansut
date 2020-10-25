@@ -322,6 +322,10 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
             tvNot.text = siparisData.siparis_notu
             tvFiyat.textSize = 18f
 
+            if (1603497600000 - 4752000000 > siparisData.siparis_teslim_zamani.toString().toLong()) {
+                ref.child("Burgaz").child(siparisData.siparis_key.toString()).setValue(siparisData)
+                ref.child("Teslim_siparisler").child(siparisData.siparis_key.toString()).removeValue()
+            }
 
 
             if (!siparisData.siparisi_giren.isNullOrEmpty()) {
@@ -404,7 +408,7 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
                 dokmeSutFiyat = siparisData.dokme_sut_fiyat
             } else {
                 hataMesajiYazdir("dokme yok ${siparisData.siparis_key}", siparisData.siparis_veren.toString())
-                Log.e("dokme","dokme yok ${siparisData.siparis_key} siparisData.siparis_veren.toString()")
+                Log.e("dokme", "dokme yok ${siparisData.siparis_key} siparisData.siparis_veren.toString()")
             }
 
 

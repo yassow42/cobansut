@@ -10,5 +10,8 @@
     <item
         android:id="@+id/corlumurat"
         android:title="Corlu Murat" />
+    <item
+        android:id="@+id/bingolbali"
+        android:title="Bingolbali" />
 
 </menu>

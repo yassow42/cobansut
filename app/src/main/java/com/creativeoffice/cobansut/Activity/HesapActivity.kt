@@ -5,15 +5,15 @@ import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.renderscript.Sampler
-import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.creativeoffice.cobansut.Adapter.HesapAdapter
+import com.creativeoffice.cobansut.Datalar.AracStokEkleData
 import com.creativeoffice.cobansut.Datalar.SiparisData
+import com.creativeoffice.cobansut.Datalar.StokData
 import com.creativeoffice.cobansut.Datalar.Users
 import com.creativeoffice.cobansut.R
 import com.creativeoffice.cobansut.genel.BolgeSecimActivity
@@ -23,7 +23,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_hesap.*
 import kotlinx.android.synthetic.main.dialog_recyclerview.view.*
-import kotlinx.android.synthetic.main.dialog_stok_ekle.*
 import kotlinx.android.synthetic.main.dialog_stok_ekle.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -52,8 +51,7 @@ class HesapActivity : AppCompatActivity() {
         setupNavigationView()
         mAuth = FirebaseAuth.getInstance()
         userID = mAuth.currentUser!!.uid
-        imgPlus.visibility = View.GONE
-        ref.child("Depo").addValueEventListener(stokGetir)
+
 
         if (userID != null) {
             ref.child("users").child(userID!!).addListenerForSingleValueEvent(object : ValueEventListener {
@@ -82,13 +80,14 @@ class HesapActivity : AppCompatActivity() {
                 if (p0.hasChildren()) {
                     for (ds in p0.children) {
                         var gelenData = ds.getValue(Users::class.java)!!
+
                         if (gelenData.user_name.toString() == "ibrahim39") userList.add(gelenData)
                         if (gelenData.user_name.toString() == "Corlumurat") userList.add(gelenData)
 
                     }
                 }
                 rcHesap.layoutManager = LinearLayoutManager(this@HesapActivity, LinearLayoutManager.VERTICAL, false)
-                rcHesap.adapter = HesapAdapter(this@HesapActivity, userList)
+                rcHesap.adapter = HesapAdapter(this@HesapActivity, userList,ileriZaman,geriZaman)
 
             }
 
@@ -117,29 +116,33 @@ class HesapActivity : AppCompatActivity() {
                     for (ds in p0.children) {
                         var gelenData = ds.getValue(SiparisData::class.java)!!
                         if (gelenData.siparis_teslim_tarihi != null) {
-                            teslimList.add(gelenData)
+                            if (ileriZaman!! - 86400000 < gelenData.siparis_teslim_zamani!!.toLong() && gelenData.siparis_teslim_zamani!!.toLong() < ileriZaman!!) {
+                                teslimList.add(gelenData)
+                            }
                         }
                     }
 
+                    for (item in teslimList) {
+                        if (item.siparis_teslim_tarihi!!.compareTo(System.currentTimeMillis()) == -1) {
 
+                            if (item.siparisi_giren == "ibrahim39") {
+                                ibrahim39Satis3ltSayisi = ibrahim39Satis3ltSayisi + item.sut3lt.toString().toInt()
+                                ibrahim39Satis5ltSayisi = ibrahim39Satis5ltSayisi + item.sut5lt.toString().toInt()
+                                ibrahim39SatisDokmeSayisi = ibrahim39SatisDokmeSayisi + item.dokme_sut.toString().toInt()
+                                ibrahim39SatisYumurtaSayisi = ibrahim39SatisYumurtaSayisi + item.yumurta.toString().toInt()
+                                ibrahim39SatisFiyat = ibrahim39SatisFiyat + item.toplam_fiyat.toString().toDouble()
 
-                    for (item in teslimList){
-                        if (item.siparisi_giren == "ibrahim39") {
-                            ibrahim39Satis3ltSayisi = ibrahim39Satis3ltSayisi + item.sut3lt.toString().toInt()
-                            ibrahim39Satis5ltSayisi = ibrahim39Satis5ltSayisi + item.sut5lt.toString().toInt()
-                            ibrahim39SatisDokmeSayisi = ibrahim39SatisDokmeSayisi + item.dokme_sut.toString().toInt()
-                            ibrahim39SatisYumurtaSayisi = ibrahim39SatisYumurtaSayisi + item.yumurta.toString().toInt()
-                            ibrahim39SatisFiyat = ibrahim39SatisFiyat + item.toplam_fiyat.toString().toDouble()
+                            }
 
+                            if (item.siparisi_giren == "Corlumurat") {
+                                CorluMuratSatis3ltSayisi = CorluMuratSatis3ltSayisi + item.sut3lt.toString().toInt()
+                                CorluMuratSatis5ltSayisi = CorluMuratSatis5ltSayisi + item.sut5lt.toString().toInt()
+                                CorluMuratSatisDokmeSayisi = CorluMuratSatisDokmeSayisi + item.dokme_sut.toString().toInt()
+                                CorluMuratSatisYumurtaSayisi = CorluMuratSatisYumurtaSayisi + item.yumurta.toString().toInt()
+                                CorluMuratSatisFiyat = CorluMuratSatisFiyat + item.toplam_fiyat.toString().toDouble()
+                            }
                         }
 
-                        if (item.siparisi_giren == "Corlumurat") {
-                            CorluMuratSatis3ltSayisi = CorluMuratSatis3ltSayisi + item.sut3lt.toString().toInt()
-                            CorluMuratSatis5ltSayisi = CorluMuratSatis5ltSayisi + item.sut5lt.toString().toInt()
-                            CorluMuratSatisDokmeSayisi = CorluMuratSatisDokmeSayisi + item.dokme_sut.toString().toInt()
-                            CorluMuratSatisYumurtaSayisi = CorluMuratSatisYumurtaSayisi + item.yumurta.toString().toInt()
-                            CorluMuratSatisFiyat = CorluMuratSatisFiyat + item.toplam_fiyat.toString().toDouble()
-                        }
                     }
                     ref.child("users").child("IwSSK7TVUFRqnex9weLnLhoTz3n2").child("Satis").child("3lt").setValue(ibrahim39Satis3ltSayisi)
                     ref.child("users").child("IwSSK7TVUFRqnex9weLnLhoTz3n2").child("Satis").child("5lt").setValue(ibrahim39Satis5ltSayisi)
@@ -170,8 +173,6 @@ class HesapActivity : AppCompatActivity() {
                     ref.child("users").child("sV2MFbOueZgU1gqNrRuB4Ab2GPW2").child("Satis").child("dokme_sut").setValue(0)
                     ref.child("users").child("sV2MFbOueZgU1gqNrRuB4Ab2GPW2").child("Satis").child("yumurta").setValue(0)
                     ref.child("users").child("sV2MFbOueZgU1gqNrRuB4Ab2GPW2").child("Satis").child("toplam_fiyat").setValue(0.0)
-                    Log.e("burgaz21 3lt",CorluMuratSatis3ltSayisi.toString())
-                    Log.e("burgaz21 5lt",CorluMuratSatis5ltSayisi.toString())
 
                 }
 
@@ -182,72 +183,57 @@ class HesapActivity : AppCompatActivity() {
             }
         })
 
-        //   ref.child("Depo").child("3lt").setValue(0)
-        //   ref.child("Depo").child("5lt").setValue(0)
-        //   ref.child("Depo").child("dokme_sut").setValue(0)
-        ///   ref.child("Depo").child("yumurta").setValue(0)
+        var sut3ltSayisi = 0
+        var sut5ltSayisi = 0
+        var sutDokmeSayisi = 0
+        var yumurtaSayisi = 0
 
-    }
+        ref.child("Depo_Log").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
 
-    var teslimEdilenler = object : ValueEventListener {
-        override fun onDataChange(p0: DataSnapshot) {
-            for (ds in p0.children) {
-                var gelenData = ds.getValue(SiparisData::class.java)!!
-                if (gelenData.siparis_teslim_tarihi != null) {
-                    teslimList.add(gelenData)
+                if (p0.hasChildren()) {
+                    for (ds in p0.children) {
+                        var data = ds.getValue(StokData::class.java)!!
+                        if (geriZaman!! < data.stok_guncelleme_zamani!! && data.stok_guncelleme_zamani!! < ileriZaman!!) {
+                            sut3ltSayisi = sut3ltSayisi + data.sut3lt!!
+                            sut5ltSayisi = sut5ltSayisi + data.sut5lt!!
+                            sutDokmeSayisi = sutDokmeSayisi + data.dokme_sut!!
+                            yumurtaSayisi = yumurtaSayisi + data.yumurta!!
+                        }
+                    }
+
+                    ref.child("Depo_Arac_Stok_Ekle").addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(p1: DataSnapshot) {
+                            if (p1.hasChildren()) {
+                                for (ds in p1.children) {
+                                    var data = ds.getValue(AracStokEkleData::class.java)!!
+                                    if (geriZaman!! < data.araca_stok_ekleme_zamani!! && data.araca_stok_ekleme_zamani!! < ileriZaman!!) {
+                                        sut3ltSayisi = sut3ltSayisi - data.sut3lt!!
+                                        sut5ltSayisi = sut5ltSayisi - data.sut5lt!!
+                                        sutDokmeSayisi = sutDokmeSayisi - data.dokme_sut!!
+                                        yumurtaSayisi = yumurtaSayisi - data.yumurta!!
+                                    }
+                                }
+                                tvStokSayisi.setText("3lt: $sut3ltSayisi  5lt: $sut5ltSayisi Dökme: $sutDokmeSayisi Yum: $yumurtaSayisi ")
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+
+                        }
+
+                    })
+
                 }
-
             }
 
-        }
+            override fun onCancelled(error: DatabaseError) {
 
-        override fun onCancelled(error: DatabaseError) {
-
-        }
+            }
+        })
 
     }
 
-    var zamanAl = object : ValueEventListener {
-
-
-        override fun onDataChange(p0: DataSnapshot) {
-            ileriZaman = p0.child("gece3").value.toString().toLong()
-            geriZaman = p0.child("gerigece3").value.toString().toLong()
-            Log.e("zamann", ileriZaman.toString() + "  " + geriZaman.toString())
-            veriler()
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-
-        }
-    }
-    var stokGetir = object : ValueEventListener {
-        override fun onDataChange(p0: DataSnapshot) {
-            p0.child("3lt").value.toString().toInt().let {
-                stok3lt = it
-            }
-            p0.child("5lt").value.toString().toInt().let {
-                stok5lt = it
-            }
-
-            p0.child("dokme_sut").value.toString().toInt().let {
-                stokDokmeSut = it
-            }
-            p0.child("yumurta").value.toString().toInt().let {
-                stokYumurta = it
-            }
-
-            tvStokSayisi.text = " Depoda Bulunan Ürünler: \n3lt: $stok3lt \r 5lt: $stok5lt\r Dökme: $stokDokmeSut\r Yum: $stokYumurta"
-            imgPlus.visibility = View.VISIBLE
-
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-
-        }
-
-
-    }
 
     fun imgPlus(view: View) {
         var builder: AlertDialog.Builder = AlertDialog.Builder(this)
@@ -280,17 +266,15 @@ class HesapActivity : AppCompatActivity() {
 
 
 
-                    ref.child("Depo").child("3lt").setValue(guncel3lt)
-                    ref.child("Depo").child("5lt").setValue(guncel5lt)
+                    ref.child("Depo").child("sut3lt").setValue(guncel3lt)
+                    ref.child("Depo").child("sut5lt").setValue(guncel5lt)
                     ref.child("Depo").child("dokme_sut").setValue(guncelDokmeSut)
                     ref.child("Depo").child("yumurta").setValue(guncelYumurta).addOnSuccessListener {
-                        val key = ref.child("Depo").push().key.toString()
-
-                        ref.child("Depo_Log").child(key).child("3lt").setValue(et3lt)
-                        ref.child("Depo_Log").child(key).child("5lt").setValue(et5lt)
+                        val key = ref.child("Depo_Log").push().key.toString()
+                        ref.child("Depo_Log").child(key).child("sut3lt").setValue(et3lt)
+                        ref.child("Depo_Log").child(key).child("sut5lt").setValue(et5lt)
                         ref.child("Depo_Log").child(key).child("dokme_sut").setValue(etDokmeSut)
                         ref.child("Depo_Log").child(key).child("yumurta").setValue(etYumurta)
-
                         ref.child("Depo_Log").child(key).child("key").setValue(key)
                         ref.child("Depo_Log").child(key).child("stok_guncelleme_zamani").setValue(ServerValue.TIMESTAMP)
                         Snackbar.make(view, "Stok Güncellendi", 2000).show()
@@ -313,23 +297,35 @@ class HesapActivity : AppCompatActivity() {
 
         var builder: AlertDialog.Builder = AlertDialog.Builder(this@HesapActivity)
         var dialogView = View.inflate(this@HesapActivity, R.layout.dialog_recyclerview, null)
-        ref.child("Depo_Log").orderByChild("stok_guncelleme_zamani").addListenerForSingleValueEvent(object : ValueEventListener {
+        var sut3ltSayisi = 0
+        var sut5ltSayisi = 0
+        var sutDokmeSayisi = 0
+        var yumurtaSayisi = 0
+        ref.child("Depo_Log").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
-
 
                 if (p0.hasChildren()) {
                     var stokList = ArrayList<String>()
                     for (ds in p0.children) {
-                        var sut3lt = p0.child(ds.key.toString()).child("3lt").value.toString()
-                        var sut5lt = p0.child(ds.key.toString()).child("5lt").value.toString()
-                        var dokmeSut = p0.child(ds.key.toString()).child("dokme_sut").value.toString()
-                        var yumurta = p0.child(ds.key.toString()).child("yumurta").value.toString()
-                        var long = p0.child(ds.key.toString()).child("stok_guncelleme_zamani").value.toString().toLong()
+                        var data = ds.getValue(StokData::class.java)!!
+                        if (geriZaman!! < data.stok_guncelleme_zamani!! && data.stok_guncelleme_zamani!! < ileriZaman!!) {
+                            sut3ltSayisi = sut3ltSayisi + data.sut3lt!!
+                            sut5ltSayisi = sut5ltSayisi + data.sut5lt!!
+                            sutDokmeSayisi = sutDokmeSayisi + data.dokme_sut!!
+                            yumurtaSayisi = yumurtaSayisi + data.yumurta!!
+                        }
+                        var sut3lt = data.sut3lt
+                        var sut5lt = data.sut5lt
+                        var dokmeSut = data.dokme_sut
+                        var yumurta = data.yumurta
+                        var long = data.stok_guncelleme_zamani
                         var zaman = formatDate(long).toString()
 
                         var tumListString = "3lt: $sut3lt \n5lt: $sut5lt \nDökme Süt: $dokmeSut \nYumurta: $yumurta \n $zaman"
                         stokList.add(tumListString)
                     }
+
+
 
                     val adapter = ArrayAdapter<String>(this@HesapActivity, android.R.layout.simple_list_item_1, stokList)
                     dialogView.dialogRC.adapter = adapter
@@ -355,6 +351,41 @@ class HesapActivity : AppCompatActivity() {
         dialog.show()
 
 
+    }
+
+    var teslimEdilenler = object : ValueEventListener {
+        override fun onDataChange(p0: DataSnapshot) {
+            for (ds in p0.children) {
+                var gelenData = ds.getValue(SiparisData::class.java)!!
+                if (gelenData.siparis_teslim_tarihi != null) {
+                    if (ileriZaman!! - 86400000 < gelenData.siparis_teslim_zamani!!.toLong() && gelenData.siparis_teslim_zamani!!.toLong() < ileriZaman!!) {
+
+                        teslimList.add(gelenData)
+                    }
+                }
+
+            }
+
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+
+        }
+
+    }
+
+    var zamanAl = object : ValueEventListener {
+
+
+        override fun onDataChange(p0: DataSnapshot) {
+            ileriZaman = p0.child("gece3").value.toString().toLong()
+            geriZaman = p0.child("gerigece3").value.toString().toLong()
+            veriler()
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+
+        }
     }
 
 

@@ -249,7 +249,6 @@ class SiparislerActivity : AppCompatActivity() {
                                     }
                                     recyclerView(rcHurriyet, hurriyetlist)
                                 }
-
                                 if (gelenData.siparis_mah == "İnönü") {
                                     inonulist.add(gelenData)
                                     tvInonuSayi.text = inonulist.size.toString() + " Sipariş"
@@ -258,7 +257,6 @@ class SiparislerActivity : AppCompatActivity() {
                                     }
                                     recyclerView(rcInonu, inonulist)
                                 }
-
                                 if (gelenData.siparis_mah == "İstiklal") {
                                     istiklallist.add(gelenData)
                                     tvIstiklalSayi.text = istiklallist.size.toString() + " Sipariş"
@@ -267,7 +265,6 @@ class SiparislerActivity : AppCompatActivity() {
                                     }
                                     recyclerView(rcIstiklal, istiklallist)
                                 }
-
                                 if (gelenData.siparis_mah == "Kocasinan") {
                                     kocasinanlist.add(gelenData)
                                     tvKocasinanSayi.text = kocasinanlist.size.toString() + " Sipariş"

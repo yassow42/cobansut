@@ -30,7 +30,7 @@ class BolgeSecimActivity : AppCompatActivity() {
     lateinit var mAuth: FirebaseAuth
 
     lateinit var mAuthListener: FirebaseAuth.AuthStateListener
-    var  versionCode: Int = 0
+    var versionCode: Int = 0
     var ref = FirebaseDatabase.getInstance().reference
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,17 +38,17 @@ class BolgeSecimActivity : AppCompatActivity() {
         konumIzni()
         mAuth = FirebaseAuth.getInstance()
         //    mAuth.signOut()
-         versionCode = BuildConfig.VERSION_CODE
+        versionCode = BuildConfig.VERSION_CODE
 
         var user = mAuth.currentUser
         if (user == null) {
 
             startActivity(Intent(this@BolgeSecimActivity, LoginActivity::class.java))
-        }else   ref.child("users").child(mAuth.currentUser!!.uid).child("Version").setValue(versionCode)
+        } else ref.child("users").child(mAuth.currentUser!!.uid).child("Version").setValue(versionCode)
 
 
         initMyAuthStateListener()
-        setupButon()
+        setup()
 
         ref.addListenerForSingleValueEvent(versiyonveusername)
 
@@ -56,13 +56,13 @@ class BolgeSecimActivity : AppCompatActivity() {
 
     var versiyonveusername = object : ValueEventListener {
         override fun onDataChange(p0: DataSnapshot) {
-            if (p0.child("versiyon").value !=null){
+            if (p0.child("versiyon").value != null) {
                 var genelVersion = p0.child("versiyon").value.toString().toInt()
-                if (genelVersion > versionCode) Toast.makeText(this@BolgeSecimActivity, "Eski Sürüm Kullanıyorsun. Lütfen Güncelle",Toast.LENGTH_LONG).show()
+                if (genelVersion > versionCode) Toast.makeText(this@BolgeSecimActivity, "Eski Sürüm Kullanıyorsun. Lütfen Güncelle", Toast.LENGTH_LONG).show()
             }
-            if (p0.child("users").child(mAuth.currentUser!!.uid).value!=null){
-                val userName =    p0.child("users").child(mAuth.currentUser!!.uid).child("user_name").value.toString()
-                Toast.makeText(this@BolgeSecimActivity, "Hoşgeldin... $userName",Toast.LENGTH_SHORT).show()
+            if (p0.child("users").child(mAuth.currentUser!!.uid).value != null) {
+                val userName = p0.child("users").child(mAuth.currentUser!!.uid).child("user_name").value.toString()
+                Toast.makeText(this@BolgeSecimActivity, "Hoşgeldin... $userName", Toast.LENGTH_SHORT).show()
             }
 
 
@@ -73,7 +73,27 @@ class BolgeSecimActivity : AppCompatActivity() {
         }
 
     }
-    private fun setupButon() {
+
+    private fun setup() {
+
+
+        ref.child("Zaman").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+
+                var gece3GelenZaman = p0.child("gece3").value.toString().toLong()
+                var suankıZaman = System.currentTimeMillis()
+
+                if (gece3GelenZaman < suankıZaman) {
+
+                    var guncelGece3 = gece3GelenZaman + 86400000
+                    FirebaseDatabase.getInstance().reference.child("Zaman").child("gece3").setValue(guncelGece3)
+                }
+            }
+        })
+
 
         tvBurgaz.setOnClickListener {
             val intent = Intent(this, SiparislerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
