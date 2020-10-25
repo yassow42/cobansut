@@ -126,7 +126,7 @@
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Doküm:  "
+                android:text="Dökme:  "
                 android:textColor="@color/beyaz"
                 android:textSize="12sp" />
 

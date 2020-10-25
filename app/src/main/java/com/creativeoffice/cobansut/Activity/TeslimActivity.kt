@@ -90,21 +90,10 @@ class TeslimActivity : AppCompatActivity() {
                                 butunTeslimList.add(gelenData)
 
                                 if (gelenData.siparis_teslim_zamani.toString() != "null") {
-                                    if (gelenData.dokme_sut == null) {
-                                        ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut").setValue("0")
-                                        ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut_fiyat").setValue(3.5)
-                                    }
-                                    if (gelenData.dokme_sut_fiyat == null) {
-                                        Log.e("sad", "dokme eksik ${gelenData.siparis_key}")
-                                        ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut").setValue("0")
-                                        ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut_fiyat").setValue(3.5)
-                                    }
-
                                     if (gece3GelenZaman - 4752000000 > gelenData.siparis_teslim_zamani.toString().toLong()) {
                                         ref.child("Burgaz").child(gelenData.siparis_key.toString()).setValue(gelenData)
                                         ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).removeValue()
                                     }
-
 
                                     if (gece3GelenZaman - 86400000 < gelenData.siparis_teslim_zamani!!.toLong() && gelenData.siparis_teslim_zamani!!.toLong() < gece3GelenZaman) {
                                         suankiTeslimList.add(gelenData)

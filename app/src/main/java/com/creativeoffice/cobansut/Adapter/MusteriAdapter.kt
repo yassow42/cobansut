@@ -247,7 +247,7 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                             dialogView.tvAdSoyad.text = musteriler[position].musteri_ad_soyad.toString()
                             dialogView.tvMahalle.setText( musteriler[position].musteri_mah.toString())
                             dialogView.etApartman.setText(musteriler[position].musteri_apartman.toString())
-                            FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).addListenerForSingleValueEvent(object : ValueEventListener {
+                           ref.child("Musteriler").child(musteriAdi).addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onCancelled(p0: DatabaseError) {
 
                                 }

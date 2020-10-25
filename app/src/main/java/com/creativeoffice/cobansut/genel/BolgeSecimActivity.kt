@@ -50,20 +50,17 @@ class BolgeSecimActivity : AppCompatActivity() {
         initMyAuthStateListener()
         setup()
 
-        ref.addListenerForSingleValueEvent(versiyonveusername)
+        ref.child("versiyon").addListenerForSingleValueEvent(versiyon)
 
     }
 
-    var versiyonveusername = object : ValueEventListener {
+    var versiyon = object : ValueEventListener {
         override fun onDataChange(p0: DataSnapshot) {
-            if (p0.child("versiyon").value != null) {
-                var genelVersion = p0.child("versiyon").value.toString().toInt()
+            if (p0.value != null) {
+                var genelVersion = p0.value.toString().toInt()
                 if (genelVersion > versionCode) Toast.makeText(this@BolgeSecimActivity, "Eski Sürüm Kullanıyorsun. Lütfen Güncelle", Toast.LENGTH_LONG).show()
             }
-            if (p0.child("users").child(mAuth.currentUser!!.uid).value != null) {
-                val userName = p0.child("users").child(mAuth.currentUser!!.uid).child("user_name").value.toString()
-                Toast.makeText(this@BolgeSecimActivity, "Hoşgeldin... $userName", Toast.LENGTH_SHORT).show()
-            }
+
 
 
         }

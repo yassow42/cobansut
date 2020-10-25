@@ -15,15 +15,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.R
 import com.creativeoffice.cobansut.Activity.SiparislerActivity
+import com.creativeoffice.cobansut.CorluActivity.AdresBulmaMapsCorluActivity
 import com.creativeoffice.cobansut.TimeAgo
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.dialog_gidilen_musteri.view.*
 import kotlinx.android.synthetic.main.dialog_siparis_ekle.view.*
 import kotlinx.android.synthetic.main.item_siparisler.view.*
+import kotlinx.android.synthetic.main.item_siparisler.view.tv3litre
+import kotlinx.android.synthetic.main.item_siparisler.view.tv5litre
+import kotlinx.android.synthetic.main.item_siparisler.view.tvYumurta
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -61,8 +67,9 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
     }
 
     override fun onBindViewHolder(holder: SiparisAdapter.SiparisHolder, position: Int) {
+        var item = siparisler[position]
         try {
-            holder.setData(siparisler[position])
+            holder.setData(item)
             holder.itemView.setOnLongClickListener {
 
                 val popup = PopupMenu(myContext, holder.itemView)
@@ -280,6 +287,131 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
                 popup.show()
 
                 return@setOnLongClickListener true
+            }
+            holder.siparisVeren.setOnClickListener {
+
+                var dialogMsDznle: Dialog
+
+                var musteriAdi = item.siparis_veren.toString()
+                var builder = AlertDialog.Builder(myContext)
+
+                var dialogView: View = View.inflate(myContext, R.layout.dialog_gidilen_musteri, null)
+                builder.setView(dialogView)
+
+
+                dialogMsDznle = builder.create()
+
+                dialogView.imgMaps.setOnClickListener {
+                    var intent = Intent(myContext, AdresBulmaMapsCorluActivity::class.java)
+                    intent.putExtra("musteri_konumu", "Burgaz")
+                    intent.putExtra("musteriAdi", item.siparis_veren)
+                    myContext.startActivity(intent)
+                }
+                dialogView.swKonumKaydet.setOnClickListener {
+
+
+                    if (dialogView.swKonumKaydet.isChecked) {
+                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_zkonum").setValue(true)
+                        //  holder.getLocation(musteriAdi)
+
+                    } else {
+                        //  holder.locationManager.removeUpdates(holder.myLocationListener)
+                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_zkonum").setValue(false)
+                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_zlat").removeValue()
+                        FirebaseDatabase.getInstance().reference.child("Musteriler").child(musteriAdi).child("musteri_zlong").removeValue()
+
+                    }
+
+                }
+
+                dialogView.imgCheck.setOnClickListener {
+
+                    if (dialogView.etAdresGidilen.text.toString().isNotEmpty() && dialogView.etTelefonGidilen.text.toString().isNotEmpty()) {
+                        var mahalle = dialogView.tvMahalle.text.toString()
+                        var adres = dialogView.etAdresGidilen.text.toString()
+                        var telefon = dialogView.etTelefonGidilen.text.toString()
+                        var apartman = dialogView.etApartman.text.toString()
+
+
+                        ref.child("Musteriler").child(musteriAdi).child("musteri_mah").setValue(mahalle)
+                        ref.child("Musteriler").child(musteriAdi).child("musteri_adres").setValue(adres)
+                        ref.child("Musteriler").child(musteriAdi).child("musteri_apartman").setValue(apartman)
+                        ref.child("Musteriler").child(musteriAdi).child("musteri_tel").setValue(telefon).addOnCompleteListener {
+///locationsu durduruyruz
+                            //    holder.locationManager.removeUpdates(holder.myLocationListener)
+///
+                            dialogMsDznle.dismiss()
+
+                            Toast.makeText(myContext, "Müşteri Bilgileri Güncellendi", Toast.LENGTH_LONG).show()
+                        }.addOnFailureListener { Toast.makeText(myContext, "Müşteri Bilgileri Güncellenemedi", Toast.LENGTH_LONG).show() }
+                    } else {
+                        Toast.makeText(myContext, "Bilgilerde boşluklar var", Toast.LENGTH_LONG).show()
+                    }
+                }
+
+                dialogView.imgBack.setOnClickListener {
+                    //   holder.locationManager.removeUpdates(holder.myLocationListener)
+                    dialogMsDznle.dismiss()
+                }
+
+                dialogView.tvAdSoyad.text =  item.siparis_veren.toString()
+                dialogView.tvMahalle.setText( item.siparis_mah.toString())
+                dialogView.etApartman.setText( item.siparis_apartman.toString())
+                ref.child("Musteriler").child(musteriAdi).addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        var adres = p0.child("musteri_adres").value.toString()
+                        var telefon = p0.child("musteri_tel").value.toString()
+                        var konum = p0.child("musteri_zkonum").value.toString().toBoolean()
+
+                        dialogView.swKonumKaydet.isChecked = konum
+                        dialogView.etAdresGidilen.setText(adres)
+                        dialogView.etTelefonGidilen.setText(telefon)
+
+                        var list = ArrayList<SiparisData>()
+                        list = ArrayList()
+                        if (p0.child("siparisleri").hasChildren()) {
+
+                            var sut3ltSayisi = 0
+                            var sut5ltSayisi = 0
+                            var yumurtaSayisi = 0
+
+                            for (ds in p0.child("siparisleri").children) {
+                                var gelenData = ds.getValue(SiparisData::class.java)!!
+                                list.add(gelenData)
+
+                                sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
+                                sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
+                                yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
+
+                            }
+
+                            list.sortByDescending { it.siparis_teslim_zamani }
+                            dialogView.tv3litre.text = "3lt: " + sut3ltSayisi.toString()
+                            dialogView.tv5litre.text = "5lt: " + sut5ltSayisi.toString()
+                            dialogView.tvYumurta.text = "Yumurta: " + yumurtaSayisi.toString()
+                            dialogView.tvFiyatGenel.visibility = View.GONE
+                            //  dialogView.tvFiyatGenel.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
+
+
+                            dialogView.rcSiparisGidilen.layoutManager = LinearLayoutManager(myContext, LinearLayoutManager.VERTICAL, false)
+                            //        dialogView.rcSiparisGidilen.layoutManager = StaggeredGridLayoutManager(myContext, LinearLayoutManager.VERTICAL, 2)
+                            val Adapter = MusteriSiparisleriAdapter(myContext, list)
+                            dialogView.rcSiparisGidilen.adapter = Adapter
+                            dialogView.rcSiparisGidilen.setHasFixedSize(true)
+
+
+                        }
+                    }
+
+
+                })
+                dialogMsDznle.setCancelable(false)
+                dialogMsDznle.show()
+
             }
         } catch (e: IOException) {
             ref.child("Hatalar/Siparis adapter/277.satır hatası").setValue(e.message.toString())

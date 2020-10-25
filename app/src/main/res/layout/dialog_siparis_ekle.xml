@@ -35,7 +35,7 @@
 
             <EditText
                 android:id="@+id/et3lt"
-                android:layout_width="75dp"
+                android:layout_width="@dimen/mor_yuv_genislik"
                 android:layout_height="45dp"
 
                 android:layout_margin="8dp"
@@ -55,7 +55,7 @@
 
             <EditText
                 android:id="@+id/et3ltFiyat"
-                android:layout_width="75dp"
+                android:layout_width="@dimen/mor_yuv_genislik"
                 android:layout_height="45dp"
 
                 android:layout_margin="8dp"
@@ -95,7 +95,7 @@
 
             <EditText
                 android:id="@+id/et5lt"
-                android:layout_width="75dp"
+                android:layout_width="@dimen/mor_yuv_genislik"
                 android:layout_height="45dp"
 
                 android:layout_margin="8dp"
@@ -109,7 +109,7 @@
 
             <EditText
                 android:id="@+id/et5ltFiyat"
-                android:layout_width="75dp"
+                android:layout_width="@dimen/mor_yuv_genislik"
                 android:layout_height="45dp"
 
                 android:layout_margin="8dp"
@@ -125,56 +125,6 @@
                 android:textColorHint="#ffffff" />
 
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="0dp"
-                android:gravity="center"
-                android:text="Yumurta"
-                android:textAlignment="center"
-                android:textColor="@color/siyah"
-                android:visibility="visible" />
-
-            <EditText
-                android:id="@+id/etYumurta"
-                android:layout_width="75dp"
-                android:layout_height="45dp"
-                android:layout_margin="8dp"
-
-                android:background="@drawable/bg_edittext"
-                android:ems="10"
-                android:gravity="center"
-                android:inputType="number"
-
-                android:textAlignment="center"
-                android:textColor="#ffffff"
-                android:textColorHint="#ffffff" />
-
-            <EditText
-                android:id="@+id/etYumurtaFiyat"
-                android:layout_width="75dp"
-                android:layout_height="45dp"
-                android:layout_margin="8dp"
-
-                android:background="@drawable/bg_edittext"
-                android:ems="10"
-                android:gravity="center"
-                android:inputType="number"
-
-                android:text="1.0"
-                android:textAlignment="center"
-                android:textColor="#ffffff"
-                android:textColorHint="#ffffff" />
-        </LinearLayout>
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -195,8 +145,8 @@
 
             <EditText
                 android:id="@+id/etDokmeSut"
-                android:layout_width="75dp"
-                android:layout_height="45dp"
+                android:layout_width="@dimen/mor_yuv_genislik"
+                android:layout_height="@dimen/mor_yuv_uzunluk"
 
                 android:layout_margin="8dp"
                 android:background="@drawable/bg_edittext"
@@ -209,7 +159,7 @@
 
             <EditText
                 android:id="@+id/etDokmeSutFiyat"
-                android:layout_width="75dp"
+                android:layout_width="@dimen/mor_yuv_genislik"
                 android:layout_height="45dp"
                 android:layout_margin="8dp"
 
@@ -224,6 +174,57 @@
                 android:textColorHint="#ffffff" />
 
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="0dp"
+                android:gravity="center"
+                android:text="Yumurta"
+                android:textAlignment="center"
+                android:textColor="@color/siyah"
+                android:visibility="visible" />
+
+            <EditText
+                android:id="@+id/etYumurta"
+                android:layout_width="@dimen/mor_yuv_genislik"
+                android:layout_height="45dp"
+                android:layout_margin="8dp"
+
+                android:background="@drawable/bg_edittext"
+                android:ems="10"
+                android:gravity="center"
+                android:inputType="number"
+
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textColorHint="#ffffff" />
+
+            <EditText
+                android:id="@+id/etYumurtaFiyat"
+                android:layout_width="@dimen/mor_yuv_genislik"
+                android:layout_height="45dp"
+                android:layout_margin="8dp"
+
+                android:background="@drawable/bg_edittext"
+                android:ems="10"
+                android:gravity="center"
+
+                android:inputType="number"
+
+                android:text="1.0"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textColorHint="#ffffff" />
+        </LinearLayout>
+
+
 
     </LinearLayout>
 

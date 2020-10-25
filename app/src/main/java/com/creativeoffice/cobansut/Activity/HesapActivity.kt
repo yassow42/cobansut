@@ -87,7 +87,7 @@ class HesapActivity : AppCompatActivity() {
                     }
                 }
                 rcHesap.layoutManager = LinearLayoutManager(this@HesapActivity, LinearLayoutManager.VERTICAL, false)
-                rcHesap.adapter = HesapAdapter(this@HesapActivity, userList,ileriZaman,geriZaman)
+                rcHesap.adapter = HesapAdapter(this@HesapActivity, userList, ileriZaman, geriZaman)
 
             }
 
@@ -107,9 +107,9 @@ class HesapActivity : AppCompatActivity() {
         var CorluMuratSatisDokmeSayisi = 0
         var CorluMuratSatisYumurtaSayisi = 0
         var CorluMuratSatisFiyat = 0.0
-        ref.child("Corlu").child("Teslim_siparisler").addListenerForSingleValueEvent(teslimEdilenler)
-        ref.child("Cerkez").child("Teslim_siparisler").addListenerForSingleValueEvent(teslimEdilenler)
-        ref.child("Teslim_siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
+        ref.child("Corlu").child("Teslim_siparisler").orderByChild("siparis_teslim_tarihi").limitToLast(100).addListenerForSingleValueEvent(teslimEdilenler)
+        ref.child("Cerkez").child("Teslim_siparisler").orderByChild("siparis_teslim_tarihi").limitToLast(100).addListenerForSingleValueEvent(teslimEdilenler)
+        ref.child("Teslim_siparisler").orderByChild("siparis_teslim_tarihi").limitToLast(100).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 if (p0.hasChildren()) {
 
@@ -188,6 +188,11 @@ class HesapActivity : AppCompatActivity() {
         var sutDokmeSayisi = 0
         var yumurtaSayisi = 0
 
+        var sut3ltSayisiOnceki = 0
+        var sut5ltSayisiOnceki = 0
+        var sutDokmeSayisiOnceki = 0
+        var yumurtaSayisiOnceki = 0
+
         ref.child("Depo_Log").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
 
@@ -200,31 +205,38 @@ class HesapActivity : AppCompatActivity() {
                             sutDokmeSayisi = sutDokmeSayisi + data.dokme_sut!!
                             yumurtaSayisi = yumurtaSayisi + data.yumurta!!
                         }
+                        if (geriZaman!! -86400000 < data.stok_guncelleme_zamani!! && data.stok_guncelleme_zamani!! < ileriZaman!!-86400000) {
+                            sut3ltSayisiOnceki = sut3ltSayisiOnceki + data.sut3lt!!
+                            sut5ltSayisiOnceki = sut5ltSayisiOnceki + data.sut5lt!!
+                            sutDokmeSayisiOnceki = sutDokmeSayisiOnceki + data.dokme_sut!!
+                            yumurtaSayisiOnceki = yumurtaSayisiOnceki + data.yumurta!!
+                        }
+
+                    }
+                }
+                ref.child("Depo_Arac_Stok_Ekle").addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(p1: DataSnapshot) {
+                        if (p1.hasChildren()) {
+                            for (ds in p1.children) {
+                                var data = ds.getValue(AracStokEkleData::class.java)!!
+                                if (geriZaman!! < data.araca_stok_ekleme_zamani!! && data.araca_stok_ekleme_zamani!! < ileriZaman!!) {
+                                    sut3ltSayisi = sut3ltSayisi - data.sut3lt!!
+                                    sut5ltSayisi = sut5ltSayisi - data.sut5lt!!
+                                    sutDokmeSayisi = sutDokmeSayisi - data.dokme_sut!!
+                                    yumurtaSayisi = yumurtaSayisi - data.yumurta!!
+                                }
+                            }
+
+                        }
                     }
 
-                    ref.child("Depo_Arac_Stok_Ekle").addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onDataChange(p1: DataSnapshot) {
-                            if (p1.hasChildren()) {
-                                for (ds in p1.children) {
-                                    var data = ds.getValue(AracStokEkleData::class.java)!!
-                                    if (geriZaman!! < data.araca_stok_ekleme_zamani!! && data.araca_stok_ekleme_zamani!! < ileriZaman!!) {
-                                        sut3ltSayisi = sut3ltSayisi - data.sut3lt!!
-                                        sut5ltSayisi = sut5ltSayisi - data.sut5lt!!
-                                        sutDokmeSayisi = sutDokmeSayisi - data.dokme_sut!!
-                                        yumurtaSayisi = yumurtaSayisi - data.yumurta!!
-                                    }
-                                }
-                                tvStokSayisi.setText("3lt: $sut3ltSayisi  5lt: $sut5ltSayisi Dökme: $sutDokmeSayisi Yum: $yumurtaSayisi ")
-                            }
-                        }
+                    override fun onCancelled(error: DatabaseError) {
 
-                        override fun onCancelled(error: DatabaseError) {
+                    }
 
-                        }
-
-                    })
-
-                }
+                })
+                tvStokSayisi.setText("Dün: 3lt: $sut3ltSayisiOnceki  5lt: $sut5ltSayisiOnceki Dökme: $sutDokmeSayisiOnceki Yum: $yumurtaSayisiOnceki\n"
+                        +"Bugün: 3lt: $sut3ltSayisi  5lt: $sut5ltSayisi Dökme: $sutDokmeSayisi Yum: $yumurtaSayisi ")
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -324,7 +336,6 @@ class HesapActivity : AppCompatActivity() {
                         var tumListString = "3lt: $sut3lt \n5lt: $sut5lt \nDökme Süt: $dokmeSut \nYumurta: $yumurta \n $zaman"
                         stokList.add(tumListString)
                     }
-
 
 
                     val adapter = ArrayAdapter<String>(this@HesapActivity, android.R.layout.simple_list_item_1, stokList)

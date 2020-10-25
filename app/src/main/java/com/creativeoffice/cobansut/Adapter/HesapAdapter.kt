@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.creativeoffice.cobansut.Activity.HesapActivity
 import com.creativeoffice.cobansut.Datalar.AlinanParaData
 import com.creativeoffice.cobansut.Datalar.AracStokEkleData
-import com.creativeoffice.cobansut.Datalar.StokData
 import com.creativeoffice.cobansut.Datalar.Users
 import com.creativeoffice.cobansut.R
 import com.google.firebase.database.*
@@ -44,13 +43,6 @@ class HesapAdapter(var myContext: Context, var userList: ArrayList<Users>, var i
         holder.userName.text = item.user_name
 
 
-        /*/stok sıfırlama
-        refUsers.child(item.user_id.toString()).child("Stok/3lt").setValue(0)
-        refUsers.child(item.user_id.toString()).child("Stok/5lt").setValue(0)
-        refUsers.child(item.user_id.toString()).child("Stok/dokme_sut").setValue(0)
-        refUsers.child(item.user_id.toString()).child("Stok/yumurta").setValue(0)*/
-
-
     }
 
     override fun getItemCount(): Int {
@@ -70,7 +62,7 @@ class HesapAdapter(var myContext: Context, var userList: ArrayList<Users>, var i
 
         fun setData(item: Users) {
 
-            stokBilgisiAlveGuncelleAlinanParaList(item)
+
             imgPlus(item)
             aracStokBilgisiGetir(item)
 
@@ -99,6 +91,8 @@ class HesapAdapter(var myContext: Context, var userList: ArrayList<Users>, var i
                         }
                         tvStok.text = "3lt: $sut3ltSayisi\n5lt: $sut5ltSayisi\nDökme: $sutDokmeSayisi\nYum: $yumurtaSayisi "
 
+
+                        stokBilgisiAlveGuncelleAlinanParaList(item,sut3ltSayisi,sut5ltSayisi,sutDokmeSayisi,yumurtaSayisi)
                     }
                 }
 
@@ -109,16 +103,12 @@ class HesapAdapter(var myContext: Context, var userList: ArrayList<Users>, var i
             })
         }
 
-        fun stokBilgisiAlveGuncelleAlinanParaList(item: Users) {
+        fun stokBilgisiAlveGuncelleAlinanParaList(item: Users, sut3ltSayisi: Int, sut5ltSayisi: Int, sutDokmeSayisi: Int, yumurtaSayisi: Int) {
 
             refUsers.child(item.user_id.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(p0: DataSnapshot) {
 
 
-                    var aracStokSut3lt = p0.child("Stok").child("3lt").value.toString().toInt()
-                    var aracStokSut5lt = p0.child("Stok").child("5lt").value.toString().toInt()
-                    var aracStokDokme = p0.child("Stok").child("dokme_sut").value.toString().toInt()
-                    var aracStokYumurta = p0.child("Stok").child("yumurta").value.toString().toInt()
 
 
                     var satisSut3lt = p0.child("Satis").child("3lt").value.toString().toInt()
@@ -128,14 +118,13 @@ class HesapAdapter(var myContext: Context, var userList: ArrayList<Users>, var i
                     var satisFiyat = p0.child("Satis").child("toplam_fiyat").value.toString().toDouble()
 
 
-                    var kalan3lt = aracStokSut3lt - satisSut3lt
-                    var kalan5lt = aracStokSut5lt - satisSut5lt
-                    var kalanDokme = aracStokDokme - satisDokme
-                    var kalanYumurta = aracStokYumurta - satisYumurta
+                    var kalan3lt = sut3ltSayisi - satisSut3lt
+                    var kalan5lt = sut5ltSayisi - satisSut5lt
+                    var kalanDokme = sutDokmeSayisi - satisDokme
+                    var kalanYumurta = yumurtaSayisi - satisYumurta
 
 
 
-                    tvStok.text = "3lt:  $aracStokSut3lt \n5lt:  $aracStokSut5lt \nDökme:  $aracStokDokme \nYum:  $aracStokYumurta"
                     tvSatis.text = "3lt:  $satisSut3lt \n5lt:  $satisSut5lt \nDökme:  $satisDokme \nYum:  $satisYumurta"
                     tvKalanBilgisi.text = "3lt:  $kalan3lt \n5lt:  $kalan5lt \nDökme:  $kalanDokme \nYum:  $kalanYumurta"
                     tvToplamFiyat.text = "Toplam: " + satisFiyat.toString() + " tl"

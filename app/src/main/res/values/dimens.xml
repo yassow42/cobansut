@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="mor_yuv_genislik">65dp</dimen>
+    <dimen name="mor_yuv_uzunluk">45dp</dimen>
+</resources>
