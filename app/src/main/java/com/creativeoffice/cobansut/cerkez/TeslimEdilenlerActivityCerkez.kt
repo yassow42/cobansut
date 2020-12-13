@@ -58,7 +58,7 @@ class TeslimEdilenlerActivityCerkez : AppCompatActivity() {
 
 
     private fun setupVeri() {
-
+        ref.child("Teslim_siparisler").keepSynced(true)
         ref.child("Teslim_siparisler").orderByChild("siparis_teslim_zamani").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
@@ -68,6 +68,8 @@ class TeslimEdilenlerActivityCerkez : AppCompatActivity() {
                 if (data.hasChildren()) {
                     var sut3ltSayisi = 0
                     var sut5ltSayisi = 0
+                    var dokmeSayisi = 0
+
                     var yumurtaSayisi = 0
                     var toplamFiyatlar = 0.0
 
@@ -86,20 +88,21 @@ class TeslimEdilenlerActivityCerkez : AppCompatActivity() {
                             }
                             for (ds in data.children) {
                                 var gelenData = ds.getValue(SiparisData::class.java)!!
-                                if (gelenData.dokme_sut==null){
+                                if (gelenData.dokme_sut == null) {
                                     ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut").setValue("0")
                                     ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut_fiyat").setValue(3.5)
                                 }
-                                if (gelenData.dokme_sut_fiyat==null){
-                                    Log.e("sad","dokme eksik ${gelenData.siparis_key}")
+                                if (gelenData.dokme_sut_fiyat == null) {
                                     ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut").setValue("0")
                                     ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut_fiyat").setValue(3.5)
                                 }
                                 butunTeslimList.add(gelenData)
+
                                 if (gece3GelenZaman - 86400000 < gelenData.siparis_teslim_zamani!!.toLong() && gelenData.siparis_teslim_zamani!!.toLong() < gece3GelenZaman) {
                                     suankiTeslimList.add(gelenData)
                                     sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
                                     sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
+                                    dokmeSayisi += gelenData.dokme_sut!!.toInt()
                                     yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
 
                                     try {
@@ -110,15 +113,21 @@ class TeslimEdilenlerActivityCerkez : AppCompatActivity() {
 
 
                                 }
+
+                                if ( gelenData.siparisi_giren == "CorluMurat") {
+                                    ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("siparisi_giren").setValue("Corlumurat")
+                                    ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("siparis_giren").removeValue()
+                                }
                             }
                             progressDialog.dismiss()
                             suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }
-                            tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
-                            tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
-                            tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
+                            tv3litre.text = "3lt: " + sut3ltSayisi.toString()
+                            tv5litre.text = "5lt: " + sut5ltSayisi.toString()
+                            tvDokme.text = "Dökme: " + dokmeSayisi.toString()
+                            tvYumurta.text = "Yumurta: " + yumurtaSayisi.toString()
 
                             try {
-                                tvFiyatGenelTeslim.setText(toplamFiyatlar.toString() + " TL")
+                                tvFiyatGenel.setText(toplamFiyatlar.toString() + " TL")
                             } catch (e: IOException) {
                                 Log.e("teslim activity", "hatalar ${e.message.toString()}")
 
@@ -193,6 +202,7 @@ class TeslimEdilenlerActivityCerkez : AppCompatActivity() {
 
             var sut3ltSayisi = 0
             var sut5ltSayisi = 0
+            var dokmeSayisi = 0
             var yumurtaSayisi = 0
             var toplamFiyatlar = 0.0
 
@@ -201,18 +211,20 @@ class TeslimEdilenlerActivityCerkez : AppCompatActivity() {
 
                 if (calZamandan.timeInMillis < ds.siparis_teslim_zamani!!.toLong() && ds.siparis_teslim_zamani!!.toLong() < calZamana.timeInMillis) {
                     suankiTeslimList.add(ds)
-                    sut3ltSayisi = ds.sut3lt!!.toInt() + sut3ltSayisi
-                    sut5ltSayisi = ds.sut5lt!!.toInt() + sut5ltSayisi
-                    yumurtaSayisi = ds.yumurta!!.toInt() + yumurtaSayisi
-                    toplamFiyatlar = ds.toplam_fiyat!!.toDouble() + toplamFiyatlar
+                    sut3ltSayisi += ds.sut3lt!!.toInt()
+                    sut5ltSayisi += ds.sut5lt!!.toInt()
+                    dokmeSayisi += ds.dokme_sut!!.toInt()
+                    yumurtaSayisi += ds.yumurta!!.toInt()
+                    toplamFiyatlar += ds.toplam_fiyat!!.toDouble()
 
                 }
 
                 suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }
-                tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
-                tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
-                tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
-                tvFiyatGenelTeslim.text = toplamFiyatlar.toString() + " TL"
+                tv3litre.text = "3lt: " + sut3ltSayisi.toString()
+                tv5litre.text = "5lt: " + sut5ltSayisi.toString()
+                tvDokme.text = "Dökme: " + dokmeSayisi.toString()
+                tvYumurta.text = "Yumurta: " + yumurtaSayisi.toString()
+                tvFiyatGenel.text = toplamFiyatlar.toString() + " TL"
 
                 setupRecyclerView()
 

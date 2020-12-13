@@ -2,13 +2,11 @@ package com.creativeoffice.cobansut.Activity
 
 import android.app.DatePickerDialog
 import android.app.ProgressDialog
-import android.app.TimePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.View
-import android.view.WindowManager
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.creativeoffice.cobansut.Adapter.TeslimEdilenlerAdapter
@@ -36,8 +34,9 @@ class TeslimActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_teslim)
         setupNavigationView()
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        // this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setupBtn()
+
 
         suankiTeslimList = ArrayList()
         butunTeslimList = ArrayList()
@@ -49,16 +48,17 @@ class TeslimActivity : AppCompatActivity() {
 
 
         ref.child("users").child(FirebaseAuth.getInstance().currentUser!!.uid.toString()).addListenerForSingleValueEvent(userYetki)
-        setupVeri()
+
         hndler.postDelayed(Runnable { progressDialog.dismiss() }, 3000)
 
 
     }
 
 
-    private fun setupVeri() {
-
-        ref.child("Teslim_siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
+    private fun setupVeri(gosterilenSayi: Int) {
+        ref.child("Teslim_siparisler").keepSynced(true)
+        ref.child("Burgaz").child("Teslim_siparisler").keepSynced(true)
+        ref.child("Burgaz").child("Teslim_siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
             }
@@ -78,9 +78,11 @@ class TeslimActivity : AppCompatActivity() {
                         override fun onDataChange(p0: DataSnapshot) {
 
                             var gece3GelenZaman = p0.child("gece3").value.toString().toLong()
-                            var suankıZaman = System.currentTimeMillis()
+                            var suankiZaman = System.currentTimeMillis()
 
-                            if (gece3GelenZaman < suankıZaman) {
+                          //  veriTasima(gece3GelenZaman)
+
+                            if (gece3GelenZaman < suankiZaman) {
                                 var guncelGece3 = gece3GelenZaman + 86400000
                                 FirebaseDatabase.getInstance().reference.child("Zaman").child("gece3").setValue(guncelGece3)
                             }
@@ -90,10 +92,6 @@ class TeslimActivity : AppCompatActivity() {
                                 butunTeslimList.add(gelenData)
 
                                 if (gelenData.siparis_teslim_zamani.toString() != "null") {
-                                    if (gece3GelenZaman - 4752000000 > gelenData.siparis_teslim_zamani.toString().toLong()) {
-                                        ref.child("Burgaz").child(gelenData.siparis_key.toString()).setValue(gelenData)
-                                        ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).removeValue()
-                                    }
 
                                     if (gece3GelenZaman - 86400000 < gelenData.siparis_teslim_zamani!!.toLong() && gelenData.siparis_teslim_zamani!!.toLong() < gece3GelenZaman) {
                                         suankiTeslimList.add(gelenData)
@@ -112,20 +110,19 @@ class TeslimActivity : AppCompatActivity() {
                             tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
                             tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
                             tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
-                            tvDokumSutTeslim.text = "Dokum: " + dokumSutSayisi.toString()
+                            tvDokumSutTeslim.text = "Dökme: " + dokumSutSayisi.toString()
 
 
                             try {
-                                tvFiyatGenelTeslim.setText(toplamFiyatlar.toString() + " TL")
+                                tvFiyatGenelTeslim.setText(toplamFiyatlar.toDouble().toString() + " TL")
                                 setupRecyclerView()
                             } catch (e: IOException) {
                                 Log.e("teslim activity", "hatalar ${e.message.toString()}")
 
                             }
-
-
                         }
                     })
+
                 } else {
                     progressDialog.setMessage("Veri Alınamıyor...")
                     hndler.postDelayed(Runnable { progressDialog.dismiss() }, 2000)
@@ -133,11 +130,41 @@ class TeslimActivity : AppCompatActivity() {
                 }
             }
         })
+
+
+    }
+
+    private fun veriTasima(gece3GelenZaman: Long) {
+        ref.child("Teslim_siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+
+                for (ds in p0.children) {
+                    var gelenData = ds.getValue(SiparisData::class.java)!!
+
+                    if (gelenData.siparis_teslim_zamani.toString() != "null") {
+                        if (gelenData.siparis_teslim_zamani!! > gece3GelenZaman - 5184000000) {
+                            ref.child("Burgaz").child("Teslim_siparisler").child(gelenData.siparis_key.toString()).setValue(gelenData)
+                        }else{
+                            ref.child("Eski_veriler").child("Burgaz").child("Teslim_siparisler").child(gelenData.siparis_key.toString()).setValue(gelenData)
+                        }
+                    }else{
+                       Log.e("silinneler",gelenData.siparis_key.toString())
+                     //   ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).removeValue()
+
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
     }
 
     private fun setupBtn() {
-        tvZamandan.text = SimpleDateFormat("HH:mm dd.MM.yyyy").format(System.currentTimeMillis() - (24 * 60 * 60 * 1000))
-        tvZamana.text = SimpleDateFormat("HH:mm dd.MM.yyyy").format(System.currentTimeMillis())
+        tvZamandan.text = SimpleDateFormat("HH:mm  dd.MM.yyyy").format(System.currentTimeMillis() - (24 * 60 * 60 * 1000))
+        tvZamana.text = SimpleDateFormat("HH:mm  dd.MM.yyyy").format(System.currentTimeMillis())
 
         var calZamandan = Calendar.getInstance()
         val dateSetListenerZamandan = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
@@ -151,10 +178,10 @@ class TeslimActivity : AppCompatActivity() {
             tvZamandan.text = sdf.format(calZamandan.time)
         }
 
-        val timeSetListenerZamandan = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+   /*     val timeSetListenerZamandan = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
             calZamandan.set(Calendar.HOUR_OF_DAY, hourOfDay)
             calZamandan.set(Calendar.MINUTE, minute)
-        }
+        }*/
 
         var calZamana = Calendar.getInstance()
         val dateSetListenerZamana = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
@@ -168,21 +195,21 @@ class TeslimActivity : AppCompatActivity() {
             tvZamana.text = sdf.format(calZamana.time)
         }
 
-        val timeSetListenerZamana = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+       /* val timeSetListenerZamana = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
             calZamana.set(Calendar.HOUR_OF_DAY, hourOfDay)
             calZamana.set(Calendar.MINUTE, minute)
-        }
+        }*/
 
 
 
         tvZamandan.setOnClickListener {
             DatePickerDialog(this, dateSetListenerZamandan, calZamandan.get(Calendar.YEAR), calZamandan.get(Calendar.MONTH), calZamandan.get(Calendar.DAY_OF_MONTH)).show()
-            TimePickerDialog(this, timeSetListenerZamandan, calZamandan.get(Calendar.HOUR_OF_DAY), calZamandan.get(Calendar.MINUTE), true).show()
+         //  TimePickerDialog(this, timeSetListenerZamandan, calZamandan.get(Calendar.HOUR_OF_DAY), calZamandan.get(Calendar.MINUTE), true).show()
 
         }
         tvZamana.setOnClickListener {
             DatePickerDialog(this, dateSetListenerZamana, calZamana.get(Calendar.YEAR), calZamana.get(Calendar.MONTH), calZamana.get(Calendar.DAY_OF_MONTH)).show()
-            TimePickerDialog(this, timeSetListenerZamana, calZamana.get(Calendar.HOUR_OF_DAY), calZamana.get(Calendar.MINUTE), true).show()
+           // TimePickerDialog(this, timeSetListenerZamana, calZamana.get(Calendar.HOUR_OF_DAY), calZamana.get(Calendar.MINUTE), true).show()
         }
 
 
@@ -429,8 +456,15 @@ class TeslimActivity : AppCompatActivity() {
     var userYetki = object : ValueEventListener {
         override fun onDataChange(p0: DataSnapshot) {
             if (p0.value != null) {
+
                 yetki2 = p0.child("yetki2").value.toString()
-                if (yetki2 != "Patron") imgTarih.visibility = View.GONE
+                if (yetki2 != "Patron") {
+                    setupVeri(150)
+                    imgTarih.visibility = View.VISIBLE
+                } else {
+                    setupVeri(1500)
+                }
+
             }
 
 

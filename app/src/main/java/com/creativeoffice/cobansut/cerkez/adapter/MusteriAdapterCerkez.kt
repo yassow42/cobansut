@@ -239,13 +239,13 @@ class MusteriAdapterCerkez(val myContext: Context, val musteriler: ArrayList<Mus
                             }
 
                             dialogView.imgBack.setOnClickListener {
-                                //   holder.locationManager.removeUpdates(holder.myLocationListener)
                                 dialogMsDznle.dismiss()
                             }
 
                             dialogView.tvAdSoyad.text = musteriler[position].musteri_ad_soyad.toString()
                             dialogView.tvMahalle.setText( musteriler[position].musteri_mah.toString())
                             dialogView.etApartman.setText(musteriler[position].musteri_apartman.toString())
+
                             ref.child("Musteriler").child(musteriAdi).addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onCancelled(p0: DatabaseError) {
 
@@ -274,9 +274,9 @@ class MusteriAdapterCerkez(val myContext: Context, val musteriler: ArrayList<Mus
                                             var gelenData = ds.getValue(SiparisData::class.java)!!
                                             list.add(gelenData)
 
-                                            sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
-                                            sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
-                                            yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
+                                            sut3ltSayisi += gelenData.sut3lt!!.toInt()
+                                            sut5ltSayisi += gelenData.sut5lt!!.toInt()
+                                            yumurtaSayisi += gelenData.yumurta!!.toInt()
 
                                         }
 

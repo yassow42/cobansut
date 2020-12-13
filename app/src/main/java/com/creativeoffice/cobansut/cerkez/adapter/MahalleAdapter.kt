@@ -25,11 +25,7 @@ import kotlin.collections.ArrayList
 
 class MahalleAdapter(val myContext: Context, val mahalleler: ArrayList<String>, val kullaniciAdi: String, var bolge: String) : RecyclerView.Adapter<MahalleAdapter.SiparisHolder>() {
     var ref = FirebaseDatabase.getInstance().reference.child(bolge)
-
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): MahalleAdapter.SiparisHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MahalleAdapter.SiparisHolder {
         val view = LayoutInflater.from(myContext).inflate(R.layout.item_siparisler_mahalle, parent, false)
 
         SiparisHolder(view).recycler.visibility = View.GONE
@@ -39,7 +35,6 @@ class MahalleAdapter(val myContext: Context, val mahalleler: ArrayList<String>, 
     }
 
     override fun getItemCount(): Int {
-
         return mahalleler.size
     }
 
@@ -60,6 +55,9 @@ class MahalleAdapter(val myContext: Context, val mahalleler: ArrayList<String>, 
             }
         }
 
+
+
+
     }
 
     inner class SiparisHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -75,6 +73,7 @@ class MahalleAdapter(val myContext: Context, val mahalleler: ArrayList<String>, 
         val tvToplam = itemView.tvToplam
 
         fun setRc(mahalleler: String) {
+
             ref.child("Siparisler").child(mahalleler).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
 
@@ -84,16 +83,15 @@ class MahalleAdapter(val myContext: Context, val mahalleler: ArrayList<String>, 
                     var siparisList = ArrayList<SiparisData>()
                     if (p0.hasChildren()) {
                         for (ds in p0.children) {
-                            try {
-                                var gelenData = ds.getValue(SiparisData::class.java)!!
+
+                            var gelenData = ds.getValue(SiparisData::class.java)!!
+                            if (gelenData.siparis_teslim_tarihi!!.compareTo(System.currentTimeMillis()) == -1) {
                                 siparisList.add(gelenData)
-
-
-                            } catch (e: Exception) {
-                                ref.child("Hatalar/MahalleAdapter").push().setValue(e.message.toString())
                             }
 
                         }
+
+
                         recycler.layoutManager = LinearLayoutManager(myContext, LinearLayoutManager.VERTICAL, false)
                         val adapter = MahalleSiparisleriAdapter(myContext, siparisList, kullaniciAdi, bolge)
                         recycler.adapter = adapter

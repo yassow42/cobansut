@@ -19,16 +19,12 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.activity_teslim.*
 import kotlinx.android.synthetic.main.activity_teslim.bottomNav
 import kotlinx.android.synthetic.main.activity_teslim_corlu.*
-import kotlinx.android.synthetic.main.activity_teslim_corlu.imgOptions
+
 import kotlinx.android.synthetic.main.activity_teslim_corlu.imgTarih
 import kotlinx.android.synthetic.main.activity_teslim_corlu.rcTeslimEdilenler
-import kotlinx.android.synthetic.main.activity_teslim_corlu.tv3ltTeslim
-import kotlinx.android.synthetic.main.activity_teslim_corlu.tv5ltTeslim
-import kotlinx.android.synthetic.main.activity_teslim_corlu.tvFiyatGenelTeslim
-import kotlinx.android.synthetic.main.activity_teslim_corlu.tvYumurtaTeslim
+
 import kotlinx.android.synthetic.main.activity_teslim_corlu.tvZamana
 import kotlinx.android.synthetic.main.activity_teslim_corlu.tvZamandan
 import java.io.IOException
@@ -44,7 +40,7 @@ class TeslimCorluActivity : AppCompatActivity() {
     lateinit var progressDialog: ProgressDialog
     val hndler = Handler()
 
-    var refCorlu =  FirebaseDatabase.getInstance().reference.child("Corlu")
+    var refCorlu = FirebaseDatabase.getInstance().reference.child("Corlu")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_teslim_corlu)
@@ -61,14 +57,15 @@ class TeslimCorluActivity : AppCompatActivity() {
 
 
 
-        hndler.postDelayed(Runnable { setupVeri() }, 2000)
+        hndler.postDelayed(Runnable { setupVeri() }, 500)
         hndler.postDelayed(Runnable { progressDialog.dismiss() }, 5000)
 
     }
 
 
     private fun setupVeri() {
-       refCorlu.child("Teslim_siparisler").orderByChild("siparis_teslim_zamani").addListenerForSingleValueEvent(object : ValueEventListener {
+        refCorlu.child("Teslim_siparisler").keepSynced(true)
+        refCorlu.child("Teslim_siparisler").orderByChild("siparis_teslim_zamani").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
             }
@@ -77,6 +74,7 @@ class TeslimCorluActivity : AppCompatActivity() {
                 if (data.hasChildren()) {
                     var sut3ltSayisi = 0
                     var sut5ltSayisi = 0
+                    var dokmeSayisi = 0
                     var yumurtaSayisi = 0
                     var toplamFiyatlar = 0.0
 
@@ -95,12 +93,12 @@ class TeslimCorluActivity : AppCompatActivity() {
                             }
                             for (ds in data.children) {
                                 var gelenData = ds.getValue(SiparisData::class.java)!!
-                                if (gelenData.dokme_sut==null){
+                                if (gelenData.dokme_sut == null) {
                                     refCorlu.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut").setValue("0")
                                     refCorlu.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut_fiyat").setValue(3.5)
                                 }
-                                if (gelenData.dokme_sut_fiyat==null){
-                                    Log.e("sad","dokme eksik ${gelenData.siparis_key}")
+                                if (gelenData.dokme_sut_fiyat == null) {
+                                    Log.e("sad", "dokme eksik ${gelenData.siparis_key}")
                                     refCorlu.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut").setValue("0")
                                     refCorlu.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("dokme_sut_fiyat").setValue(3.5)
                                 }
@@ -108,25 +106,31 @@ class TeslimCorluActivity : AppCompatActivity() {
                                 if (gelenData.siparis_teslim_zamani.toString() != "null") {
                                     if (gece3GelenZaman - 86400000 < gelenData.siparis_teslim_zamani!!.toLong() && gelenData.siparis_teslim_zamani!!.toLong() < gece3GelenZaman) {
                                         suankiTeslimList.add(gelenData)
-                                        sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
-                                        sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
-                                        yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
+                                        sut3ltSayisi += gelenData.sut3lt!!.toInt()
+                                        sut5ltSayisi += gelenData.sut5lt!!.toInt()
+                                        dokmeSayisi += gelenData.dokme_sut!!.toInt()
+                                        yumurtaSayisi += gelenData.yumurta!!.toInt()
                                         try {
                                             toplamFiyatlar = gelenData.toplam_fiyat!!.toDouble() + toplamFiyatlar
                                         } catch (e: IOException) {
                                             Log.e("teslim corlu activity", "hatalar ${e.message.toString()}")
                                         }
-                                }
+                                    }
 
+                                }
+                                if ( gelenData.siparisi_giren == "CorluMurat") {
+                                    refCorlu.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("siparisi_giren").setValue("Corlumurat")
+                                    refCorlu.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("siparis_giren").removeValue()
                                 }
                             }
                             progressDialog.dismiss()
                             suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }
-                            tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
-                            tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
-                            tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
+                            tv3litre.text = "3lt: " + sut3ltSayisi.toString()
+                            tv5litre.text = "5lt: " + sut5ltSayisi.toString()
+                            tvDokme.text = "Dökme: " + dokmeSayisi.toString()
+                            tvYumurta.text = "Yumurta: " + yumurtaSayisi.toString()
                             try {
-                                tvFiyatGenelTeslim.setText(toplamFiyatlar.toString() + " TL")
+                                tvFiyatGenel.setText(toplamFiyatlar.toString() + " TL")
                             } catch (e: IOException) {
                                 Log.e("teslim activity", "hatalar ${e.message.toString()}")
 
@@ -220,10 +224,10 @@ class TeslimCorluActivity : AppCompatActivity() {
                 }
 
                 suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }
-                tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
-                tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
-                tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
-                tvFiyatGenelTeslim.text = toplamFiyatlar.toString() + " TL"
+                tv3litre.text = "3lt: " + sut3ltSayisi.toString()
+                tv5litre.text = "5lt: " + sut5ltSayisi.toString()
+                tvYumurta.text = "Yumurta: " + yumurtaSayisi.toString()
+                tvFiyatGenel.text = toplamFiyatlar.toString() + " TL"
 
                 setupRecyclerView()
 

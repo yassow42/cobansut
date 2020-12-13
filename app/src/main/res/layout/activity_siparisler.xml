@@ -21,6 +21,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout"
                 android:layout_width="match_parent"
@@ -29,8 +30,8 @@
 
                 <ImageView
                     android:id="@+id/imgCikis"
-                    android:layout_width="8dp"
-                    android:layout_height="4dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
                     android:layout_marginEnd="16dp"
                     android:background="@drawable/cancel"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -49,11 +50,91 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"></TextView>
+                    app:layout_constraintTop_toTopOf="parent" />
+
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcMahallelerBurgaz"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+
+                android:id="@+id/clileriTarih"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_margin="1dp"
+                android:background="@color/kirmizi">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="İleri Tarihli"
+                    android:textColor="@color/beyaz"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/imgileriDown"
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
+                    android:layout_marginEnd="24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/down" />
+
+                <ImageView
+                    android:id="@+id/imgileriUp"
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
+                    android:layout_marginEnd="24dp"
+                    android:background="@drawable/up"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/imgileriDown"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/up" />
+
+                <TextView
+                    android:id="@+id/tvileriTarihliSayi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:text="0"
+                    android:textColor="@color/beyaz"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcileriTarih"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="375dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/clMarket"
                 android:layout_width="match_parent"
@@ -714,7 +795,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -1004,8 +1087,8 @@
                 android:background="@color/colorPrimary">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="77dp"
+                    android:layout_height="17dp"
                     android:text="İnönü Mah."
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
@@ -1860,12 +1943,10 @@
     </ScrollView>
 
 
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout5"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="40dp"
         android:background="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/bottomNav"
         app:layout_constraintEnd_toEndOf="parent"
@@ -1877,11 +1958,11 @@
             android:layout_height="wrap_content"
             android:text="3lt: 0"
             android:textColor="@color/beyaz"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/tv5litre"
             app:layout_constraintEnd_toStartOf="@+id/tv5litre"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/tv5litre" />
 
         <TextView
             android:id="@+id/tv5litre"
@@ -1889,11 +1970,11 @@
             android:layout_height="wrap_content"
             android:text="5lt: 0"
             android:textColor="@color/beyaz"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/tvYumurta"
+            app:layout_constraintBottom_toBottomOf="@+id/tvYumurta"
+            app:layout_constraintEnd_toStartOf="@+id/tvDokme"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/tv3litre"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/tvYumurta" />
 
         <TextView
             android:id="@+id/tvYumurta"
@@ -1901,11 +1982,24 @@
             android:layout_height="wrap_content"
             android:text="Yumurta: 0"
             android:textColor="@color/beyaz"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/tvFiyatGenel"
+            app:layout_constraintBottom_toTopOf="@+id/tvFiyatGenel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tvDokme"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvDokme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dokme 0"
+            android:textColor="@color/beyaz"
+            app:layout_constraintBottom_toBottomOf="@+id/tvYumurta"
+            app:layout_constraintEnd_toStartOf="@+id/tvYumurta"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/tv5litre"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/tvYumurta"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/tvFiyatGenel"
@@ -1916,8 +2010,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/tvYumurta"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvYumurta" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

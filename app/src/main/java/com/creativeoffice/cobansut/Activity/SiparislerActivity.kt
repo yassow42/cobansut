@@ -1,21 +1,26 @@
 package com.creativeoffice.cobansut.Activity
 
+import android.app.ActivityManager
 import android.app.ProgressDialog
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Handler
+import android.util.Log
 import android.view.View
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.creativeoffice.cobansut.Adapter.SiparisAdapter
-import com.creativeoffice.cobansut.genel.BolgeSecimActivity
-import com.creativeoffice.cobansut.utils.BottomNavigationViewHelper
 import com.creativeoffice.cobansut.Datalar.SiparisData
-import com.creativeoffice.cobansut.genel.LoginActivity
 import com.creativeoffice.cobansut.R
+import com.creativeoffice.cobansut.cerkez.adapter.MahalleAdapter
+import com.creativeoffice.cobansut.genel.BolgeSecimActivity
+import com.creativeoffice.cobansut.genel.LoginActivity
+import com.creativeoffice.cobansut.utils.BottomNavigationViewHelper
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -25,6 +30,8 @@ import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_siparisler.*
 
 class SiparislerActivity : AppCompatActivity() {
+    val mahalleList = ArrayList<String>()
+
     lateinit var marketlist: ArrayList<SiparisData>
     lateinit var kurtulusList: ArrayList<SiparisData>
     lateinit var genclikList: ArrayList<SiparisData>
@@ -62,7 +69,10 @@ class SiparislerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_siparisler)
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        //  this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        //FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+        FirebaseDatabase.getInstance().reference.child("Siparisler").keepSynced(true)
+
 
         mAuth = FirebaseAuth.getInstance()
         userID = mAuth.currentUser!!.uid
@@ -73,6 +83,8 @@ class SiparislerActivity : AppCompatActivity() {
         setupNavigationView()
         setupBtn()
         zamanAyarı()
+       // FirebaseDatabase.getInstance().reference.child("Burgaz").child("Teslim_siparisler").removeValue()
+      //  FirebaseDatabase.getInstance().reference.child("Eski_veriler").removeValue()
 
         progressDialog = ProgressDialog(this)
         progressDialog.setMessage("Yükleniyor...")
@@ -119,7 +131,9 @@ class SiparislerActivity : AppCompatActivity() {
         var sut3ltSayisi = 0
         var sut5ltSayisi = 0
         var yumurtaSayisi = 0
+        var dokmeSayisi = 0
         var toplamFiyatlar = 0.0
+        FirebaseDatabase.getInstance().reference.child("users").keepSynced(true)
 
         var ref = FirebaseDatabase.getInstance().reference
         ref.child("Siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
@@ -127,236 +141,238 @@ class SiparislerActivity : AppCompatActivity() {
             override fun onDataChange(p0: DataSnapshot) {
 
                 if (p0.hasChildren()) {
+
                     for (ds in p0.children) {
-                        try {
-                            var gelenData = ds.getValue(SiparisData::class.java)!!
-                            if (gelenData.sut3lt != null && gelenData.sut5lt != null && gelenData.yumurta != null) {
-                                sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
-                                sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
-                                yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
-                                toplamFiyatlar = gelenData.toplam_fiyat!!.toDouble() + toplamFiyatlar
+
+                        var gelenData = ds.getValue(SiparisData::class.java)!!
+
+                        ref.child("Burgaz").child("Siparisler").child(gelenData.siparis_mah.toString()).child(gelenData.siparis_key.toString()).setValue(gelenData)
+
+                        if (gelenData.siparis_teslim_tarihi!!.compareTo(System.currentTimeMillis()) == -1) {
+                            sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
+                            sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
+                            yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
+                            dokmeSayisi = gelenData.dokme_sut!!.toInt() + dokmeSayisi
+                            toplamFiyatlar = gelenData.toplam_fiyat!!.toDouble() + toplamFiyatlar
+
+                            if (gelenData.siparis_mah == "Market") {
+                                marketlist.add(gelenData)
+                                marketlist.sortBy { it.siparis_adres }
+                                tvMarketSayi.text = marketlist.size.toString() + " Sipariş"
+                                recyclerView(rcMarket, marketlist)
+
+                                if (marketlist.size > 0) {
+                                    clMarket.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                            }
+                            if (gelenData.siparis_mah == "Kurtuluş") {
+                                kurtulusList.add(gelenData)
+                                kurtulusList.sortBy { it.siparis_adres }
+                                tvKurtulusSayi.text = kurtulusList.size.toString() + " Sipariş"
+                                if (kurtulusList.size > 0) {
+                                    clKurtulus.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                                recyclerView(rcKurtulus, kurtulusList)
+                            }
+                            if (gelenData.siparis_mah == "Gençlik") {
+                                genclikList.add(gelenData)
+                                tvGenclikSayi.text = genclikList.size.toString() + " Sipariş"
+
+                                if (genclikList.size > 0) {
+                                    clGenclik.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+
+                                recyclerView(rcGenclik, genclikList)
+                            }
+                            if (gelenData.siparis_mah == "8 Kasım") {
+                                kasim8List.add(gelenData)
+                                tvKasimSayi.text = kasim8List.size.toString() + " Sipariş"
+                                if (kasim8List.size > 0) {
+                                    cl8Kasim.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                                recyclerView(rc8Kasim, kasim8List)
+                            }
+                            if (gelenData.siparis_mah == "Atatürk") {
+                                Ataturklist.add(gelenData)
+                                tvAtaturkSayi.text = Ataturklist.size.toString() + " Sipariş"
+                                if (Ataturklist.size > 0) {
+                                    clAtaturk.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                                recyclerView(rcAtaturk, Ataturklist)
+                            }
+                            if (gelenData.siparis_mah == "Barış") {
+                                barislist.add(gelenData)
+                                tvBarisSayi.text = barislist.size.toString() + " Sipariş"
+                                if (barislist.size > 0) {
+                                    clBaris.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                                recyclerView(rcBaris, barislist)
+                            }
+                            if (gelenData.siparis_mah == "Cumhuriyet") {
+                                cumhuriyetlist.add(gelenData)
+                                tvCumhuriyetSayi.text = cumhuriyetlist.size.toString() + " Sipariş"
+                                if (cumhuriyetlist.size > 0) {
+                                    clCumhuriyet.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                                recyclerView(rcCumhuriyet, cumhuriyetlist)
+                            }
+                            if (gelenData.siparis_mah == "Dere") {
+                                derelist.add(gelenData)
+                                tvDereSayi.text = derelist.size.toString() + " Sipariş"
+                                if (derelist.size > 0) {
+                                    clDere.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                                recyclerView(rcDere, derelist)
+                            }
+                            if (gelenData.siparis_mah == "Durak") {
+                                duraklist.add(gelenData)
+                                tvDurakSayi.text = duraklist.size.toString() + " Sipariş"
+                                if (duraklist.size > 0) {
+                                    clDurak.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                                recyclerView(rcDurak, duraklist)
+                            }
+                            if (gelenData.siparis_mah == "Fatih") {
+                                fatihlist.add(gelenData)
+                                tvFatihSayi.text = fatihlist.size.toString() + " Sipariş"
+                                if (fatihlist.size > 0) {
+                                    clFatih.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                                recyclerView(rcFatih, fatihlist)
+                            }
+                            if (gelenData.siparis_mah == "Gündoğu") {
+                                gunlist.add(gelenData)
+                                tvGunSayi.text = gunlist.size.toString() + " Sipariş"
+                                if (gunlist.size > 0) {
+                                    clGun.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                                recyclerView(rcGun, gunlist)
+                            }
+                            if (gelenData.siparis_mah == "Güneş") {
+                                guneslist.add(gelenData)
+                                tvGunesSayi.text = guneslist.size.toString() + " Sipariş"
+                                if (guneslist.size > 0) {
+                                    clGunes.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                                recyclerView(rcGunes, guneslist)
+                            }
+                            if (gelenData.siparis_mah == "Hürriyet") {
+                                hurriyetlist.add(gelenData)
+                                tvHurriyetSayi.text = hurriyetlist.size.toString() + " Sipariş"
+                                if (hurriyetlist.size > 0) {
+                                    clHurriyet.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                                recyclerView(rcHurriyet, hurriyetlist)
+                            }
+                            if (gelenData.siparis_mah == "İnönü") {
+                                inonulist.add(gelenData)
+                                tvInonuSayi.text = inonulist.size.toString() + " Sipariş"
+                                if (inonulist.size > 0) {
+                                    clinonu.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                                recyclerView(rcInonu, inonulist)
+                            }
+                            if (gelenData.siparis_mah == "İstiklal") {
+                                istiklallist.add(gelenData)
+                                tvIstiklalSayi.text = istiklallist.size.toString() + " Sipariş"
+                                if (istiklallist.size > 0) {
+                                    clIstıklal.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                                recyclerView(rcIstiklal, istiklallist)
+                            }
+                            if (gelenData.siparis_mah == "Kocasinan") {
+                                kocasinanlist.add(gelenData)
+                                tvKocasinanSayi.text = kocasinanlist.size.toString() + " Sipariş"
+                                if (kocasinanlist.size > 0) {
+                                    clKocasinan.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                                recyclerView(rcKocasinan, kocasinanlist)
+                            }
+                            if (gelenData.siparis_mah == "Özerler") {
+                                ozerlerlist.add(gelenData)
+                                tvOzerlerSayi.text = ozerlerlist.size.toString() + " Sipariş"
+                                if (ozerlerlist.size > 0) {
+                                    clOzerler.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                                recyclerView(rcOzerler, ozerlerlist)
+                            }
+                            if (gelenData.siparis_mah == "Sevgi") {
+                                sevgilist.add(gelenData)
+                                tvSevgiSayi.text = sevgilist.size.toString() + " Sipariş"
+                                if (sevgilist.size > 0) {
+                                    clSevgi.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                                recyclerView(rcSevgi, sevgilist)
+                            }
+                            if (gelenData.siparis_mah == "Siteler") {
+                                sitelerlist.add(gelenData)
+                                tvSitelerSayi.text = sitelerlist.size.toString() + " Sipariş"
+                                if (sitelerlist.size > 0) {
+                                    clSiteler.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                                recyclerView(rcSiteler, sitelerlist)
+                            }
+                            if (gelenData.siparis_mah == "Yeni") {
+                                yenilist.add(gelenData)
+                                tvYeniSayi.text = yenilist.size.toString() + " Sipariş"
+                                if (yenilist.size > 0) {
+                                    clYeni.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                                recyclerView(rcYeni, yenilist)
+                            }
+                            if (gelenData.siparis_mah == "Yıldırım") {
+                                yildirimlist.add(gelenData)
+                                tvYildirimSayi.text = yildirimlist.size.toString() + " Sipariş"
+                                if (yildirimlist.size > 0) {
+                                    clYildirim.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                                recyclerView(rcYildirim, yildirimlist)
+                            }
+                            if (gelenData.siparis_mah == "Yıldız") {
+                                yildizlist.add(gelenData)
+                                tvYildizSayi.text = yildizlist.size.toString() + " Sipariş"
+                                if (yildizlist.size > 0) {
+                                    clYildiz.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                                recyclerView(rcYildiz, yildizlist)
+                            }
+                            if (gelenData.siparis_mah == "Yılmaz") {
+                                yilmazlist.add(gelenData)
+                                tvYilmazSayi.text = yilmazlist.size.toString() + " Sipariş"
+                                if (yilmazlist.size > 0) {
+                                    clYilmaz.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                                recyclerView(rcYilmaz, yilmazlist)
+                            }
+                            if (gelenData.siparis_mah == "Zafer") {
+                                zaferlist.add(gelenData)
+                                tvZaferSayi.text = zaferlist.size.toString() + " Sipariş"
+                                if (zaferlist.size > 0) {
+                                    clZafer.setBackgroundColor(resources.getColor(R.color.kirmizi))
+                                }
+                                recyclerView(rcZafer, zaferlist)
                             }
 
 
-                            if (gelenData.siparis_teslim_tarihi!!.compareTo(System.currentTimeMillis()) == -1) {
+                        } else if (gelenData.siparis_teslim_tarihi!!.compareTo(System.currentTimeMillis()) == 1) {
+                            ilerilist.add(gelenData)
+                            tvileriTarihliSayi.text = ilerilist.size.toString() + " Sipariş"
 
-                                if (gelenData.siparis_mah == "Market") {
-                                    marketlist.add(gelenData)
-                                    marketlist.sortBy { it.siparis_adres }
-                                    tvMarketSayi.text = marketlist.size.toString() + " Sipariş"
-                                    recyclerView(rcMarket, marketlist)
-
-                                    if (marketlist.size > 0) {
-                                        clMarket.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                }
-                                if (gelenData.siparis_mah == "Kurtuluş") {
-                                    kurtulusList.add(gelenData)
-                                    kurtulusList.sortBy { it.siparis_adres }
-                                    tvKurtulusSayi.text = kurtulusList.size.toString() + " Sipariş"
-                                    if (kurtulusList.size > 0) {
-                                        clKurtulus.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                    recyclerView(rcKurtulus, kurtulusList)
-                                }
-                                if (gelenData.siparis_mah == "Gençlik") {
-                                    genclikList.add(gelenData)
-                                    tvGenclikSayi.text = genclikList.size.toString() + " Sipariş"
-
-                                    if (genclikList.size > 0) {
-                                        clGenclik.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-
-                                    recyclerView(rcGenclik, genclikList)
-                                }
-                                if (gelenData.siparis_mah == "8 Kasım") {
-                                    kasim8List.add(gelenData)
-                                    tvKasimSayi.text = kasim8List.size.toString() + " Sipariş"
-                                    if (kasim8List.size > 0) {
-                                        cl8Kasim.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                    recyclerView(rc8Kasim, kasim8List)
-                                }
-                                if (gelenData.siparis_mah == "Atatürk") {
-                                    Ataturklist.add(gelenData)
-                                    tvAtaturkSayi.text = Ataturklist.size.toString() + " Sipariş"
-                                    if (Ataturklist.size > 0) {
-                                        clAtaturk.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                    recyclerView(rcAtaturk, Ataturklist)
-                                }
-                                if (gelenData.siparis_mah == "Barış") {
-                                    barislist.add(gelenData)
-                                    tvBarisSayi.text = barislist.size.toString() + " Sipariş"
-                                    if (barislist.size > 0) {
-                                        clBaris.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                    recyclerView(rcBaris, barislist)
-                                }
-                                if (gelenData.siparis_mah == "Cumhuriyet") {
-                                    cumhuriyetlist.add(gelenData)
-                                    tvCumhuriyetSayi.text = cumhuriyetlist.size.toString() + " Sipariş"
-                                    if (cumhuriyetlist.size > 0) {
-                                        clCumhuriyet.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                    recyclerView(rcCumhuriyet, cumhuriyetlist)
-                                }
-                                if (gelenData.siparis_mah == "Dere") {
-                                    derelist.add(gelenData)
-                                    tvDereSayi.text = derelist.size.toString() + " Sipariş"
-                                    if (derelist.size > 0) {
-                                        clDere.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                    recyclerView(rcDere, derelist)
-                                }
-                                if (gelenData.siparis_mah == "Durak") {
-                                    duraklist.add(gelenData)
-                                    tvDurakSayi.text = duraklist.size.toString() + " Sipariş"
-                                    if (duraklist.size > 0) {
-                                        clDurak.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                    recyclerView(rcDurak, duraklist)
-                                }
-                                if (gelenData.siparis_mah == "Fatih") {
-                                    fatihlist.add(gelenData)
-                                    tvFatihSayi.text = fatihlist.size.toString() + " Sipariş"
-                                    if (fatihlist.size > 0) {
-                                        clFatih.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                    recyclerView(rcFatih, fatihlist)
-                                }
-                                if (gelenData.siparis_mah == "Gündoğu") {
-                                    gunlist.add(gelenData)
-                                    tvGunSayi.text = gunlist.size.toString() + " Sipariş"
-                                    if (gunlist.size > 0) {
-                                        clGun.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                    recyclerView(rcGun, gunlist)
-                                }
-                                if (gelenData.siparis_mah == "Güneş") {
-                                    guneslist.add(gelenData)
-                                    tvGunesSayi.text = guneslist.size.toString() + " Sipariş"
-                                    if (guneslist.size > 0) {
-                                        clGunes.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                    recyclerView(rcGunes, guneslist)
-                                }
-                                if (gelenData.siparis_mah == "Hürriyet") {
-                                    hurriyetlist.add(gelenData)
-                                    tvHurriyetSayi.text = hurriyetlist.size.toString() + " Sipariş"
-                                    if (hurriyetlist.size > 0) {
-                                        clHurriyet.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                    recyclerView(rcHurriyet, hurriyetlist)
-                                }
-                                if (gelenData.siparis_mah == "İnönü") {
-                                    inonulist.add(gelenData)
-                                    tvInonuSayi.text = inonulist.size.toString() + " Sipariş"
-                                    if (inonulist.size > 0) {
-                                        clinonu.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                    recyclerView(rcInonu, inonulist)
-                                }
-                                if (gelenData.siparis_mah == "İstiklal") {
-                                    istiklallist.add(gelenData)
-                                    tvIstiklalSayi.text = istiklallist.size.toString() + " Sipariş"
-                                    if (istiklallist.size > 0) {
-                                        clIstıklal.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                    recyclerView(rcIstiklal, istiklallist)
-                                }
-                                if (gelenData.siparis_mah == "Kocasinan") {
-                                    kocasinanlist.add(gelenData)
-                                    tvKocasinanSayi.text = kocasinanlist.size.toString() + " Sipariş"
-                                    if (kocasinanlist.size > 0) {
-                                        clKocasinan.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                    recyclerView(rcKocasinan, kocasinanlist)
-                                }
-                                if (gelenData.siparis_mah == "Özerler") {
-                                    ozerlerlist.add(gelenData)
-                                    tvOzerlerSayi.text = ozerlerlist.size.toString() + " Sipariş"
-                                    if (ozerlerlist.size > 0) {
-                                        clOzerler.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                    recyclerView(rcOzerler, ozerlerlist)
-                                }
-                                if (gelenData.siparis_mah == "Sevgi") {
-                                    sevgilist.add(gelenData)
-                                    tvSevgiSayi.text = sevgilist.size.toString() + " Sipariş"
-                                    if (sevgilist.size > 0) {
-                                        clSevgi.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                    recyclerView(rcSevgi, sevgilist)
-                                }
-                                if (gelenData.siparis_mah == "Siteler") {
-                                    sitelerlist.add(gelenData)
-                                    tvSitelerSayi.text = sitelerlist.size.toString() + " Sipariş"
-                                    if (sitelerlist.size > 0) {
-                                        clSiteler.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                    recyclerView(rcSiteler, sitelerlist)
-                                }
-                                if (gelenData.siparis_mah == "Yeni") {
-                                    yenilist.add(gelenData)
-                                    tvYeniSayi.text = yenilist.size.toString() + " Sipariş"
-                                    if (yenilist.size > 0) {
-                                        clYeni.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                    recyclerView(rcYeni, yenilist)
-                                }
-                                if (gelenData.siparis_mah == "Yıldırım") {
-                                    yildirimlist.add(gelenData)
-                                    tvYildirimSayi.text = yildirimlist.size.toString() + " Sipariş"
-                                    if (yildirimlist.size > 0) {
-                                        clYildirim.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                    recyclerView(rcYildirim, yildirimlist)
-                                }
-                                if (gelenData.siparis_mah == "Yıldız") {
-                                    yildizlist.add(gelenData)
-                                    tvYildizSayi.text = yildizlist.size.toString() + " Sipariş"
-                                    if (yildizlist.size > 0) {
-                                        clYildiz.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                    recyclerView(rcYildiz, yildizlist)
-                                }
-                                if (gelenData.siparis_mah == "Yılmaz") {
-                                    yilmazlist.add(gelenData)
-                                    tvYilmazSayi.text = yilmazlist.size.toString() + " Sipariş"
-                                    if (yilmazlist.size > 0) {
-                                        clYilmaz.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                    recyclerView(rcYilmaz, yilmazlist)
-                                }
-                                if (gelenData.siparis_mah == "Zafer") {
-                                    zaferlist.add(gelenData)
-                                    tvZaferSayi.text = zaferlist.size.toString() + " Sipariş"
-                                    if (zaferlist.size > 0) {
-                                        clZafer.setBackgroundColor(resources.getColor(R.color.kirmizi))
-                                    }
-                                    recyclerView(rcZafer, zaferlist)
-                                }
-
-
-                            } else if (gelenData.siparis_teslim_tarihi!!.compareTo(System.currentTimeMillis()) == 1) {
-                                ilerilist.add(gelenData)
-                                tvileriTarihliSayi.text = ilerilist.size.toString() + " Sipariş"
-
-                                recyclerView(rcileriTarih, ilerilist)
-                                //recyclerViewileriTarihli()
+                            ilerilist.sortByDescending {
+                                it.siparis_mah
                             }
-                        } catch (e: Exception) {
-                            ref.child("Hatalar/siparisDataBurgazHataSiparislerActivity").push().setValue(e.message.toString())
-                            ref.child("Hatalar/siparisDataBurgazHataSiparislerActivity").push().setValue(e.localizedMessage.toString())
-
+                            recyclerView(rcileriTarih, ilerilist)
+                            //recyclerViewileriTarihli()
                         }
+
+
                     }
+
                     progressDialog.dismiss()
                     tv3litre.text = "3lt: " + sut3ltSayisi.toString()
                     tv5litre.text = "5lt: " + sut5ltSayisi.toString()
                     tvYumurta.text = "Yumurta: " + yumurtaSayisi.toString()
-
+                    tvDokme.text = "Dökme: " + dokmeSayisi.toString()
                     tvFiyatGenel.text = toplamFiyatlar.toString() + " TL"
 
                 } else {
@@ -367,6 +383,7 @@ class SiparislerActivity : AppCompatActivity() {
             }
         })
 
+        ref.child("Burgaz").child("Siparisler").addListenerForSingleValueEvent(siparisleriGoster)
 
     }
 
@@ -395,6 +412,8 @@ class SiparislerActivity : AppCompatActivity() {
 
             override fun onDataChange(p0: DataSnapshot) {
                 kullaniciAdi = p0.child("user_name").value.toString()
+                Snackbar.make(bottomNav, kullaniciAdi + " hoşgeldin", 750).show()
+                //   if (kullaniciAdi == "null")  startActivity(Intent(this@SiparislerActivity, LoginActivity::class.java))
                 setupVeri()
             }
 
@@ -405,7 +424,8 @@ class SiparislerActivity : AppCompatActivity() {
         mAuthListener = object : FirebaseAuth.AuthStateListener {
             override fun onAuthStateChanged(p0: FirebaseAuth) {
                 val kullaniciGirisi = p0.currentUser
-                if (kullaniciGirisi != null) { //eğer kişi giriş yaptıysa nul gorunmez. giriş yapmadıysa null olur
+                if (kullaniciGirisi != null) {
+                //eğer kişi giriş yaptıysa nul gorunmez. giriş yapmadıysa null olur
                 } else {
                     startActivity(Intent(this@SiparislerActivity, LoginActivity::class.java))
                 }
@@ -414,6 +434,8 @@ class SiparislerActivity : AppCompatActivity() {
     }
 
     private fun setupBtn() {
+
+
 
         imgCikis.setOnClickListener {
             mAuth.signOut()
@@ -801,6 +823,38 @@ class SiparislerActivity : AppCompatActivity() {
         yilmazlist = ArrayList()
         zaferlist = ArrayList()
         ilerilist = ArrayList()
+
+    }
+
+    val siparisleriGoster = object : ValueEventListener {
+        override fun onDataChange(p0: DataSnapshot) {
+            if (p0.hasChildren()) {
+
+                for (ds in p0.children) {
+
+                    var mahalle = ds.key.toString()
+
+                    if (mahalle=="Market") {
+                        mahalleList.add(0, mahalle)
+                    }else{
+                        mahalleList.add(mahalle)
+                    }
+
+                }
+                Log.e("sad", mahalleList.toString())
+
+            }
+
+            val adapter = MahalleAdapter(this@SiparislerActivity, mahalleList, kullaniciAdi, "Burgaz")
+            rcMahallelerBurgaz.layoutManager = LinearLayoutManager(this@SiparislerActivity, LinearLayoutManager.VERTICAL, false)
+            rcMahallelerBurgaz.adapter = adapter
+            adapter.notifyDataSetChanged()
+        }
+
+
+        override fun onCancelled(error: DatabaseError) {
+
+        }
 
     }
 

@@ -155,7 +155,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 */
     fun veriler() {
         var gelenData: SiparisData
-        ref.child("Siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
+    FirebaseDatabase.getInstance().reference.child("Siparisler").keepSynced(true)
+
+    ref.child("Siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
             override fun onDataChange(p0: DataSnapshot) {
 
@@ -364,6 +366,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
     fun setupKullaniciAdi() {
+        FirebaseDatabase.getInstance().reference.child("users").keepSynced(true)
+
         FirebaseDatabase.getInstance().reference.child("users").child(userID).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }

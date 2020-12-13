@@ -67,22 +67,21 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="4dp"
         android:layout_marginEnd="24dp"
-        android:ems="10"
         android:background="@drawable/bg_edittext"
+        android:ems="10"
+        android:hint="Adres"
+        android:inputType="none"
         android:paddingLeft="17dp"
         android:paddingTop="10dp"
         android:paddingRight="15dp"
         android:paddingBottom="10dp"
         android:textColor="#ffffff"
         android:textColorHint="#ffffff"
-        android:hint="Adres"
-        android:inputType="none"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12" />
+        app:layout_constraintTop_toBottomOf="@+id/tvMahalle" />
 
     <EditText
         android:id="@+id/etTelefonGidilen"
@@ -128,8 +127,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcSiparisGidilen"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_width="330dp"
+        android:layout_height="350dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="4dp"
@@ -148,65 +147,67 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-
         <TextView
             android:id="@+id/tv3litre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
+            android:text="3lt: 0"
             android:textColor="@color/beyaz"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/tv5litre"
             app:layout_constraintEnd_toStartOf="@+id/tv5litre"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/tv5litre" />
 
         <TextView
             android:id="@+id/tv5litre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
+            android:text="5lt: 0"
             android:textColor="@color/beyaz"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/tvYumurta"
+            app:layout_constraintBottom_toBottomOf="@+id/tvYumurta"
+            app:layout_constraintEnd_toStartOf="@+id/tvDokme"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/tv3litre"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/tvYumurta" />
 
         <TextView
             android:id="@+id/tvYumurta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
+            android:text="Yumurta: 0"
             android:textColor="@color/beyaz"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/tvFiyatGenel"
+            app:layout_constraintBottom_toTopOf="@+id/tvFiyatGenel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tvDokme"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvDokme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dokme 0"
+            android:textColor="@color/beyaz"
+            app:layout_constraintBottom_toBottomOf="@+id/tvYumurta"
+            app:layout_constraintEnd_toStartOf="@+id/tvYumurta"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/tv5litre"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/tvYumurta"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/tvFiyatGenel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
+            android:text="00 tl"
             android:textColor="@color/beyaz"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/tvYumurta"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvYumurta" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <TextView
-        android:id="@+id/textView12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text=" (Lütfen adres güncellerken kurallara uyun) "
-        app:layout_constraintEnd_toEndOf="@+id/tvMahalle"
-        app:layout_constraintStart_toStartOf="@+id/tvMahalle"
-        app:layout_constraintTop_toBottomOf="@+id/tvMahalle" />
 
     <EditText
         android:id="@+id/etApartman"

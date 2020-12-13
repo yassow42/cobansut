@@ -76,6 +76,7 @@ class MusterilerActivityCerkez : AppCompatActivity() {
 
     private fun setupVeri() {
         musteriList.clear()
+        ref.child("Musteriler").keepSynced(true)
         ref.child("Musteriler").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
             override fun onDataChange(p0: DataSnapshot) {

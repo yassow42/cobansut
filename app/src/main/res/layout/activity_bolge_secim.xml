@@ -7,6 +7,15 @@
     android:background="@drawable/ic_bg"
     tools:context=".genel.BolgeSecimActivity">
 
+    <ImageView
+        android:id="@+id/refreshData"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/refresh" />
     <TextView
         android:id="@+id/tvBurgaz"
         android:layout_width="250dp"
@@ -54,4 +63,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvCorlu" />
+
+    <TextView
+        android:id="@+id/tvDuyuru"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="32dp"
+        android:text="Duyurular: "
+        android:textAlignment="center"
+        android:textColor="@color/beyaz"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvCerkez" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -54,6 +54,8 @@ class MusteriSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
         val tv3ltFiyat = itemView.tv3ltFiyat
         val tv5lt = itemView.tv5lt
         val tv5ltFiyat = itemView.tv5ltFiyat
+        val tvDokme = itemView.tvDokmeSut
+        val tvDokmeFiyat = itemView.tvDokmeSutFiyat
         val tvYumurta = itemView.tvYumurta
         val tvYumurtaFiyat = itemView.tvYumurtaFiyat
         val tvZaman = itemView.tvZaman
@@ -76,6 +78,7 @@ class MusteriSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
             tvNot.text = siparisData.siparis_notu
             tv3lt.text = siparisData.sut3lt
             tv5lt.text = siparisData.sut5lt
+            tvDokme.text = siparisData.dokme_sut
             tvYumurta.text = siparisData.yumurta
 
 
@@ -102,17 +105,23 @@ class MusteriSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
                 sut5ltAdet = siparisData.sut5lt.toString().toInt()
             }
 
+            if (!siparisData.dokme_sut.isNullOrEmpty()) {
+                tvDokme.text = siparisData.dokme_sut
+                tvDokmeFiyat.text = siparisData.dokme_sut_fiyat.toString()
+            }
+
             if (!siparisData.yumurta.isNullOrEmpty()) {
                 tvYumurta.text = siparisData.yumurta
                 yumurtaAdet = siparisData.yumurta.toString().toInt()
             }
 
 
-                if (!siparisData.sut3lt_fiyat.toString().isNullOrEmpty() && !siparisData.sut5lt_fiyat.toString().isNullOrEmpty() && !siparisData.yumurta_fiyat.toString().isNullOrEmpty()) {
+                if (!siparisData.sut3lt_fiyat.toString().isNullOrEmpty() && !siparisData.sut5lt_fiyat.toString().isNullOrEmpty() &&
+                    !siparisData.yumurta_fiyat.toString().isNullOrEmpty() && !siparisData.dokme_sut_fiyat.toString().isNullOrEmpty()) {
                     tv3ltFiyat.text = siparisData.sut3lt_fiyat.toString()
                     tv5ltFiyat.text = siparisData.sut5lt_fiyat.toString()
                     tvYumurtaFiyat.text = siparisData.yumurta_fiyat.toString()
-
+                    tvDokmeFiyat.text = siparisData.dokme_sut_fiyat.toString()
                     //        sut3ltFiyat = siparisData.sut3lt_fiyat.toString().toDouble()
                     //        sut5ltFiyat = siparisData.sut5lt_fiyat.toString().toDouble()
                     // yumurtaFiyat = siparisData.yumurta_fiyat.toString().toDouble()

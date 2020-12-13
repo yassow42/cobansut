@@ -41,7 +41,7 @@ class AdresBulmaMapsCorluActivity : AppCompatActivity(), OnMapReadyCallback {
 
         musteriAdi = intent.getStringExtra("musteriAdi")
         yer = intent.getStringExtra("musteri_konumu").toString()
-        Log.e("sad", yer)
+
     }
 
 

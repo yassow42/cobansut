@@ -7,7 +7,6 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color.RED
 import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,28 +15,36 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.creativeoffice.cobansut.Activity.SiparislerActivity
+import com.creativeoffice.cobansut.Adapter.MusteriSiparisleriAdapter
+import com.creativeoffice.cobansut.CorluActivity.SiparislerCorluActivity
 import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.R
 import com.creativeoffice.cobansut.TimeAgo
 import com.creativeoffice.cobansut.cerkez.SiparisActivityCerkez
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.dialog_gidilen_musteri.view.*
 import kotlinx.android.synthetic.main.dialog_siparis_ekle.view.*
 import kotlinx.android.synthetic.main.item_siparisler.view.*
-import java.io.IOException
-import java.sql.Time
+import kotlinx.android.synthetic.main.item_siparisler.view.tv3litre
+import kotlinx.android.synthetic.main.item_siparisler.view.tv5litre
+import kotlinx.android.synthetic.main.item_siparisler.view.tvYumurta
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayList<SiparisData>, val kullaniciAdi: String,var bolge:String) : RecyclerView.Adapter<MahalleSiparisleriAdapter.SiparisHolder>() {
+class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayList<SiparisData>, val kullaniciAdi: String, var bolge: String) : RecyclerView.Adapter<MahalleSiparisleriAdapter.SiparisHolder>() {
     lateinit var mAuth: FirebaseAuth
     lateinit var userID: String
     lateinit var saticiYetki: String
 
-    var refCerkez = FirebaseDatabase.getInstance().reference.child(bolge)
+    lateinit var dialogMsDznle: Dialog
+
+    var refBolge = FirebaseDatabase.getInstance().reference.child(bolge)
     var ref = FirebaseDatabase.getInstance().reference
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MahalleSiparisleriAdapter.SiparisHolder {
         val view = LayoutInflater.from(myContext).inflate(R.layout.item_siparisler, parent, false)
@@ -112,17 +119,20 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
                                         kullaniciAdi
                                     )
 
-                                    refCerkez.child("Musteriler").child(siparisler[position].siparis_veren.toString()).child("siparisleri").child(siparisler[position].siparis_key.toString()).setValue(siparisData)
+                                    refBolge.child("Musteriler").child(siparisler[position].siparis_veren.toString()).child("siparisleri").child(siparisler[position].siparis_key.toString()).setValue(siparisData)
 
-                                    refCerkez.child("Teslim_siparisler").child(siparisler[position].siparis_key.toString()).setValue(siparisData).addOnCompleteListener {
-                                            Toast.makeText(myContext, "Sipariş Teslim Edildi. Kontrol et.", Toast.LENGTH_LONG).show()
-                                            notifyDataSetChanged()
-                                            refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisler[position].siparis_key.toString()).removeValue()
-                                            refCerkez.child("Teslim_siparisler").child(siparisler[position].siparis_key.toString())
-                                                .child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
-                                            refCerkez.child("Musteriler").child(siparisler[position].siparis_veren.toString())
-                                                .child("siparis_son_zaman").setValue(ServerValue.TIMESTAMP)
-                                        }
+                                    refBolge.child("Teslim_siparisler").child(siparisler[position].siparis_key.toString()).setValue(siparisData).addOnCompleteListener {
+                                        Toast.makeText(myContext, "Sipariş Teslim Edildi. Kontrol et.", Toast.LENGTH_LONG).show()
+                                        notifyDataSetChanged()
+
+                                        refBolge.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisler[position].siparis_key.toString()).removeValue()
+                                        FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisler[position].siparis_key.toString()).removeValue()
+
+                                        refBolge.child("Teslim_siparisler").child(siparisler[position].siparis_key.toString()).child("siparis_teslim_zamani").setValue(ServerValue.TIMESTAMP)
+                                        refBolge.child("Musteriler").child(siparisler[position].siparis_veren.toString()).child("siparis_son_zaman").setValue(ServerValue.TIMESTAMP)
+
+                                        notifyDataSetChanged()
+                                    }
 
 
                                 }
@@ -195,6 +205,10 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
                                 if (viewDuzenle.et5lt.text.isNotEmpty()) {
                                     sut5lt = viewDuzenle.et5lt.text.toString()
                                 }
+                                var dokme = "0"
+                                if (viewDuzenle.etDokmeSut.text.isNotEmpty()) {
+                                    dokme = viewDuzenle.etDokmeSut.text.toString()
+                                }
                                 var yumurta = "0"
                                 if (viewDuzenle.etYumurta.text.isNotEmpty()) {
                                     yumurta = viewDuzenle.etYumurta.text.toString()
@@ -202,28 +216,45 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
 
                                 var sut3ltFiyat = viewDuzenle.et3ltFiyat.text.toString().toDouble()
                                 var sut5ltFiyat = viewDuzenle.et5ltFiyat.text.toString().toDouble()
+                                var dokmeFiyat = viewDuzenle.etDokmeSutFiyat.text.toString().toDouble()
                                 var yumurtaFiyat = viewDuzenle.etYumurtaFiyat.text.toString().toDouble()
 
                                 var not = viewDuzenle.etSiparisNotu.text.toString()
                                 var siparisKey = siparisler[position].siparis_key.toString()
                                 var siparisVeren = siparisler[position].siparis_veren.toString()
-                                refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("sut3lt").setValue(sut3lt)
-                                refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("sut3lt_fiyat").setValue(sut3ltFiyat)
-                                refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("sut5lt").setValue(sut5lt)
-                                refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("sut5lt_fiyat").setValue(sut5ltFiyat)
-                                refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("yumurta").setValue(yumurta)
-                                refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("yumurta_fiyat").setValue(yumurtaFiyat)
-                                refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("siparis_notu").setValue(not)
-                                refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("siparis_teslim_tarihi").setValue(cal.timeInMillis)
+                                refBolge.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("sut3lt").setValue(sut3lt)
+                                refBolge.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("sut3lt_fiyat").setValue(sut3ltFiyat)
+                                refBolge.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("sut5lt").setValue(sut5lt)
+                                refBolge.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("sut5lt_fiyat").setValue(sut5ltFiyat)
+                                refBolge.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("yumurta").setValue(yumurta)
+                                refBolge.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("yumurta_fiyat").setValue(yumurtaFiyat)
+                                refBolge.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("dokme_sut").setValue(dokme)
+                                refBolge.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("dokme_sut_fiyat").setValue(dokmeFiyat)
+                                refBolge.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("siparis_notu").setValue(not)
+                                refBolge.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisKey).child("siparis_teslim_tarihi").setValue(cal.timeInMillis)
 
-                                refCerkez.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("sut3lt").setValue(sut3lt)
-                                refCerkez.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("sut5lt").setValue(sut5lt)
-                                refCerkez.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("yumurta").setValue(yumurta)
-                                refCerkez.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("siparis_notu").setValue(not)
-                                var intent = Intent(myContext, SiparisActivityCerkez::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                                ref.child("Siparisler").child(siparisKey).child("sut3lt").setValue(sut3lt)
+                                ref.child("Siparisler").child(siparisKey).child("sut3lt_fiyat").setValue(sut3ltFiyat)
+                                ref.child("Siparisler").child(siparisKey).child("sut5lt").setValue(sut5lt)
+                                ref.child("Siparisler").child(siparisKey).child("sut5lt_fiyat").setValue(sut5ltFiyat)
+                                ref.child("Siparisler").child(siparisKey).child("yumurta").setValue(yumurta)
+                                ref.child("Siparisler").child(siparisKey).child("yumurta_fiyat").setValue(yumurtaFiyat)
+                                ref.child("Siparisler").child(siparisKey).child("dokme_sut").setValue(dokme)
+                                ref.child("Siparisler").child(siparisKey).child("dokme_sut_fiyat").setValue(dokmeFiyat)
+                                ref.child("Siparisler").child(siparisKey).child("siparis_notu").setValue(not)
+                                ref.child("Siparisler").child(siparisKey).child("siparis_teslim_tarihi").setValue(cal.timeInMillis)
 
 
-                                myContext.startActivity(intent)
+
+
+                                refBolge.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("sut3lt").setValue(sut3lt)
+                                refBolge.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("sut5lt").setValue(sut5lt)
+                                refBolge.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("yumurta").setValue(yumurta)
+                                refBolge.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("siparis_notu").setValue(not)
+                            //    var intent = Intent(myContext, SiparisActivityCerkez::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+
+
+                         //       myContext.startActivity(intent)
 
 
                             }
@@ -236,37 +267,43 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
                     R.id.popSil -> {
 
 
-                        if (saticiYetki == "Yönetici") {
+                        var alert = AlertDialog.Builder(myContext)
+                            .setTitle("Siparişi Sil")
+                            .setMessage("Emin Misin ?")
+                            .setPositiveButton("Sil", object : DialogInterface.OnClickListener {
+                                override fun onClick(p0: DialogInterface?, p1: Int) {
 
-                            var alert = AlertDialog.Builder(myContext)
-                                .setTitle("Siparişi Sil")
-                                .setMessage("Emin Misin ?")
-                                .setPositiveButton("Sil", object : DialogInterface.OnClickListener {
-                                    override fun onClick(p0: DialogInterface?, p1: Int) {
-
-                                        refCerkez.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisler[position].siparis_key.toString()).removeValue().addOnCompleteListener {
-                                            Toast.makeText(myContext, "Sipariş Silindi...", Toast.LENGTH_LONG).show()
-                                        }
-
-                                        refCerkez.child("Musteriler").child(siparisler[position].siparis_veren.toString()).child("siparisleri")
-                                            .child(siparisler[position].siparis_key.toString()).removeValue()
-
-                                        myContext.startActivity(Intent(myContext, SiparisActivityCerkez::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
-
+                                    FirebaseDatabase.getInstance().reference.child("Siparisler")
+                                        .child(siparisler[position].siparis_key.toString()).removeValue()
+                                    refBolge.child("Siparisler").child(siparisler[position].siparis_mah.toString()).child(siparisler[position].siparis_key.toString()).removeValue().addOnCompleteListener {
+                                        Toast.makeText(myContext, "Sipariş Silindi...", Toast.LENGTH_LONG).show()
                                     }
-                                })
-                                .setNegativeButton("İptal", object : DialogInterface.OnClickListener {
-                                    override fun onClick(p0: DialogInterface?, p1: Int) {
-                                        p0!!.dismiss()
-                                    }
-                                }).create()
 
-                            alert.show()
+                                    refBolge.child("Musteriler").child(siparisler[position].siparis_veren.toString()).child("siparisleri")
+                                        .child(siparisler[position].siparis_key.toString()).removeValue()
 
-                        } else {
-                            Toast.makeText(myContext, "Yetkiniz yok. Yönetici ile iletişime geçin", Toast.LENGTH_LONG).show()
+                                //   myContext.startActivity(Intent(myContext, SiparislerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
 
-                        }
+                                    /*   if (bolge == "Burgaz") {
+                                           myContext.startActivity(Intent(myContext, SiparislerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+
+                                       } else if (bolge == "Cerkez") {
+                                           myContext.startActivity(Intent(myContext, SiparisActivityCerkez::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+
+                                       } else if (bolge == "Corlu") {
+                                           myContext.startActivity(Intent(myContext, SiparislerCorluActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+
+                                       }*/
+
+                                }
+                            })
+                            .setNegativeButton("İptal", object : DialogInterface.OnClickListener {
+                                override fun onClick(p0: DialogInterface?, p1: Int) {
+                                    p0!!.dismiss()
+                                }
+                            }).create()
+
+                        alert.show()
 
 
                     }
@@ -321,6 +358,113 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
             tvNot.text = siparisData.siparis_notu
             tvFiyat.textSize = 18f
 
+            siparisVeren.setOnClickListener {
+
+                var musteriAdi = siparisData.siparis_veren.toString()
+                var builder: androidx.appcompat.app.AlertDialog.Builder = androidx.appcompat.app.AlertDialog.Builder(myContext)
+
+                var dialogView: View = View.inflate(myContext, R.layout.dialog_gidilen_musteri, null)
+                builder.setView(dialogView)
+
+
+                dialogMsDznle = builder.create()
+
+                dialogView.imgMaps.visibility = View.GONE
+
+                dialogView.imgCheck.visibility = View.GONE
+
+                /*   .setOnClickListener {
+
+                   if (dialogView.etAdresGidilen.text.toString().isNotEmpty() && dialogView.etTelefonGidilen.text.toString().isNotEmpty()) {
+                       var mahalle = dialogView.tvMahalle.text.toString()
+                       var adres = dialogView.etAdresGidilen.text.toString()
+                       var telefon = dialogView.etTelefonGidilen.text.toString()
+                       var apartman = dialogView.etApartman.text.toString()
+
+
+                       ref.child("Musteriler").child(musteriAdi).child("musteri_mah").setValue(mahalle)
+                       ref.child("Musteriler").child(musteriAdi).child("musteri_adres").setValue(adres)
+                       ref.child("Musteriler").child(musteriAdi).child("musteri_apartman").setValue(apartman)
+                       ref.child("Musteriler").child(musteriAdi).child("musteri_tel").setValue(telefon).addOnCompleteListener {
+                           dialogMsDznle.dismiss()
+                           Toast.makeText(myContext, "Müşteri Bilgileri Güncellendi", Toast.LENGTH_LONG).show()
+                       }.addOnFailureListener { Toast.makeText(myContext, "Müşteri Bilgileri Güncellenemedi", Toast.LENGTH_LONG).show() }
+                   } else {
+                       Toast.makeText(myContext, "Bilgilerde boşluklar var", Toast.LENGTH_LONG).show()
+                   }
+               }*/
+
+                dialogView.imgBack.setOnClickListener {
+                    dialogMsDznle.dismiss()
+                }
+
+                dialogView.etAdresGidilen.visibility = View.GONE //.text = musteriler[position].musteri_ad_soyad.toString()
+                dialogView.swKonumKaydet.visibility = View.GONE //.text = musteriler[position].musteri_ad_soyad.toString()
+                dialogView.etTelefonGidilen.visibility = View.GONE //.text = musteriler[position].musteri_ad_soyad.toString()
+                dialogView.tvAdSoyad.visibility = View.GONE //.text = musteriler[position].musteri_ad_soyad.toString()
+                dialogView.tvMahalle.visibility = View.GONE //.setText( musteriler[position].musteri_mah.toString())
+                dialogView.etApartman.visibility = View.GONE //.setText(musteriler[position].musteri_apartman.toString())
+
+                refBolge.child("Musteriler").child(musteriAdi).addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        var adres = p0.child("musteri_adres").value.toString()
+                        var telefon = p0.child("musteri_tel").value.toString()
+                        var mahalle = p0.child("musteri_mah").value.toString()
+                        var konum = p0.child("musteri_zkonum").value.toString().toBoolean()
+
+                        dialogView.swKonumKaydet.isChecked = konum
+                        dialogView.etAdresGidilen.setText(adres)
+                        dialogView.etTelefonGidilen.setText(telefon)
+                        dialogView.tvMahalle.setText(mahalle)
+
+                        var list = ArrayList<SiparisData>()
+                        list = ArrayList()
+                        if (p0.child("siparisleri").hasChildren()) {
+
+                            var sut3ltSayisi = 0
+                            var sut5ltSayisi = 0
+                            var dokmeSayisi = 0
+                            var yumurtaSayisi = 0
+
+                            for (ds in p0.child("siparisleri").children) {
+                                var gelenData = ds.getValue(SiparisData::class.java)!!
+                                list.add(gelenData)
+
+                                sut3ltSayisi += gelenData.sut3lt!!.toInt()
+                                sut5ltSayisi += gelenData.sut5lt!!.toInt()
+                                dokmeSayisi += gelenData.dokme_sut!!.toInt()
+                                yumurtaSayisi += gelenData.yumurta!!.toInt()
+
+                            }
+
+                            list.sortByDescending { it.siparis_teslim_zamani }
+                            dialogView.tv3litre.text = "3lt: " + sut3ltSayisi.toString()
+                            dialogView.tv5litre.text = "5lt: " + sut5ltSayisi.toString()
+                            dialogView.tvDokme.text = "Dökme: " + dokmeSayisi.toString()
+                            dialogView.tvYumurta.text = "Yumurta: " + yumurtaSayisi.toString()
+                            dialogView.tvFiyatGenel.visibility = View.GONE
+                            //  dialogView.tvFiyatGenel.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
+
+
+                            dialogView.rcSiparisGidilen.layoutManager = LinearLayoutManager(myContext, LinearLayoutManager.VERTICAL, false)
+                            //dialogView.rcSiparisGidilen.layoutManager = StaggeredGridLayoutManager(myContext, LinearLayoutManager.VERTICAL, 2)
+                            val Adapter = MusteriSiparisleriAdapter(myContext, list)
+                            dialogView.rcSiparisGidilen.adapter = Adapter
+                            dialogView.rcSiparisGidilen.setHasFixedSize(true)
+
+
+                        }
+                    }
+
+
+                })
+                dialogMsDznle.setCancelable(false)
+                dialogMsDznle.show()
+            }
 
             if (!siparisData.siparisi_giren.isNullOrEmpty()) {
                 siparisGiren.text = siparisData.siparisi_giren.toString()
@@ -332,9 +476,9 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
 
             swSiparisPromosyon.setOnClickListener {
                 if (swSiparisPromosyon.isChecked) {
-                    refCerkez.child("Musteriler").child(siparisData.siparis_veren.toString()).child("promosyon_verildimi").setValue(true)
+                    refBolge.child("Musteriler").child(siparisData.siparis_veren.toString()).child("promosyon_verildimi").setValue(true)
                 } else {
-                    refCerkez.child("Musteriler").child(siparisData.siparis_veren.toString()).child("promosyon_verildimi").setValue(false)
+                    refBolge.child("Musteriler").child(siparisData.siparis_veren.toString()).child("promosyon_verildimi").setValue(false)
 
                 }
             }
@@ -396,7 +540,7 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
                 dokmeSutFiyat = siparisData.dokme_sut_fiyat
             } else {
                 hataMesajiYazdir("dokme yok ${siparisData.siparis_key}", siparisData.siparis_veren.toString())
-                Log.e("dokme","dokme yok ${siparisData.siparis_key} siparisData.siparis_veren.toString()")
+                Log.e("dokme", "dokme yok ${siparisData.siparis_key} siparisData.siparis_veren.toString()")
             }
 
 
@@ -410,10 +554,9 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
                 tv5ltFiyat.text = siparisData.sut5lt_fiyat.toString()
                 tvDokmeSutFiyat.text = siparisData.dokme_sut_fiyat.toString()
                 tvYumurtaFiyat.text = siparisData.yumurta_fiyat.toString()
-             //   refCerkez.child("Siparisler").child(siparisData.siparis_mah.toString()).child(siparisData.siparis_key.toString()).child("toplam_fiyat").setValue(toplamFiyat)
+                //   refCerkez.child("Siparisler").child(siparisData.siparis_mah.toString()).child(siparisData.siparis_key.toString()).child("toplam_fiyat").setValue(toplamFiyat)
 
             }
-
 
 
         }
@@ -427,7 +570,7 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
             }
 
             siparisAdres.setOnClickListener {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q= " + siparisData.siparis_mah + " " + siparisData.siparis_adres ))
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q= " + siparisData.siparis_mah + " " + siparisData.siparis_adres))
                 myContext.startActivity(intent)
             }
         }
@@ -459,10 +602,9 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
                 tvYumurta.visibility = View.VISIBLE
                 tvYumurtaYazi.visibility = View.VISIBLE
             }
-            if (siparisData.dokme_sut.isNullOrEmpty()) refCerkez.child("Siparisler").child(siparisData.siparis_mah.toString()).child(siparisData.siparis_key.toString()).child("dokme_sut").setValue("0")
+            if (siparisData.dokme_sut.isNullOrEmpty()) refBolge.child("Siparisler").child(siparisData.siparis_mah.toString()).child(siparisData.siparis_key.toString()).child("dokme_sut").setValue("0")
 
-            if (siparisData.dokme_sut_fiyat.toString() == "null") refCerkez.child("Siparisler").child(siparisData.siparis_mah.toString()).child(siparisData.siparis_key.toString()).child("dokme_sut_fiyat").setValue(3.5)
-
+            if (siparisData.dokme_sut_fiyat.toString() == "null") refBolge.child("Siparisler").child(siparisData.siparis_mah.toString()).child(siparisData.siparis_key.toString()).child("dokme_sut_fiyat").setValue(3.5)
 
 
         }

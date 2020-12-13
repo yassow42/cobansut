@@ -21,22 +21,17 @@ import kotlinx.android.synthetic.main.item_teslim.view.*
 class TeslimEdilenlerAdapter(val myContext: Context, val siparisler: ArrayList<SiparisData>, val bolge: String) : RecyclerView.Adapter<TeslimEdilenlerAdapter.SiparisHolder>() {
     lateinit var mAuth: FirebaseAuth
     lateinit var userID: String
-    lateinit var saticiYetki: String
+   // lateinit var saticiYetki: String
     var ref = FirebaseDatabase.getInstance().reference
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TeslimEdilenlerAdapter.SiparisHolder {
         val view = LayoutInflater.from(myContext).inflate(R.layout.item_teslim, parent, false)
         mAuth = FirebaseAuth.getInstance()
         userID = mAuth.currentUser!!.uid
 
-        if (bolge == "Corlu") {
-            ref = FirebaseDatabase.getInstance().reference.child("Corlu")
-        }else if (bolge == "Cerkez") {
-            ref = FirebaseDatabase.getInstance().reference.child("Cerkez")
 
-        } else {
-            ref = FirebaseDatabase.getInstance().reference
-        }
-        FirebaseDatabase.getInstance().reference.child("users").child(userID).addListenerForSingleValueEvent(object : ValueEventListener {
+            ref = FirebaseDatabase.getInstance().reference.child(bolge)
+
+      /*  FirebaseDatabase.getInstance().reference.child("users").child(userID).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
             }
 
@@ -44,7 +39,7 @@ class TeslimEdilenlerAdapter(val myContext: Context, val siparisler: ArrayList<S
                 saticiYetki = p0.child("yetki").value.toString()
             }
 
-        })
+        })*/
 
         return SiparisHolder(view)
     }
@@ -57,7 +52,7 @@ class TeslimEdilenlerAdapter(val myContext: Context, val siparisler: ArrayList<S
     override fun onBindViewHolder(holder: SiparisHolder, position: Int) {
         holder.setData(siparisler[position])
         holder.itemView.setOnLongClickListener {
-            if (saticiYetki == "Yönetici") {
+
                 var alert = AlertDialog.Builder(myContext)
                     .setTitle("Sil")
                     .setMessage("Emin Misin ?")
@@ -65,11 +60,12 @@ class TeslimEdilenlerAdapter(val myContext: Context, val siparisler: ArrayList<S
                         override fun onClick(p0: DialogInterface?, p1: Int) {
 
                             ref.child("Teslim_siparisler").child(siparisler[position].siparis_key.toString()).removeValue()
-                            ref.child("Musteriler").child(siparisler[position].siparis_veren.toString()).child("siparisleri").child(siparisler[position].siparis_key.toString())
-                                .removeValue().addOnCompleteListener {
+                            FirebaseDatabase.getInstance().reference.child("Teslim_siparisler").child(siparisler[position].siparis_key.toString()).removeValue()
+                            ref.child("Musteriler").child(siparisler[position].siparis_veren.toString()).child("siparisleri")
+                                .child(siparisler[position].siparis_key.toString()).removeValue().addOnCompleteListener {
                                     Toast.makeText(myContext, "Sipariş silindi sayfayı yenileyebilirsin...", Toast.LENGTH_SHORT).show()
                                 }
-
+                            notifyDataSetChanged()
                         }
                     })
                     .setNegativeButton("İptal", object : DialogInterface.OnClickListener {
@@ -79,7 +75,7 @@ class TeslimEdilenlerAdapter(val myContext: Context, val siparisler: ArrayList<S
                     }).create()
 
                 alert.show()
-            }
+
             return@setOnLongClickListener true
 
 

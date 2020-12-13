@@ -54,7 +54,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout7"
         android:layout_width="match_parent"
-        android:layout_height="22dp"
+        android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/bottomNav"
         app:layout_constraintEnd_toEndOf="parent"
@@ -66,34 +66,38 @@
             android:layout_height="wrap_content"
             android:text="3lt: 0"
             android:textColor="@color/beyaz"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/tv5ltTeslim"
             app:layout_constraintEnd_toStartOf="@+id/tv5ltTeslim"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/tv5ltTeslim" />
 
         <TextView
             android:id="@+id/tv5ltTeslim"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="44dp"
             android:text="5lt: 0"
             android:textColor="@color/beyaz"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/tvYumurtaTeslim"
+            app:layout_constraintBottom_toBottomOf="@+id/tvYumurtaTeslim"
+            app:layout_constraintEnd_toStartOf="@+id/tvDokumSutTeslim"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/tv3ltTeslim"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/tvYumurtaTeslim"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/tvYumurtaTeslim"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             android:text="Yumurta: 0"
             android:textColor="@color/beyaz"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/tvDokumSutTeslim"
+            app:layout_constraintBottom_toTopOf="@+id/tvFiyatGenelTeslim"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/tv5ltTeslim"
+            app:layout_constraintStart_toEndOf="@+id/tvDokumSutTeslim"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -104,21 +108,20 @@
             android:textColor="@color/beyaz"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/tvDokumSutTeslim"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/tvDokumSutTeslim"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dokum:0"
+            android:text="Dökme: 0"
             android:textColor="@color/beyaz"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/tvFiyatGenelTeslim"
+            app:layout_constraintBottom_toBottomOf="@+id/tvYumurtaTeslim"
+            app:layout_constraintEnd_toStartOf="@+id/tvYumurtaTeslim"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/tvYumurtaTeslim"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toEndOf="@+id/tv5ltTeslim"
+            app:layout_constraintTop_toTopOf="@+id/tvYumurtaTeslim"
+            app:layout_constraintVertical_bias="1.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

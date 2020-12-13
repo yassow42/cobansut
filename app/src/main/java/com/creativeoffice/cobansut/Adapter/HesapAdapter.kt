@@ -12,7 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.creativeoffice.cobansut.Activity.HesapActivity
 import com.creativeoffice.cobansut.Datalar.AlinanParaData
-import com.creativeoffice.cobansut.Datalar.AracStokEkleData
+import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.Datalar.Users
 import com.creativeoffice.cobansut.R
 import com.google.firebase.database.*
@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class HesapAdapter(var myContext: Context, var userList: ArrayList<Users>, var ileriZaman: Long?, var geriZaman: Long?) : RecyclerView.Adapter<HesapAdapter.ViewHolder>() {
+class HesapAdapter(var myContext: Context, var userList: ArrayList<Users>,var teslimList:ArrayList<SiparisData>, var ileriZaman: Long?, var geriZaman: Long?) : RecyclerView.Adapter<HesapAdapter.ViewHolder>() {
 
     var ref = FirebaseDatabase.getInstance().reference
     var refUsers = FirebaseDatabase.getInstance().reference.child("users")
@@ -37,10 +37,10 @@ class HesapAdapter(var myContext: Context, var userList: ArrayList<Users>, var i
 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var item = userList[position]
+        var itemUser = userList[position]
 
-        holder.setData(item)
-        holder.userName.text = item.user_name
+        holder.setData(itemUser)
+        holder.userName.text = itemUser.user_name
 
 
     }
@@ -61,13 +61,93 @@ class HesapAdapter(var myContext: Context, var userList: ArrayList<Users>, var i
 
 
         fun setData(item: Users) {
-
-
             imgPlus(item)
-            aracStokBilgisiGetir(item)
+
+            var satis3Lt = 0
+            var satis5Lt = 0
+            var satisDokme = 0
+            var satisYumurta = 0
+
+            var toplamPara = 0.0
+            for (i in teslimList){
+
+                if (i.siparisi_giren.equals(item.user_name)){
+                    satis3Lt += i.sut3lt!!.toInt()
+                    satis5Lt += i.sut5lt!!.toInt()
+                    satisDokme += i.dokme_sut!!.toInt()
+                    satisYumurta += i.yumurta!!.toInt()
+                    toplamPara += i.toplam_fiyat!!.toDouble()
+                }
+
+            }
+            tvSatis.text = "3lt:  $satis3Lt \n5lt:  $satis5Lt \nDökme:  $satisDokme \nYum:  $satisYumurta"
+            tvToplamFiyat.text = "Toplam: $toplamPara"
+
+
+
+
+
+            var alinanParaList = ArrayList<AlinanParaData>()
+            ref.child("Depo_Alinan_Para").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(p0: DataSnapshot) {
+                    if (p0.hasChildren()) {
+                        var alinanPara: Double = 0.0
+                        for (ds in p0.children) {
+                            var data = ds.getValue(AlinanParaData::class.java)!!
+
+                            if (data.kimden_alindi == item.user_name) {
+                                alinanParaList.add(data)
+                                alinanPara += data.alinan_para!!.toDouble()
+                                tvAlinanPara.text = "Alınan: " + alinanPara.toString() + " tl"
+                                tvKalanPara.text = "Kalan: " + (toplamPara - alinanPara) + " tl"
+                            }
+
+                        }
+                        alinanParaList.sortByDescending { it.alinma_zamani }
+                        tvAlinanPara.setOnClickListener {
+                            var builder: AlertDialog.Builder = AlertDialog.Builder(myContext)
+                            var dialogView = View.inflate(myContext, R.layout.dialog_recyclerview, null)
+
+
+                            var gosterilenParaList = ArrayList<String>()
+                            for (ds in alinanParaList) {
+
+                                var kimdenAlindi = ds.kimden_alindi
+                                var alinanPara = ds.alinan_para
+                                var alinanParaZaman = ds.alinma_zamani
+
+                                var tumListString = "Alınan Para: $alinanPara \n${formatDate(alinanParaZaman).toString()}"
+                                if (item.user_name.equals(kimdenAlindi)) gosterilenParaList.add(tumListString)
+
+
+                            }
+                            val adapter = ArrayAdapter<String>(myContext, android.R.layout.simple_list_item_1, gosterilenParaList)
+                            dialogView.dialogRC.adapter = adapter
+
+                            builder.setNegativeButton("Çık", object : DialogInterface.OnClickListener {
+                                override fun onClick(dialog: DialogInterface?, which: Int) {
+                                    dialog!!.dismiss()
+                                }
+
+                            })
+                            builder.setView(dialogView)
+                            var dialog: Dialog = builder.create()
+                            dialog.show()
+
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+
+
 
         }
-
+/*
         fun aracStokBilgisiGetir(item: Users) {
             var sut3ltSayisi = 0
             var sut5ltSayisi = 0
@@ -103,12 +183,10 @@ class HesapAdapter(var myContext: Context, var userList: ArrayList<Users>, var i
             })
         }
 
-        fun stokBilgisiAlveGuncelleAlinanParaList(item: Users, sut3ltSayisi: Int, sut5ltSayisi: Int, sutDokmeSayisi: Int, yumurtaSayisi: Int) {
+       fun stokBilgisiAlveGuncelleAlinanParaList(item: Users, sut3ltSayisi: Int, sut5ltSayisi: Int, sutDokmeSayisi: Int, yumurtaSayisi: Int) {
 
             refUsers.child(item.user_id.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(p0: DataSnapshot) {
-
-
 
 
                     var satisSut3lt = p0.child("Satis").child("3lt").value.toString().toInt()
@@ -201,7 +279,7 @@ class HesapAdapter(var myContext: Context, var userList: ArrayList<Users>, var i
 
 
         }
-
+*/
         fun imgPlus(item: Users) {
             imgPlus.setOnClickListener {
                 var builder: AlertDialog.Builder = AlertDialog.Builder(myContext)

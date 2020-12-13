@@ -56,11 +56,11 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/imgPlus"
+            android:id="@+id/tvStokEklePlus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:onClick="imgPlus"
+            android:onClick="tvStokEklePlus"
             android:text="Stok Ekle"
             android:textColor="@color/beyaz"
             app:layout_constraintBottom_toBottomOf="parent"

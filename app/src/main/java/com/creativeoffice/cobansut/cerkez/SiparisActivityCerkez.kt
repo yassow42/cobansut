@@ -44,6 +44,7 @@ class SiparisActivityCerkez : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_siparis_cerkez)
+
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
         mAuth = FirebaseAuth.getInstance()
@@ -75,74 +76,17 @@ class SiparisActivityCerkez : AppCompatActivity() {
         var sut5ltSayisi = 0
         var yumurtaSayisi = 0
         var toplamFiyatlar = 0.0
-
+        refCerkez.child("Siparisler").keepSynced(true)
+        refCerkez.child("Teslim_siparisler").keepSynced(true)
         refCerkez.child("Siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
             override fun onDataChange(p0: DataSnapshot) {
 
                 if (p0.hasChildren()) {
                     for (ds in p0.children) {
-                        try {
+
                             mahalleList.add(ds.key.toString())
-                        /*  if (mahalleList.size > 0) {
-                                for (i in mahalleList) {
-                                    refCerkez.child("Siparisler").child(i.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
-                                        override fun onCancelled(p0: DatabaseError) {
 
-                                        }
-
-                                        override fun onDataChange(p0: DataSnapshot) {
-                                            if (p0.hasChildren()) {
-                                                for (childMahalle in p0.children) {
-                                                    // var gelenData = ds.getValue(SiparisData::class.java)!!
-                                                    siparislerKeyList.add(childMahalle.key.toString())
-                                                    Log.e("sad", siparislerKeyList.toString())
-
-                                                    if (siparislerKeyList.size > 0) {
-                                                        for (keyler in siparislerKeyList) {
-                                                            refCerkez.child("Siparisler").child(i.toString()).child(keyler.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
-                                                                override fun onCancelled(p0: DatabaseError) {
-
-                                                                }
-
-                                                                override fun onDataChange(p0: DataSnapshot) {
-                                                                    if (p0.hasChildren()) {
-                                                                        for (childKey in p0.children) {
-                                                                            var gelenData = childKey.getValue(SiparisData::class.java)!!
-                                                                            if (gelenData.sut3lt != null && gelenData.sut5lt != null && gelenData.yumurta != null) {
-                                                                                sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
-                                                                                sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
-                                                                                yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
-                                                                                //    toplamFiyatlar = gelenData.toplam_fiyat!!.toDouble() + toplamFiyatlar
-                                                                                Log.e(
-                                                                                    "sad",
-                                                                                    "3 lt: " + sut3ltSayisi.toString() + "  " +
-                                                                                            "5 lt: " + sut5ltSayisi.toString() + "  " +
-                                                                                            "Yumurta: " + yumurtaSayisi.toString() + "  " +
-                                                                                            "toplam: " + toplamFiyatlar
-                                                                                )
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-
-                                                            })
-
-                                                        }
-                                                    })
-
-                                                }
-
-
-                                            }
-                                        }
-                                    })
-                                }
-                            }*/
-
-                        } catch (e: Exception) {
-                            Log.e("hata", "siparişler activityCerkez ${e.message.toString()}")
-                        }
 
                     }
 

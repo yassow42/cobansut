@@ -61,8 +61,9 @@ class MusterilerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_musteriler)
         setupNavigationView()
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+     //   this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
+        FirebaseDatabase.getInstance().reference.child("Musteriler").keepSynced(true)
         mAuth = FirebaseAuth.getInstance()
         userID = mAuth.currentUser!!.uid
         setupKullaniciAdi()
@@ -89,6 +90,7 @@ class MusterilerActivity : AppCompatActivity() {
                             var musteriAdlari = gelenData.musteri_ad_soyad
                             musteriList.add(gelenData)
                             musteriAdList.add(musteriAdlari.toString())
+
                         } catch (e: Exception) {
                             ref.child("Hatalar/musteriDataHata").push().setValue(e.message.toString())
                         }
@@ -206,6 +208,7 @@ class MusterilerActivity : AppCompatActivity() {
 
                     var musteriBilgileri = MusteriData(musteriAdi, secilenMah, musteriAdres, musteriApt, musteriTel, null, false, null, null)
 
+                    ref.child("Burgaz").child("Musteriler").child(musteriAdi.toString()).setValue(musteriBilgileri)
                     ref.child("Musteriler").child(musteriAdi.toString()).setValue(musteriBilgileri).addOnCompleteListener {
                         ref.child("Musteriler").child(musteriAdi.toString()).child("siparis_son_zaman").setValue(ServerValue.TIMESTAMP)
                         setupVeri()
