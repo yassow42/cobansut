@@ -11,8 +11,8 @@ android {
         applicationId "com.creativeoffice.cobansut"
         minSdkVersion 20
         targetSdkVersion 30
-        versionCode 16
-        versionName "16"
+        versionCode 17
+        versionName "17"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -43,7 +43,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'com.github.ittianyu:BottomNavigationViewEx:2.0.4'
     //  implementation "com.android.support:design:28.0.0"
-    implementation 'com.karumi:dexter:6.1.0'
+    implementation 'com.karumi:dexter:6.2.2'
     // implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
     implementation 'com.github.myinnos:AlphabetIndex-Fast-Scroll-RecyclerView:1.0.95'
     implementation 'com.simplecityapps:recyclerview-fastscroll:2.0.1'

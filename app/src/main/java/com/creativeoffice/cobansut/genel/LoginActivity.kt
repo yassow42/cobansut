@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
@@ -29,17 +30,17 @@ class LoginActivity : AppCompatActivity() {
     lateinit var mAuth: FirebaseAuth
     lateinit var mAuthListener: FirebaseAuth.AuthStateListener
 
+    var ref =  FirebaseDatabase.getInstance().reference
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         setupAuthListener()
+        FirebaseDatabase.getInstance().reference.child("users").keepSynced(true)
 
         mAuth = FirebaseAuth.getInstance()
 
-      //  this.window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);  this.window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        //mAuth.signOut()
-        btnRegister.setOnClickListener {
 
+        btnRegister.setOnClickListener {
             var builder: AlertDialog.Builder = AlertDialog.Builder(this)
             var inflater: LayoutInflater = layoutInflater
             var view: View = inflater.inflate(R.layout.dialog_register, null)
@@ -48,13 +49,15 @@ class LoginActivity : AppCompatActivity() {
             var dialog: Dialog = builder.create()
 
             view.btnRegisterAlertDialog.setOnClickListener {
+
+
                 var kullaniciAdi = view.etKullaniciAdiLoginAlertDialog.text.toString()
                 var kullaniciAdiEmail = kullaniciAdi + "@gmail.com"
                 var kullaniciSifre = view.etSifreLoginAlertDialog.text.toString()
                 var userNameKullanimi = false
 
 
-                FirebaseDatabase.getInstance().reference.child("users").addListenerForSingleValueEvent(object : ValueEventListener {
+              ref .child("users").addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
                     }
 
@@ -62,6 +65,7 @@ class LoginActivity : AppCompatActivity() {
 
                         for (ds in p0.children) {
                             val gelenKullanicilar = ds.getValue(Users::class.java)!!
+
                             if (gelenKullanicilar.user_name.equals(kullaniciAdi)) {
                                 userNameKullanimi = true
                                 break
@@ -83,6 +87,7 @@ class LoginActivity : AppCompatActivity() {
 
                                         var kaydedilecekUsers = Users(kullaniciAdiEmail, kullaniciSifre, kullaniciAdi, userID)
                                         FirebaseDatabase.getInstance().reference.child("users").child(userID).setValue(kaydedilecekUsers)
+                                        dialog.dismiss()
 
                                     } else {
                                         mAuth.currentUser!!.delete().addOnCompleteListener(object : OnCompleteListener<Void> {
@@ -113,6 +118,7 @@ class LoginActivity : AppCompatActivity() {
             var kullaniciAdi = etKullaniciAdiLogin.text.toString()
             var kullaniciAdiEmail = kullaniciAdi + "@gmail.com"
             var kullaniciSifre = etSifreLogin.text.toString()
+
             mAuth.signInWithEmailAndPassword(kullaniciAdiEmail, kullaniciSifre)
                 .addOnCompleteListener(object : OnCompleteListener<AuthResult> {
                     override fun onComplete(p0: Task<AuthResult>) {
@@ -128,6 +134,11 @@ class LoginActivity : AppCompatActivity() {
                 })
         }
 
+        if (mAuth.currentUser!=null){
+            Log.e("giris yapılan hesap",mAuth.currentUser!!.uid.toString())
+        }else{
+            Log.e("cıkıs","cıkıs yapılmıs uid yok")
+        }
 
     }
 
@@ -136,7 +147,7 @@ class LoginActivity : AppCompatActivity() {
             override fun onAuthStateChanged(p0: FirebaseAuth) {
                 var user = FirebaseAuth.getInstance().currentUser
                 if (user != null) {
-                    var intent = Intent(this@LoginActivity, BolgeSecimActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                   var intent = Intent(this@LoginActivity, BolgeSecimActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                     startActivity(intent)
                     finish()
                 } else {

@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.creativeoffice.cobansut.Activity.HesapActivity
 import com.creativeoffice.cobansut.BuildConfig
+import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.EnYeni.SiparisActivity
 import com.creativeoffice.cobansut.R
 import com.creativeoffice.cobansut.utils.Utils
@@ -103,7 +104,7 @@ class BolgeSecimActivity : AppCompatActivity() {
 
         tvDuyuru.text = Utils.kullaniciAdi + " " + Utils.secilenBolge + " " + Utils.zaman
 
-        // Toast.makeText(this,"selamün aleyküm",Toast.LENGTH_LONG).show()
+
 
         ref.child("users").child(mAuth.currentUser!!.uid).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
@@ -125,7 +126,6 @@ class BolgeSecimActivity : AppCompatActivity() {
             Utils.secilenBolge = "Burgaz"
             startActivity(intent)
         }
-
         tvCorlu.setOnClickListener {
             val intent = Intent(this, SiparisActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             Utils.secilenBolge = "Corlu"
@@ -142,7 +142,12 @@ class BolgeSecimActivity : AppCompatActivity() {
         }
 
         refreshData.setOnClickListener {
-            progressDialog = ProgressDialog(this@BolgeSecimActivity)
+
+            mAuth.signOut()
+            val intent = Intent(this, LoginActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            startActivity(intent)
+            finish()
+      /*      progressDialog = ProgressDialog(this@BolgeSecimActivity)
             progressDialog.setCancelable(false)
 
             val timer = object : CountDownTimer(4000, 1000) {
@@ -161,9 +166,27 @@ class BolgeSecimActivity : AppCompatActivity() {
                 }
             }
             timer.start()
-
+*/
 
         }
+
+
+        var ref = FirebaseDatabase.getInstance().reference
+        ref.child("Siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {}
+            override fun onDataChange(p0: DataSnapshot) {
+
+                if (p0.hasChildren()) {
+
+                    for (ds in p0.children) {
+
+                        var gelenData = ds.getValue(SiparisData::class.java)!!
+
+                        ref.child("Burgaz").child("Siparisler").child(gelenData.siparis_mah.toString()).child(gelenData.siparis_key.toString()).setValue(gelenData)
+                    }
+                }
+            }
+        })
     }
 
     private fun initMyAuthStateListener() {
