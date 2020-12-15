@@ -60,6 +60,7 @@
                 android:id="@+id/rcMahallelerBurgaz"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -135,12 +136,14 @@
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/clMarket"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
 
                 <TextView
@@ -151,6 +154,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -162,6 +166,7 @@
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
                     android:background="@drawable/down"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -185,6 +190,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -208,7 +214,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
 
                 <TextView
@@ -219,6 +226,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -230,6 +238,7 @@
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
                     android:background="@drawable/down"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -253,6 +262,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -262,7 +272,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcKurtulus"
@@ -283,7 +294,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/textView"
@@ -293,6 +305,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -303,6 +316,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -326,6 +340,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -335,7 +350,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcGenclik"
@@ -356,7 +372,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
                 <TextView
 
@@ -366,6 +383,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -376,6 +394,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -399,6 +418,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -407,7 +427,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rc8Kasim"
@@ -429,7 +450,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
                 <TextView
 
@@ -440,6 +462,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -450,6 +473,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -474,6 +498,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -482,7 +507,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcAtaturk"
@@ -505,7 +531,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
                 <TextView
 
@@ -515,6 +542,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -525,6 +553,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -549,6 +578,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -557,7 +587,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcBaris"
@@ -579,7 +610,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -588,6 +620,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -598,6 +631,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -622,6 +656,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -630,7 +665,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcCumhuriyet"
@@ -651,7 +687,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -660,6 +697,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -670,6 +708,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -694,6 +733,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -702,7 +742,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcDere"
@@ -723,7 +764,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -732,6 +774,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -742,6 +785,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -766,6 +810,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -774,7 +819,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcDurak"
@@ -796,6 +842,7 @@
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
                 android:background="@color/colorPrimary"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
@@ -806,6 +853,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -816,6 +864,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -840,6 +889,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -848,7 +898,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcFatih"
@@ -869,7 +920,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -878,6 +930,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -888,6 +941,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -912,6 +966,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -920,7 +975,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcGun"
@@ -941,7 +997,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -950,6 +1007,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -960,6 +1018,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -984,6 +1043,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -992,7 +1052,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcGunes"
@@ -1013,7 +1074,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -1022,6 +1084,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -1032,6 +1095,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -1056,6 +1120,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -1064,7 +1129,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcHurriyet"
@@ -1084,7 +1150,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="77dp"
@@ -1093,6 +1160,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -1103,6 +1171,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -1127,6 +1196,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -1135,7 +1205,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcInonu"
@@ -1156,7 +1227,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -1165,6 +1237,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -1175,6 +1248,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -1199,6 +1273,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -1207,7 +1282,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcIstiklal"
@@ -1228,7 +1304,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -1237,6 +1314,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -1247,6 +1325,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -1271,6 +1350,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -1279,7 +1359,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcKocasinan"
@@ -1300,7 +1381,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -1309,6 +1391,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -1319,6 +1402,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -1343,6 +1427,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -1351,7 +1436,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcOzerler"
@@ -1372,7 +1458,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -1381,6 +1468,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -1391,6 +1479,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -1415,6 +1504,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -1423,7 +1513,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcSevgi"
@@ -1444,7 +1535,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -1453,6 +1545,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -1463,6 +1556,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -1487,6 +1581,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -1495,7 +1590,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcSiteler"
@@ -1516,7 +1612,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -1525,6 +1622,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -1535,6 +1633,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -1559,6 +1658,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -1567,7 +1667,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcYeni"
@@ -1587,7 +1688,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -1596,6 +1698,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -1606,6 +1709,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -1630,6 +1734,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -1638,7 +1743,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcYildirim"
@@ -1658,7 +1764,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -1667,6 +1774,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -1677,6 +1785,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -1701,6 +1810,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -1709,7 +1819,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcYildiz"
@@ -1729,7 +1840,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -1738,6 +1850,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -1748,6 +1861,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -1772,6 +1886,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -1780,7 +1895,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcYilmaz"
@@ -1801,7 +1917,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="1dp"
-                android:background="@color/colorPrimary">
+                android:background="@color/colorPrimary"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -1810,6 +1927,7 @@
                     android:textColor="@color/beyaz"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -1820,6 +1938,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -1844,6 +1963,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -1852,7 +1972,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcZafer"
@@ -1873,7 +1994,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_margin="1dp"
-                android:background="@color/kirmizi">
+                android:background="@color/kirmizi"
+                android:visibility="gone">
 
                 <TextView
 
@@ -1881,6 +2003,7 @@
                     android:layout_height="wrap_content"
                     android:text="İleri Tarihli"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -1891,6 +2014,7 @@
                     android:layout_width="27dp"
                     android:layout_height="27dp"
                     android:layout_marginEnd="24dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -1915,6 +2039,7 @@
                     android:layout_marginStart="24dp"
                     android:text="0"
                     android:textColor="@color/beyaz"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -1923,7 +2048,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp">
+                android:layout_margin="1dp"
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rcileriTarih"

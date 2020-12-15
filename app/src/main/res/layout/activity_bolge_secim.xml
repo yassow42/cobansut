@@ -16,6 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/refresh" />
+
     <TextView
         android:id="@+id/tvBurgaz"
         android:layout_width="250dp"
@@ -65,11 +66,26 @@
         app:layout_constraintTop_toBottomOf="@+id/tvCorlu" />
 
     <TextView
+        android:id="@+id/tvHesap"
+        android:layout_width="250dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_bolge"
+        android:gravity="center"
+        android:text="Hesap"
+        android:textAlignment="center"
+        android:textColor="@color/beyaz"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvCerkez" />
+
+    <TextView
         android:id="@+id/tvDuyuru"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="32dp"
         android:text="Duyurular: "
@@ -79,5 +95,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCerkez" />
+        app:layout_constraintTop_toBottomOf="@+id/tvHesap" />
 </androidx.constraintlayout.widget.ConstraintLayout>

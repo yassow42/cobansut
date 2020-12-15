@@ -63,11 +63,7 @@ class BottomNavigationViewHelperCorlu {
                                 context.startActivity(intent)
                             }
 
-                            R.id.ic_hesap->{
-                                val intent = Intent(context, HesapActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
 
-                                context.startActivity(intent)
-                            }
 
                         }
                         return false

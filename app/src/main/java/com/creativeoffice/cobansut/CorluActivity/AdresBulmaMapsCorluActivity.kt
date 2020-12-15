@@ -106,9 +106,9 @@ class AdresBulmaMapsCorluActivity : AppCompatActivity(), OnMapReadyCallback {
                 var intent = Intent(this, MusterilerActivityCerkez::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 startActivity(intent)
             } else if (yer == "Burgaz") {
-                ref.child("Musteriler").child(musteriAdi.toString()).child("musteri_zkonum").setValue(true)
-                ref.child("Musteriler").child(musteriAdi.toString()).child("musteri_zlat").setValue(latLng.latitude)
-                ref.child("Musteriler").child(musteriAdi.toString()).child("musteri_zlong").setValue(latLng.longitude)
+                ref.child(yer).child("Musteriler").child(musteriAdi.toString()).child("musteri_zkonum").setValue(true)
+                ref.child(yer).child("Musteriler").child(musteriAdi.toString()).child("musteri_zlat").setValue(latLng.latitude)
+                ref.child(yer).child("Musteriler").child(musteriAdi.toString()).child("musteri_zlong").setValue(latLng.longitude)
                 var intent = Intent(this, MusterilerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 startActivity(intent)
             }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.TeslimActivity">
+    tools:context=".EnYeni.SiparisTeslimActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout4"
@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-
+            android:id="@+id/tvBaslik"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Teslim Edilenler"
@@ -51,7 +51,42 @@
             app:srcCompat="@drawable/refresh" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/tvZamandan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textColor="@color/siyah"
+        android:textStyle="bold"
 
+        app:layout_constraintBottom_toBottomOf="@+id/tvZamana"
+        app:layout_constraintEnd_toStartOf="@+id/tvZamana"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvZamana" />
+
+    <TextView
+        android:id="@+id/tvZamana"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="TextView"
+        android:textColor="@color/siyah"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/imgTarih"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tvZamandan"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout4" />
+
+    <ImageView
+        android:id="@+id/imgTarih"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/rcTeslimEdilenler"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout4"
+        app:srcCompat="@drawable/refresh" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcTeslimEdilenler"
         android:layout_width="0dp"
@@ -61,13 +96,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvZamana" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNav"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavYeni"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -93,8 +127,7 @@
             app:layout_constraintEnd_toStartOf="@+id/tvDokumSutTeslim"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/tv3ltTeslim"
-            app:layout_constraintTop_toTopOf="@+id/tvYumurtaTeslim"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toTopOf="@+id/tvYumurtaTeslim" />
 
         <TextView
             android:id="@+id/tvYumurtaTeslim"
@@ -134,9 +167,8 @@
             app:layout_constraintVertical_bias="1.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
-        android:id="@+id/bottomNav"
+        android:id="@+id/bottomNavYeni"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#fff"
@@ -144,42 +176,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu" />
-
-    <TextView
-        android:id="@+id/tvZamandan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textColor="@color/siyah"
-        android:textStyle="bold"
-
-        app:layout_constraintBottom_toBottomOf="@+id/tvZamana"
-        app:layout_constraintEnd_toStartOf="@+id/tvZamana"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvZamana" />
-
-    <TextView
-        android:id="@+id/tvZamana"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="TextView"
-        android:textColor="@color/siyah"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/imgTarih"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tvZamandan"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout4" />
-
-    <ImageView
-        android:id="@+id/imgTarih"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginEnd="32dp"
-        app:layout_constraintBottom_toTopOf="@+id/rcTeslimEdilenler"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout4"
-        app:srcCompat="@drawable/refresh" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

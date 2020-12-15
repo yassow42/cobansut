@@ -2,20 +2,18 @@ package com.creativeoffice.cobansut.genel
 
 import android.app.ActivityManager
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.creativeoffice.cobansut.Activity.SiparislerActivity
+import com.creativeoffice.cobansut.Activity.HesapActivity
 import com.creativeoffice.cobansut.BuildConfig
-import com.creativeoffice.cobansut.CorluActivity.SiparislerCorluActivity
+import com.creativeoffice.cobansut.EnYeni.SiparisActivity
 import com.creativeoffice.cobansut.R
-import com.creativeoffice.cobansut.TimeAgo
-import com.creativeoffice.cobansut.cerkez.SiparisActivityCerkez
+import com.creativeoffice.cobansut.utils.Utils
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -27,8 +25,6 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import kotlinx.android.synthetic.main.activity_bolge_secim.*
-import kotlinx.android.synthetic.main.activity_siparisler.*
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -44,7 +40,9 @@ class BolgeSecimActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bolge_secim)
+        zamanAyarı()
         konumIzni()
+
         mAuth = FirebaseAuth.getInstance()
         //    mAuth.signOut()
         versionCode = BuildConfig.VERSION_CODE
@@ -64,9 +62,9 @@ class BolgeSecimActivity : AppCompatActivity() {
         initMyAuthStateListener()
         setup()
 
-         FirebaseDatabase.getInstance().reference.child("versiyon").keepSynced(true)
-           FirebaseDatabase.getInstance().reference.child("Zaman").keepSynced(true)
-           FirebaseDatabase.getInstance().reference.child("users").keepSynced(true)
+        FirebaseDatabase.getInstance().reference.child("versiyon").keepSynced(true)
+        FirebaseDatabase.getInstance().reference.child("Zaman").keepSynced(true)
+        FirebaseDatabase.getInstance().reference.child("users").keepSynced(true)
 
         ref.child("versiyon").addListenerForSingleValueEvent(versiyon)
 
@@ -83,12 +81,12 @@ class BolgeSecimActivity : AppCompatActivity() {
         override fun onDataChange(p0: DataSnapshot) {
             if (p0.value != null) {
                 var genelVersion = p0.value.toString().toInt()
-                if (genelVersion > versionCode){
+                if (genelVersion > versionCode) {
                     Toast.makeText(this@BolgeSecimActivity, "Eski Sürüm Kullanıyorsun. Lütfen Güncelle", Toast.LENGTH_LONG).show()
 
-                    tvBurgaz.isEnabled = false
-                    tvCorlu.isEnabled = false
-                    tvCerkez.isEnabled = false
+                    // tvBurgaz.isEnabled = false
+                    //   tvCorlu.isEnabled = false
+                    //  tvCerkez.isEnabled = false
                 }
             }
         }
@@ -101,38 +99,45 @@ class BolgeSecimActivity : AppCompatActivity() {
 
     private fun setup() {
 
+        Snackbar.make(tvBurgaz, Utils.secilenBolge, 2500).show()
 
-        ref.child("Zaman").addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
+        tvDuyuru.text = Utils.kullaniciAdi + " " + Utils.secilenBolge + " " + Utils.zaman
 
+        // Toast.makeText(this,"selamün aleyküm",Toast.LENGTH_LONG).show()
+
+        ref.child("users").child(mAuth.currentUser!!.uid).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
+                var kullaniciAdi = p0.child("user_name").value.toString()
+                var yetki = p0.child("yetki").value.toString()
+                Utils.kullaniciAdi = kullaniciAdi
+                Utils.yetki = yetki
 
-                var gece3GelenZaman = p0.child("gece3").value.toString().toLong()
-                var suankıZaman = System.currentTimeMillis()
-
-                var duyuru = p0.child("duyuru").value.toString()
-                tvDuyuru.text ="Duyuru: \n" + duyuru
-
-                if (gece3GelenZaman < suankıZaman) {
-                    var guncelGece3 = gece3GelenZaman + 86400000
-                    FirebaseDatabase.getInstance().reference.child("Zaman").child("gece3").setValue(guncelGece3)
-                }
             }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
         })
 
-
         tvBurgaz.setOnClickListener {
-            val intent = Intent(this, SiparislerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            val intent = Intent(this, SiparisActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            Utils.secilenBolge = "Burgaz"
             startActivity(intent)
         }
 
         tvCorlu.setOnClickListener {
-            val intent = Intent(this, SiparislerCorluActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            val intent = Intent(this, SiparisActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            Utils.secilenBolge = "Corlu"
             startActivity(intent)
         }
         tvCerkez.setOnClickListener {
-            val intent = Intent(this, SiparisActivityCerkez::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            val intent = Intent(this, SiparisActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            Utils.secilenBolge = "Cerkez"
+            startActivity(intent)
+        }
+        tvHesap.setOnClickListener {
+            val intent = Intent(this, HesapActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
             startActivity(intent)
         }
 
@@ -140,9 +145,9 @@ class BolgeSecimActivity : AppCompatActivity() {
             progressDialog = ProgressDialog(this@BolgeSecimActivity)
             progressDialog.setCancelable(false)
 
-            val timer = object: CountDownTimer(4000, 1000) {
+            val timer = object : CountDownTimer(4000, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
-                    progressDialog.setMessage("Sistem kapatılıyor...Programı 2 kere başlatman gerekecek.!!\n ${millisUntilFinished/1000}")
+                    progressDialog.setMessage("Sistem kapatılıyor...Programı 2 kere başlatman gerekecek.!!\n ${millisUntilFinished / 1000}")
 
                     progressDialog.show()
 
@@ -150,8 +155,8 @@ class BolgeSecimActivity : AppCompatActivity() {
                 }
 
                 override fun onFinish() {
-
-                        (this@BolgeSecimActivity.getSystemService(ACTIVITY_SERVICE) as ActivityManager).clearApplicationUserData()
+                    (this@BolgeSecimActivity.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).clearApplicationUserData()
+                    //   (this@BolgeSecimActivity.getSystemService(ACTIVITY_SERVICE) as ActivityManager).clearApplicationUserData()
 
                 }
             }
@@ -200,5 +205,31 @@ class BolgeSecimActivity : AppCompatActivity() {
 
 
             }).check()
+    }
+
+
+    private fun zamanAyarı() {
+        ref.child("Zaman").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+
+                var gece3GelenZaman = p0.child("gece3").value.toString().toLong()
+                var suankıZaman = System.currentTimeMillis()
+
+
+                var duyuru = p0.child("duyuru").value.toString()
+                //   tvDuyuru.text = "Duyuru: \n" + duyuru
+
+                if (gece3GelenZaman < suankıZaman) {
+                    var guncelGece3 = gece3GelenZaman + 86400000
+                    FirebaseDatabase.getInstance().reference.child("Zaman").child("gece3").setValue(guncelGece3)
+                }
+                Utils.zaman = gece3GelenZaman
+
+            }
+        })
+
     }
 }

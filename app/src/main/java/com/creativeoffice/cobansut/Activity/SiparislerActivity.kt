@@ -20,6 +20,7 @@ import com.creativeoffice.cobansut.cerkez.adapter.MahalleAdapter
 import com.creativeoffice.cobansut.genel.BolgeSecimActivity
 import com.creativeoffice.cobansut.genel.LoginActivity
 import com.creativeoffice.cobansut.utils.BottomNavigationViewHelper
+import com.creativeoffice.cobansut.utils.Utils
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -102,7 +103,7 @@ class SiparislerActivity : AppCompatActivity() {
     }
 
     private fun zamanAyarı() {
-        FirebaseMessaging.getInstance().subscribeToTopic("msgNotification");
+
         FirebaseDatabase.getInstance().reference.child("Zaman").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
@@ -390,7 +391,7 @@ class SiparislerActivity : AppCompatActivity() {
 
     private fun recyclerView(recyclerView: RecyclerView, siparisListesi: ArrayList<SiparisData>) {
         recyclerView.layoutManager = LinearLayoutManager(this@SiparislerActivity, LinearLayoutManager.VERTICAL, false)
-        val Adapter = SiparisAdapter(this@SiparislerActivity, siparisListesi, kullaniciAdi)
+        val Adapter = SiparisAdapter(this@SiparislerActivity, siparisListesi, kullaniciAdi,Utils.secilenBolge)
         recyclerView.adapter = Adapter
         recyclerView.setHasFixedSize(true)
     }
@@ -412,7 +413,6 @@ class SiparislerActivity : AppCompatActivity() {
 
             override fun onDataChange(p0: DataSnapshot) {
                 kullaniciAdi = p0.child("user_name").value.toString()
-                Snackbar.make(bottomNav, kullaniciAdi + " hoşgeldin", 750).show()
                 //   if (kullaniciAdi == "null")  startActivity(Intent(this@SiparislerActivity, LoginActivity::class.java))
                 setupVeri()
             }
@@ -441,8 +441,6 @@ class SiparislerActivity : AppCompatActivity() {
             mAuth.signOut()
             startActivity(Intent(this, LoginActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
         }
-
-
 
 
         imgMarketDown.setOnClickListener {

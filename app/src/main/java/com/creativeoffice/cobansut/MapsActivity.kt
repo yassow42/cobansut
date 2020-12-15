@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.location.LocationManagerCompat.isLocationEnabled
 import com.creativeoffice.cobansut.Activity.SiparislerActivity
 import com.creativeoffice.cobansut.Datalar.SiparisData
+import com.creativeoffice.cobansut.genel.BolgeSecimActivity
 import com.creativeoffice.cobansut.utils.BottomNavigationViewHelper
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -73,6 +74,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, BolgeSecimActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        startActivity(intent)
+        finish()
+    }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap

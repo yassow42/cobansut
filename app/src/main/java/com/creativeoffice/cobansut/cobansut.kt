@@ -6,7 +6,9 @@ import com.google.firebase.database.FirebaseDatabase
 class cobansut : Application() {
     override fun onCreate() {
         super.onCreate()
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+        FirebaseDatabase.getInstance().setPersistenceCacheSizeBytes(1048576)
+       FirebaseDatabase.getInstance().setPersistenceEnabled(false)
+
 
     }
 }

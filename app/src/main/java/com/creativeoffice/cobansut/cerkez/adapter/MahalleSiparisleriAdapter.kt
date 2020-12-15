@@ -157,6 +157,8 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
                         viewDuzenle.et3ltFiyat.setText(siparisler[position].sut3lt_fiyat.toString())
                         viewDuzenle.et5lt.setText(siparisler[position].sut5lt)
                         viewDuzenle.et5ltFiyat.setText(siparisler[position].sut5lt_fiyat.toString())
+                        viewDuzenle.etDokmeSut.setText(siparisler[position].dokme_sut)
+                        viewDuzenle.etDokmeSutFiyat.setText(siparisler[position].dokme_sut_fiyat.toString())
                         viewDuzenle.etYumurta.setText(siparisler[position].yumurta)
                         viewDuzenle.etYumurtaFiyat.setText(siparisler[position].yumurta_fiyat.toString())
                         viewDuzenle.etSiparisNotu.setText(siparisler[position].siparis_notu)

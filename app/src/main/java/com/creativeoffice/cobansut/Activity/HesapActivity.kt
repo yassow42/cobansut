@@ -31,7 +31,6 @@ import kotlin.collections.ArrayList
 
 
 class HesapActivity : AppCompatActivity() {
-    var ACTIVITY_NO = 3
     var ref = FirebaseDatabase.getInstance().reference
     var userID: String? = null
     lateinit var mAuth: FirebaseAuth
@@ -50,7 +49,6 @@ class HesapActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hesap)
-        setupNavigationView()
         mAuth = FirebaseAuth.getInstance()
         userID = mAuth.currentUser!!.uid
 
@@ -103,7 +101,7 @@ class HesapActivity : AppCompatActivity() {
 
 
 
-        ref.child("Teslim_siparisler").addListenerForSingleValueEvent(teslimEdilenler)
+        ref.child("Burgaz").child("Teslim_siparisler").addListenerForSingleValueEvent(teslimEdilenler)
         ref.child("Cerkez").child("Teslim_siparisler").addListenerForSingleValueEvent(teslimEdilenler)
         ref.child("Corlu").child("Teslim_siparisler").addListenerForSingleValueEvent(teslimEdilenler)
 /*
@@ -392,11 +390,12 @@ class HesapActivity : AppCompatActivity() {
                 if (gelenData.siparis_teslim_tarihi != null) {
                     if (ileriZaman!! - 86400000 < gelenData.siparis_teslim_zamani!!.toLong() && gelenData.siparis_teslim_zamani!!.toLong() < ileriZaman!!) {
                         teslimList.add(gelenData)
-                        Log.e("HesapActTeslimListSayi",teslimList.size.toString())
+
                     }
                 }
 
             }
+            Log.e("HesapActTeslimListSayi",teslimList.size.toString())
             rcHesap.layoutManager = LinearLayoutManager(this@HesapActivity, LinearLayoutManager.VERTICAL, false)
             rcHesap.adapter = HesapAdapter(this@HesapActivity, userList,teslimList, ileriZaman, geriZaman)
 
@@ -436,12 +435,5 @@ class HesapActivity : AppCompatActivity() {
 
         super.onBackPressed()
     }
-    private fun setupNavigationView() {
 
-        BottomNavigationViewHelper.setupBottomNavigationView(bottomNav)
-        BottomNavigationViewHelper.setupNavigation(this, bottomNav) // Bottomnavhelper içinde setupNavigationda context ve nav istiyordu verdik...
-        var menu = bottomNav.menu
-        var menuItem = menu.getItem(ACTIVITY_NO)
-        menuItem.setChecked(true)
-    }
 }

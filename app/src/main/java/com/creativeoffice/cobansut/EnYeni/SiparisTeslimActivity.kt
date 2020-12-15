@@ -1,193 +1,135 @@
-package com.creativeoffice.cobansut.Activity
+package com.creativeoffice.cobansut.EnYeni
 
 import android.app.DatePickerDialog
-import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
-import android.view.View
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.creativeoffice.cobansut.Adapter.TeslimEdilenlerAdapter
-import com.creativeoffice.cobansut.utils.BottomNavigationViewHelper
 import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.R
 import com.creativeoffice.cobansut.genel.BolgeSecimActivity
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.activity_teslim.*
-import java.io.IOException
+
+import com.creativeoffice.cobansut.utils.BottomNavigationViewHelperYeni
+import com.creativeoffice.cobansut.utils.Utils
+
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import kotlinx.android.synthetic.main.activity_siparis_teslim.*
+import kotlinx.android.synthetic.main.activity_siparis_teslim.imgEskiVerileriGetir
+import kotlinx.android.synthetic.main.activity_siparis_teslim.imgOptions
+import kotlinx.android.synthetic.main.activity_siparis_teslim.imgTarih
+import kotlinx.android.synthetic.main.activity_siparis_teslim.rcTeslimEdilenler
+import kotlinx.android.synthetic.main.activity_siparis_teslim.tv3ltTeslim
+import kotlinx.android.synthetic.main.activity_siparis_teslim.tv5ltTeslim
+import kotlinx.android.synthetic.main.activity_siparis_teslim.tvDokumSutTeslim
+import kotlinx.android.synthetic.main.activity_siparis_teslim.tvFiyatGenelTeslim
+import kotlinx.android.synthetic.main.activity_siparis_teslim.tvYumurtaTeslim
+import kotlinx.android.synthetic.main.activity_siparis_teslim.tvZamana
+import kotlinx.android.synthetic.main.activity_siparis_teslim.tvZamandan
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class TeslimActivity : AppCompatActivity() {
-    private val ACTIVITY_NO = 2
-    lateinit var suankiTeslimList: ArrayList<SiparisData>
-    lateinit var butunTeslimList: ArrayList<SiparisData>
-    var ref = FirebaseDatabase.getInstance().reference
-    lateinit var progressDialog: ProgressDialog
-    val hndler = Handler()
 
-    var yetki2 = ""
+class SiparisTeslimActivity : AppCompatActivity() {
+    var refBolge = FirebaseDatabase.getInstance().reference.child(Utils.secilenBolge)
+
+    var suankiTeslimList = ArrayList<SiparisData>()
+    var butunTeslimList = ArrayList<SiparisData>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_teslim)
+        setContentView(R.layout.activity_siparis_teslim)
         setupNavigationView()
-        // this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setupBtn()
 
-
-        suankiTeslimList = ArrayList()
-        butunTeslimList = ArrayList()
-
-        progressDialog = ProgressDialog(this)
-        progressDialog.setMessage("Lütfen bekleyin...")
-        progressDialog.setCancelable(false)
-        progressDialog.show()
-
-
-        ref.child("users").child(FirebaseAuth.getInstance().currentUser!!.uid.toString()).addListenerForSingleValueEvent(userYetki)
-
-        hndler.postDelayed(Runnable { progressDialog.dismiss() }, 10000)
-
-
+        tvBaslik.text = "${Utils.secilenBolge} Teslim Edilenleri"
+        refBolge.child("Teslim_siparisler").keepSynced(true)
+        refBolge.child("Teslim_siparisler").addListenerForSingleValueEvent(teslimEdilenler)
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        val intent = Intent(this, BolgeSecimActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-        startActivity(intent)
-        finish()
-    }
+    var teslimEdilenler = object : ValueEventListener {
+        override fun onCancelled(p0: DatabaseError) {
 
-    private fun setupVeri() {
-        ref.child("Teslim_siparisler").keepSynced(true)
-        ref.child("Burgaz").child("Teslim_siparisler").keepSynced(true)
-        ref.child("Burgaz").child("Teslim_siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
+        }
 
-            }
+        override fun onDataChange(data: DataSnapshot) {
+            butunTeslimList.clear()
+            suankiTeslimList.clear()
 
-            override fun onDataChange(data: DataSnapshot) {
-                if (data.hasChildren()) {
-                    var sut3ltSayisi = 0
-                    var sut5ltSayisi = 0
-                    var yumurtaSayisi = 0
-                    var dokumSutSayisi = 0
-                    var toplamFiyatlar = 0.0
+            if (data.hasChildren()) {
+                var sut3ltSayisi = 0
+                var sut5ltSayisi = 0
+                var yumurtaSayisi = 0
+                var dokumSutSayisi = 0
+                var toplamFiyatlar = 0.0
 
-                    ref.child("Zaman").addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onCancelled(p0: DatabaseError) {
-                        }
-
-                        override fun onDataChange(p0: DataSnapshot) {
-
-                            var gece3GelenZaman = p0.child("gece3").value.toString().toLong()
-                            var suankiZaman = System.currentTimeMillis()
-
-                            veriTasima(gece3GelenZaman)
-
-                            if (gece3GelenZaman < suankiZaman) {
-                                var guncelGece3 = gece3GelenZaman + 86400000
-                                FirebaseDatabase.getInstance().reference.child("Zaman").child("gece3").setValue(guncelGece3)
-                            }
-
-                            for (ds in data.children) {
-                                var gelenData = ds.getValue(SiparisData::class.java)!!
-                                butunTeslimList.add(gelenData)
-
-                                if (gelenData.siparis_teslim_zamani.toString() != "null") {
-
-                                    if (gece3GelenZaman - 86400000 < gelenData.siparis_teslim_zamani!!.toLong() && gelenData.siparis_teslim_zamani!!.toLong() < gece3GelenZaman) {
-                                        suankiTeslimList.add(gelenData)
-                                        sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
-                                        sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
-                                        yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
-                                        dokumSutSayisi = gelenData.dokme_sut!!.toInt() + dokumSutSayisi
-                                        toplamFiyatlar = gelenData.toplam_fiyat!!.toDouble() + toplamFiyatlar
-
-                                    }
-
-                                    if (gelenData.siparis_teslim_zamani!! < gece3GelenZaman - 604800000) {
-                                        Log.e("sad", gelenData.siparis_teslim_zamani.toString() + "  " + (gece3GelenZaman - 2592000000))
-                                        ref.child("Eski_veriler").child("Burgaz").child("Teslim_siparisler").child(gelenData.siparis_key.toString()).setValue(gelenData)
-                                        ref.child("Burgaz").child("Teslim_siparisler").child(gelenData.siparis_key.toString()).removeValue()
-                                        ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).removeValue()
-                                    }
-                                }
-                            }
-
-
-                            suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }
-                            tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
-                            tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
-                            tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
-                            tvDokumSutTeslim.text = "Dökme: " + dokumSutSayisi.toString()
-
-
-                            try {
-                                tvFiyatGenelTeslim.setText(toplamFiyatlar.toDouble().toString() + " TL")
-                                setupRecyclerView()
-                            } catch (e: IOException) {
-                                Log.e("teslim activity", "hatalar ${e.message.toString()}")
-
-                            }
-                            progressDialog.dismiss()
-                        }
-                    })
-
-                } else {
-                    progressDialog.setMessage("Veri Alınamıyor...")
-                    hndler.postDelayed(Runnable { progressDialog.dismiss() }, 8000)
-
-                }
-            }
-        })
-
-
-    }
-
-    private fun veriTasima(gece3GelenZaman: Long) {
-        ref.child("Teslim_siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(p0: DataSnapshot) {
-
-                for (ds in p0.children) {
+                for (ds in data.children) {
                     var gelenData = ds.getValue(SiparisData::class.java)!!
+                    butunTeslimList.add(gelenData)
 
                     if (gelenData.siparis_teslim_zamani.toString() != "null") {
-                        if (gelenData.siparis_teslim_zamani!! > gece3GelenZaman - 5184000000) {
-                            ref.child("Burgaz").child("Teslim_siparisler").child(gelenData.siparis_key.toString()).setValue(gelenData)
-                        } else {
-                            ref.child("Eski_veriler").child("Burgaz").child("Teslim_siparisler").child(gelenData.siparis_key.toString()).setValue(gelenData)
+
+                        if (Utils.zaman - 86400000 < gelenData.siparis_teslim_zamani!!.toLong() && gelenData.siparis_teslim_zamani!!.toLong() < Utils.zaman
+                        ) {
+                            suankiTeslimList.add(gelenData)
+                            sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
+                            sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
+                            yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
+                            dokumSutSayisi = gelenData.dokme_sut!!.toInt() + dokumSutSayisi
+                            toplamFiyatlar = gelenData.toplam_fiyat!!.toDouble() + toplamFiyatlar
+
                         }
-                    } else {
-                        Log.e("silinneler", gelenData.siparis_key.toString())
+
+                      /*  if (gelenData.siparisi_giren.toString()=="null"){
+                            Log.e("sad",gelenData.siparis_veren.toString())
+                            refBolge.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("siparisi_giren").setValue("Corlumurat")
+                        }*/
+
+                        /*   if (gelenData.siparis_teslim_zamani!! < gece3GelenZaman - 604800000) {
+                               Log.e("sad", gelenData.siparis_teslim_zamani.toString() + "  " + (gece3GelenZaman - 2592000000))
+                               ref.child("Eski_veriler").child("Burgaz").child("Teslim_siparisler").child(gelenData.siparis_key.toString()).setValue(gelenData)
+                               ref.child("Burgaz").child("Teslim_siparisler").child(gelenData.siparis_key.toString()).removeValue()
+                               ref.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).removeValue()
+                           }*/
                     }
                 }
+
+
+                suankiTeslimList.sortByDescending { it.siparis_teslim_zamani }
+                tv3ltTeslim.text = "3lt: " + sut3ltSayisi.toString()
+                tv5ltTeslim.text = "5lt: " + sut5ltSayisi.toString()
+                tvYumurtaTeslim.text = "Yumurta: " + yumurtaSayisi.toString()
+                tvDokumSutTeslim.text = "Dökme: " + dokumSutSayisi.toString()
+
+
+                tvFiyatGenelTeslim.setText(toplamFiyatlar.toDouble().toString() + " TL")
+
+                setupRecyclerView()
+                veriTasima(Utils.zaman)
             }
+        }
 
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-
-        })
     }
+
 
     private fun setupBtn() {
 
         imgEskiVerileriGetir.setOnClickListener {
             suankiTeslimList.clear()
-            ref.child("Eski_veriler").child("Burgaz").child("Teslim_siparisler").addListenerForSingleValueEvent(object :ValueEventListener{
+            FirebaseDatabase.getInstance().reference.child("Eski_veriler").child(Utils.secilenBolge).child("Teslim_siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(p0: DataSnapshot) {
 
-                    for (ds in p0.children){
+                    for (ds in p0.children) {
                         var gelenData = ds.getValue(SiparisData::class.java)!!
                         butunTeslimList.add(gelenData)
                     }
-                    Log.e("eski veri getir",butunTeslimList.size.toString())
+                    Log.e("eski veri getir", butunTeslimList.size.toString())
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -406,7 +348,7 @@ class TeslimActivity : AppCompatActivity() {
                                     yumurtaFiyat = ds.yumurta_fiyat!!.toInt() + yumurtaFiyat
 
                                     toplamFiyat = ds.toplam_fiyat!! + toplamFiyat
-                                    Log.e("saddd", toplamFiyat.toString())
+
                                 }
 
                             }
@@ -470,47 +412,59 @@ class TeslimActivity : AppCompatActivity() {
         }
 
 
-
     }
 
+    private fun veriTasima(gece3GelenZaman: Long) {
+
+        FirebaseDatabase.getInstance().reference.child("Teslim_siparisler").keepSynced(true)
+        FirebaseDatabase.getInstance().reference.child("Teslim_siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(p0: DataSnapshot) {
+
+                for (ds in p0.children) {
+                    var gelenData = ds.getValue(SiparisData::class.java)!!
+                    if (Utils.secilenBolge == "Burgaz") {
+                        print("Burgazdaki veriler tasınıyor.")
+                        if (gelenData.siparis_teslim_zamani.toString() != "null") {
+                            if (gelenData.siparis_teslim_zamani!! > gece3GelenZaman - 5184000000) {
+                                FirebaseDatabase.getInstance().reference.child(Utils.secilenBolge).child("Teslim_siparisler").child(gelenData.siparis_key.toString()).setValue(gelenData)
+                            } else {
+                                FirebaseDatabase.getInstance().reference.child("Eski_veriler").child(Utils.secilenBolge).child("Teslim_siparisler").child(gelenData.siparis_key.toString()).setValue(gelenData)
+                            }
+                        } else {
+                            Log.e("silinneler", gelenData.siparis_key.toString())
+                        }
+                    }
+
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
 
     private fun setupRecyclerView() {
-        rcTeslimEdilenler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        val Adapter = TeslimEdilenlerAdapter(this, suankiTeslimList, "Burgaz")
+        rcTeslimEdilenler.layoutManager = LinearLayoutManager(this@SiparisTeslimActivity, LinearLayoutManager.VERTICAL, false)
+        val Adapter = TeslimEdilenlerAdapter(this@SiparisTeslimActivity, suankiTeslimList, Utils.secilenBolge)
         rcTeslimEdilenler.adapter = Adapter
         rcTeslimEdilenler.setHasFixedSize(true)
     }
 
-    fun setupNavigationView() {
-
-        BottomNavigationViewHelper.setupBottomNavigationView(bottomNav)
-        BottomNavigationViewHelper.setupNavigation(this, bottomNav) // Bottomnavhelper içinde setupNavigationda context ve nav istiyordu verdik...
-        var menu = bottomNav.menu
-        var menuItem = menu.getItem(ACTIVITY_NO)
+    private fun setupNavigationView() {
+        BottomNavigationViewHelperYeni.setupBottomNavigationView(bottomNavYeni)
+        BottomNavigationViewHelperYeni.setupNavigation(this, bottomNavYeni) // Bottomnavhelper içinde setupNavigationda context ve nav istiyordu verdik...
+        var menu = bottomNavYeni.menu
+        var menuItem = menu.getItem(2)
         menuItem.setChecked(true)
     }
 
-
-    var userYetki = object : ValueEventListener {
-        override fun onDataChange(p0: DataSnapshot) {
-            if (p0.value != null) {
-
-                yetki2 = p0.child("yetki2").value.toString()
-                if (yetki2 != "Patron") {
-                    setupVeri()
-                    imgTarih.visibility = View.VISIBLE
-                } else {
-                    setupVeri()
-                }
-
-            }
-
-
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-
-        }
-
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, BolgeSecimActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        startActivity(intent)
+        finish()
     }
+
 }

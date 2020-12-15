@@ -39,7 +39,7 @@ import kotlin.collections.ArrayList
 
 class MusterilerActivityCerkez : AppCompatActivity() {
 
-    private val ACTIVITY_NO = 4
+    private val ACTIVITY_NO = 3
     var secilenMah: String? = null
     lateinit var musteriList: ArrayList<MusteriData>
     lateinit var musteriAdList: ArrayList<String>
