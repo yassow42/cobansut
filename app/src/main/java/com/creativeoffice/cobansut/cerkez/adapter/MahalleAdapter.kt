@@ -18,9 +18,9 @@ import com.google.firebase.database.ValueEventListener
 
 import kotlinx.android.synthetic.main.item_siparisler_mahalle.view.*
 import kotlinx.android.synthetic.main.item_siparisler_mahalle.view.tvMahalle
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.Exception
 import kotlin.collections.ArrayList
 
 class MahalleAdapter(val myContext: Context, val mahalleler: ArrayList<String>, val kullaniciAdi: String, var bolge: String) : RecyclerView.Adapter<MahalleAdapter.SiparisHolder>() {
@@ -56,8 +56,6 @@ class MahalleAdapter(val myContext: Context, val mahalleler: ArrayList<String>, 
         }
 
 
-
-
     }
 
     inner class SiparisHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -66,11 +64,7 @@ class MahalleAdapter(val myContext: Context, val mahalleler: ArrayList<String>, 
         val recycler = itemView.rcitemMahalle
         val switch = itemView.switchRc
 
-        val tv3lt = itemView.tv3lt
-        val tv5lt = itemView.tv5lt
-        val tvYumurta = itemView.tvYumurta
-        val tvDokme = itemView.tvDokmeSut
-        val tvToplam = itemView.tvToplam
+
 
         fun setRc(mahalleler: String) {
 
@@ -83,12 +77,14 @@ class MahalleAdapter(val myContext: Context, val mahalleler: ArrayList<String>, 
                     var siparisList = ArrayList<SiparisData>()
                     if (p0.hasChildren()) {
                         for (ds in p0.children) {
-
-                            var gelenData = ds.getValue(SiparisData::class.java)!!
-                            if (gelenData.siparis_teslim_tarihi!!.compareTo(System.currentTimeMillis()) == -1) {
-                                siparisList.add(gelenData)
+                            try {
+                                var gelenData = ds.getValue(SiparisData::class.java)!!
+                                if (gelenData.siparis_teslim_tarihi!!.compareTo(System.currentTimeMillis()) == -1) {
+                                    siparisList.add(gelenData)
+                                }
+                            } catch (e: Exception) {
+                                Log.e("MahalleAdapter", "93.satır")
                             }
-
                         }
 
 
@@ -112,11 +108,6 @@ class MahalleAdapter(val myContext: Context, val mahalleler: ArrayList<String>, 
                                     dokmeSayisi = ds.dokme_sut!!.toInt() + dokmeSayisi
                                     toplamFiyatlar = ds.toplam_fiyat!!.toDouble() + toplamFiyatlar
 
-                                    tv3lt.setText("3lt: " + sut3ltSayisi.toString())
-                                    tv5lt.setText("5lt: " + sut5ltSayisi.toString())
-                                    tvYumurta.setText("Yum: " + yumurtaSayisi.toString())
-                                    tvDokme.setText("Dokme: " + dokmeSayisi.toString())
-                                    tvToplam.setText("Toplam: " + toplamFiyatlar.toString())
                                 }
                             }
                         }

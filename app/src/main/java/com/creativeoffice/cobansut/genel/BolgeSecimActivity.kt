@@ -170,7 +170,7 @@ class BolgeSecimActivity : AppCompatActivity() {
 
         }
 
-
+/*
         var ref = FirebaseDatabase.getInstance().reference
         ref.child("Siparisler").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
@@ -186,7 +186,7 @@ class BolgeSecimActivity : AppCompatActivity() {
                     }
                 }
             }
-        })
+        })*/
     }
 
     private fun initMyAuthStateListener() {

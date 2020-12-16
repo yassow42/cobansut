@@ -8,6 +8,7 @@ import com.creativeoffice.cobansut.Adapter.MusteriSiparisleriAdapter
 import com.creativeoffice.cobansut.utils.BottomNavigationViewHelper
 import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.R
+import com.creativeoffice.cobansut.utils.Utils
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -100,7 +101,7 @@ class GidilenMusteriActivity : AppCompatActivity() {
     fun setupRecyclerView(list: ArrayList<SiparisData>) {
 
         rcSiparisGidilen.layoutManager = LinearLayoutManager(this@GidilenMusteriActivity, LinearLayoutManager.VERTICAL, false)
-        val Adapter = MusteriSiparisleriAdapter(this@GidilenMusteriActivity, list)
+        val Adapter = MusteriSiparisleriAdapter(this@GidilenMusteriActivity, list,Utils.secilenBolge)
         rcSiparisGidilen.adapter = Adapter
         rcSiparisGidilen.setHasFixedSize(true)
 

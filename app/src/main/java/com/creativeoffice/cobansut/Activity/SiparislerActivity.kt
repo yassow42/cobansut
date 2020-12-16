@@ -78,12 +78,12 @@ class SiparislerActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         userID = mAuth.currentUser!!.uid
         //    mAuth.signOut()
-        initMyAuthStateListener()
+     /*   initMyAuthStateListener()
         setupKullaniciAdi()
         setupListeler()
         setupNavigationView()
         setupBtn()
-        zamanAyarı()
+        zamanAyarı()*/
        // FirebaseDatabase.getInstance().reference.child("Burgaz").child("Teslim_siparisler").removeValue()
       //  FirebaseDatabase.getInstance().reference.child("Eski_veriler").removeValue()
 
@@ -94,7 +94,7 @@ class SiparislerActivity : AppCompatActivity() {
         hndler.postDelayed(Runnable { progressDialog.dismiss() }, 5000)
 
     }
-
+/*
     override fun onBackPressed() {
         super.onBackPressed()
         val intent = Intent(this, BolgeSecimActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
@@ -855,5 +855,5 @@ class SiparislerActivity : AppCompatActivity() {
         }
 
     }
-
+*/
 }

@@ -30,6 +30,7 @@ import kotlinx.android.synthetic.main.activity_siparis.tvFiyatGenel
 import kotlinx.android.synthetic.main.activity_siparis.tvYumurta
 import kotlinx.android.synthetic.main.activity_siparis.tvileriTarihliSayi
 import kotlinx.android.synthetic.main.activity_siparisler.*
+import kotlin.Exception
 
 
 class SiparisActivity : AppCompatActivity() {
@@ -46,6 +47,12 @@ class SiparisActivity : AppCompatActivity() {
     var dokmeSayisi = 0
     var toplamFiyatlar = 0.0
 
+    var sut3ltSayisiİleri = 0
+    var sut5ltSayisiİleri = 0
+    var yumurtaSayisiİleri = 0
+    var dokmeSayisiİleri = 0
+    var toplamFiyatlarİleri = 0.0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_siparis)
@@ -53,8 +60,7 @@ class SiparisActivity : AppCompatActivity() {
         tvBaslik.text = "${Utils.secilenBolge} Siparişleri"
         tvKullanici.text = "${Utils.kullaniciAdi}"
         refBolge = FirebaseDatabase.getInstance().reference.child(Utils.secilenBolge)
-     //   Snackbar.make(bottomNavYeni, Utils.secilenBolge + " " + Utils.kullaniciAdi + " " + Utils.zaman, 2500).show()
-
+        //   Snackbar.make(bottomNavYeni, Utils.secilenBolge + " " + Utils.kullaniciAdi + " " + Utils.zaman, 2500).show()
 
 
         refBolge.keepSynced(true)
@@ -67,6 +73,8 @@ class SiparisActivity : AppCompatActivity() {
             ileriTarihListesi.clear()
             if (p0.hasChildren()) {
 
+                Log.e("siparisList", "veriler kaydediliyor")
+                Utils.siparisList.clear()
                 for (ds in p0.children) {
                     var mahalle = ds.key.toString()
                     if (mahalle == "Market") {
@@ -80,32 +88,48 @@ class SiparisActivity : AppCompatActivity() {
                 for (mahalle in mahalleList) {
 
                     for (mahalleSiparisi in p0.child(mahalle).children) {
-                        var gelenData = mahalleSiparisi.getValue(SiparisData::class.java)!!
+                        try {
+                            var gelenData = mahalleSiparisi.getValue(SiparisData::class.java)!!
 
-                        if (gelenData.siparis_teslim_tarihi!!.compareTo(System.currentTimeMillis()) == -1) {
-                            sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
-                            sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
-                            dokmeSayisi = gelenData.dokme_sut!!.toInt() + dokmeSayisi
-                            yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
+                            if (gelenData.siparis_teslim_tarihi!!.compareTo(System.currentTimeMillis()) == -1) {
+                                Utils.siparisList.add(gelenData)
 
-                            toplamFiyatlar = gelenData.toplam_fiyat!!.toDouble() + toplamFiyatlar
+                                sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
+                                sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
+                                dokmeSayisi = gelenData.dokme_sut!!.toInt() + dokmeSayisi
+                                yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
 
-                        }
-                        if (gelenData.siparis_teslim_tarihi!!.compareTo(System.currentTimeMillis()) == 1) {
-                            ileriTarihListesi.add(gelenData)
-                            tvileriTarihliSayi.text = ileriTarihListesi.size.toString() + " Sipariş"
+                                toplamFiyatlar = gelenData.toplam_fiyat!!.toDouble() + toplamFiyatlar
 
-                            ileriTarihListesi.sortByDescending {
-                                it.siparis_mah
+                            }
+                            if (gelenData.siparis_teslim_tarihi!!.compareTo(System.currentTimeMillis()) == 1) {
+                                ileriTarihListesi.add(gelenData)
+                                tvileriTarihliSayi.text = "(" + ileriTarihListesi.size.toString() + ")"
+
+                                ileriTarihListesi.sortByDescending {
+                                    it.siparis_mah
+                                }
+
+                                sut3ltSayisiİleri = gelenData.sut3lt!!.toInt() + sut3ltSayisiİleri
+                                sut5ltSayisiİleri = gelenData.sut5lt!!.toInt() + sut5ltSayisiİleri
+                                dokmeSayisiİleri = gelenData.dokme_sut!!.toInt() + dokmeSayisiİleri
+                                yumurtaSayisiİleri = gelenData.yumurta!!.toInt() + yumurtaSayisiİleri
+
+                                toplamFiyatlarİleri = gelenData.toplam_fiyat!!.toDouble() + toplamFiyatlarİleri
+
+
+
                             }
 
-                            rcileriTarih.layoutManager = LinearLayoutManager(this@SiparisActivity, LinearLayoutManager.VERTICAL, false)
-                            val Adapter = SiparisAdapter(this@SiparisActivity, ileriTarihListesi, Utils.kullaniciAdi,Utils.secilenBolge)
-                            rcileriTarih.adapter = Adapter
-                            rcileriTarih.setHasFixedSize(true)
-
+                        } catch (e: Exception) {
+                            Log.e("SiparisDataHatası", "111. satır")
                         }
 
+                        tv3lt.text = "3lt: " + sut3ltSayisiİleri
+                        tv5lt.text = "5lt: " + sut5ltSayisiİleri
+                        tvDokmeİleri.text = "Dökme: " + dokmeSayisiİleri.toString()
+                        tvYumurtaİleri.text = "Yumurta: " + yumurtaSayisiİleri.toString()
+                        tvToplamİleri.text = "Toplam: " + toplamFiyatlarİleri.toString()
 
                         tv3litre.text = "3lt: " + sut3ltSayisi.toString()
                         tv5litre.text = "5lt: " + sut5ltSayisi.toString()
@@ -123,6 +147,10 @@ class SiparisActivity : AppCompatActivity() {
                             imgileriUp.visibility = View.GONE
                             rcileriTarih.visibility = View.GONE
                         }
+                        rcileriTarih.layoutManager = LinearLayoutManager(this@SiparisActivity, LinearLayoutManager.VERTICAL, false)
+                        val Adapter = SiparisAdapter(this@SiparisActivity, ileriTarihListesi, Utils.kullaniciAdi, Utils.secilenBolge)
+                        rcileriTarih.adapter = Adapter
+                        rcileriTarih.setHasFixedSize(true)
 
                     }
                 }

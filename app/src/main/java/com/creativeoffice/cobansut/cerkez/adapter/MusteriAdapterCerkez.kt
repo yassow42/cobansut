@@ -290,7 +290,7 @@ class MusteriAdapterCerkez(val myContext: Context, val musteriler: ArrayList<Mus
 
                                         dialogView.rcSiparisGidilen.layoutManager = LinearLayoutManager(myContext, LinearLayoutManager.VERTICAL, false)
                                         //        dialogView.rcSiparisGidilen.layoutManager = StaggeredGridLayoutManager(myContext, LinearLayoutManager.VERTICAL, 2)
-                                        val Adapter = MusteriSiparisleriAdapter(myContext, list)
+                                        val Adapter = MusteriSiparisleriAdapter(myContext, list,"")
                                         dialogView.rcSiparisGidilen.adapter = Adapter
                                         dialogView.rcSiparisGidilen.setHasFixedSize(true)
 

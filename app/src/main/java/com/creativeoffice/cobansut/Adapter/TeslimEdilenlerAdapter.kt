@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.R
 import com.creativeoffice.cobansut.TimeAgo
+import com.creativeoffice.cobansut.utils.MusteriDetayAcma
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -21,25 +22,16 @@ import kotlinx.android.synthetic.main.item_teslim.view.*
 class TeslimEdilenlerAdapter(val myContext: Context, val siparisler: ArrayList<SiparisData>, val bolge: String) : RecyclerView.Adapter<TeslimEdilenlerAdapter.SiparisHolder>() {
     lateinit var mAuth: FirebaseAuth
     lateinit var userID: String
-   // lateinit var saticiYetki: String
+
+    // lateinit var saticiYetki: String
     var ref = FirebaseDatabase.getInstance().reference
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TeslimEdilenlerAdapter.SiparisHolder {
         val view = LayoutInflater.from(myContext).inflate(R.layout.item_teslim, parent, false)
         mAuth = FirebaseAuth.getInstance()
         userID = mAuth.currentUser!!.uid
 
+        ref = FirebaseDatabase.getInstance().reference.child(bolge)
 
-            ref = FirebaseDatabase.getInstance().reference.child(bolge)
-
-      /*  FirebaseDatabase.getInstance().reference.child("users").child(userID).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-                saticiYetki = p0.child("yetki").value.toString()
-            }
-
-        })*/
 
         return SiparisHolder(view)
     }
@@ -50,35 +42,40 @@ class TeslimEdilenlerAdapter(val myContext: Context, val siparisler: ArrayList<S
     }
 
     override fun onBindViewHolder(holder: SiparisHolder, position: Int) {
+        var item = siparisler[position]
         holder.setData(siparisler[position])
         holder.itemView.setOnLongClickListener {
 
-                var alert = AlertDialog.Builder(myContext)
-                    .setTitle("Sil")
-                    .setMessage("Emin Misin ?")
-                    .setPositiveButton("Sil", object : DialogInterface.OnClickListener {
-                        override fun onClick(p0: DialogInterface?, p1: Int) {
+            var alert = AlertDialog.Builder(myContext)
+                .setTitle("Sil")
+                .setMessage("Emin Misin ?")
+                .setPositiveButton("Sil", object : DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
 
-                            ref.child("Teslim_siparisler").child(siparisler[position].siparis_key.toString()).removeValue()
-                            FirebaseDatabase.getInstance().reference.child("Teslim_siparisler").child(siparisler[position].siparis_key.toString()).removeValue()
-                            ref.child("Musteriler").child(siparisler[position].siparis_veren.toString()).child("siparisleri")
-                                .child(siparisler[position].siparis_key.toString()).removeValue().addOnCompleteListener {
-                                    Toast.makeText(myContext, "Sipariş silindi sayfayı yenileyebilirsin...", Toast.LENGTH_SHORT).show()
-                                }
-                            notifyDataSetChanged()
-                        }
-                    })
-                    .setNegativeButton("İptal", object : DialogInterface.OnClickListener {
-                        override fun onClick(p0: DialogInterface?, p1: Int) {
-                            p0!!.dismiss()
-                        }
-                    }).create()
+                        ref.child("Teslim_siparisler").child(siparisler[position].siparis_key.toString()).removeValue()
+                        FirebaseDatabase.getInstance().reference.child("Teslim_siparisler").child(siparisler[position].siparis_key.toString()).removeValue()
+                        ref.child("Musteriler").child(siparisler[position].siparis_veren.toString()).child("siparisleri")
+                            .child(siparisler[position].siparis_key.toString()).removeValue().addOnCompleteListener {
+                                Toast.makeText(myContext, "Sipariş silindi sayfayı yenileyebilirsin...", Toast.LENGTH_SHORT).show()
+                            }
+                        notifyDataSetChanged()
+                    }
+                })
+                .setNegativeButton("İptal", object : DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                        p0!!.dismiss()
+                    }
+                }).create()
 
-                alert.show()
+            alert.show()
 
             return@setOnLongClickListener true
 
 
+        }
+
+        holder.musteriAdSoyad.setOnClickListener{
+            MusteriDetayAcma(myContext,holder.musteriAdSoyad,item.siparis_veren.toString()).siparisVerenSiparisDetaylari()
         }
 
     }
@@ -114,11 +111,8 @@ class TeslimEdilenlerAdapter(val myContext: Context, val siparisler: ArrayList<S
             siparisFiyatı.setText(siparisData.toplam_fiyat.toString())
 
             zaman.text = TimeAgo.getTimeAgo(siparisData.siparis_teslim_zamani.toString().toLong())
-            if (!siparisData.siparisi_giren.isNullOrEmpty()) {
-                teslimEden.text = siparisData.siparisi_giren.toString()
-            } else {
-                teslimEden.visibility = View.GONE
-            }
+
+            teslimEden.text = siparisData.siparisi_giren.toString() + ""
 
 
             var sut3ltAdet = siparisData.sut3lt.toString().toDouble()
@@ -131,7 +125,7 @@ class TeslimEdilenlerAdapter(val myContext: Context, val siparisler: ArrayList<S
             var yumurtaFiyat: Double = siparisData.yumurta_fiyat.toString().toDouble()
 
 
-            var toplamFiyat = (sut3ltAdet * sut3ltFiyat) + (sut5ltAdet * sut5ltFiyat) + (yumurtaAdet * yumurtaFiyat) +(dokmeSutAdet*dokmeSutFiyat)
+            var toplamFiyat = (sut3ltAdet * sut3ltFiyat) + (sut5ltAdet * sut5ltFiyat) + (yumurtaAdet * yumurtaFiyat) + (dokmeSutAdet * dokmeSutFiyat) + 0
             ref.child("Teslim_siparisler").child(siparisData.siparis_key.toString()).child("toplam_fiyat").setValue(toplamFiyat)
             siparisFiyatı.text = toplamFiyat.toString() + " tl"
 

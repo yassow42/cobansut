@@ -24,6 +24,7 @@ import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.R
 import com.creativeoffice.cobansut.TimeAgo
 import com.creativeoffice.cobansut.cerkez.SiparisActivityCerkez
+import com.creativeoffice.cobansut.utils.MusteriDetayAcma
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.dialog_gidilen_musteri.view.*
@@ -79,7 +80,7 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
         holder.setData(siparisler[position])
         holder.telAdres(siparisler[position])
         holder.itemView.setOnLongClickListener {
-            var musteriAd = siparisler[position].siparis_veren
+
             val popup = PopupMenu(myContext, holder.itemView)
             popup.inflate(R.menu.popup_menu)
             popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener {
@@ -253,10 +254,10 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
                                 refBolge.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("sut5lt").setValue(sut5lt)
                                 refBolge.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("yumurta").setValue(yumurta)
                                 refBolge.child("Musteriler").child(siparisVeren).child("siparisleri").child(siparisKey).child("siparis_notu").setValue(not)
-                            //    var intent = Intent(myContext, SiparisActivityCerkez::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                                //    var intent = Intent(myContext, SiparisActivityCerkez::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
 
 
-                         //       myContext.startActivity(intent)
+                                //       myContext.startActivity(intent)
 
 
                             }
@@ -284,7 +285,7 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
                                     refBolge.child("Musteriler").child(siparisler[position].siparis_veren.toString()).child("siparisleri")
                                         .child(siparisler[position].siparis_key.toString()).removeValue()
 
-                                //   myContext.startActivity(Intent(myContext, SiparislerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+                                    //   myContext.startActivity(Intent(myContext, SiparislerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
 
                                     /*   if (bolge == "Burgaz") {
                                            myContext.startActivity(Intent(myContext, SiparislerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
@@ -315,6 +316,9 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
             popup.show()
 
             return@setOnLongClickListener true
+        }
+        holder.siparisVeren.setOnClickListener {
+            MusteriDetayAcma(myContext,holder.siparisVeren,item.siparis_veren.toString()).siparisVerenSiparisDetaylari()
         }
 
 
@@ -360,113 +364,7 @@ class MahalleSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
             tvNot.text = siparisData.siparis_notu
             tvFiyat.textSize = 18f
 
-            siparisVeren.setOnClickListener {
 
-                var musteriAdi = siparisData.siparis_veren.toString()
-                var builder: androidx.appcompat.app.AlertDialog.Builder = androidx.appcompat.app.AlertDialog.Builder(myContext)
-
-                var dialogView: View = View.inflate(myContext, R.layout.dialog_gidilen_musteri, null)
-                builder.setView(dialogView)
-
-
-                dialogMsDznle = builder.create()
-
-                dialogView.imgMaps.visibility = View.GONE
-
-                dialogView.imgCheck.visibility = View.GONE
-
-                /*   .setOnClickListener {
-
-                   if (dialogView.etAdresGidilen.text.toString().isNotEmpty() && dialogView.etTelefonGidilen.text.toString().isNotEmpty()) {
-                       var mahalle = dialogView.tvMahalle.text.toString()
-                       var adres = dialogView.etAdresGidilen.text.toString()
-                       var telefon = dialogView.etTelefonGidilen.text.toString()
-                       var apartman = dialogView.etApartman.text.toString()
-
-
-                       ref.child("Musteriler").child(musteriAdi).child("musteri_mah").setValue(mahalle)
-                       ref.child("Musteriler").child(musteriAdi).child("musteri_adres").setValue(adres)
-                       ref.child("Musteriler").child(musteriAdi).child("musteri_apartman").setValue(apartman)
-                       ref.child("Musteriler").child(musteriAdi).child("musteri_tel").setValue(telefon).addOnCompleteListener {
-                           dialogMsDznle.dismiss()
-                           Toast.makeText(myContext, "Müşteri Bilgileri Güncellendi", Toast.LENGTH_LONG).show()
-                       }.addOnFailureListener { Toast.makeText(myContext, "Müşteri Bilgileri Güncellenemedi", Toast.LENGTH_LONG).show() }
-                   } else {
-                       Toast.makeText(myContext, "Bilgilerde boşluklar var", Toast.LENGTH_LONG).show()
-                   }
-               }*/
-
-                dialogView.imgBack.setOnClickListener {
-                    dialogMsDznle.dismiss()
-                }
-
-                dialogView.etAdresGidilen.visibility = View.GONE //.text = musteriler[position].musteri_ad_soyad.toString()
-                dialogView.swKonumKaydet.visibility = View.GONE //.text = musteriler[position].musteri_ad_soyad.toString()
-                dialogView.etTelefonGidilen.visibility = View.GONE //.text = musteriler[position].musteri_ad_soyad.toString()
-                dialogView.tvAdSoyad.visibility = View.GONE //.text = musteriler[position].musteri_ad_soyad.toString()
-                dialogView.tvMahalle.visibility = View.GONE //.setText( musteriler[position].musteri_mah.toString())
-                dialogView.etApartman.visibility = View.GONE //.setText(musteriler[position].musteri_apartman.toString())
-
-                refBolge.child("Musteriler").child(musteriAdi).addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onCancelled(p0: DatabaseError) {
-
-                    }
-
-                    override fun onDataChange(p0: DataSnapshot) {
-                        var adres = p0.child("musteri_adres").value.toString()
-                        var telefon = p0.child("musteri_tel").value.toString()
-                        var mahalle = p0.child("musteri_mah").value.toString()
-                        var konum = p0.child("musteri_zkonum").value.toString().toBoolean()
-
-                        dialogView.swKonumKaydet.isChecked = konum
-                        dialogView.etAdresGidilen.setText(adres)
-                        dialogView.etTelefonGidilen.setText(telefon)
-                        dialogView.tvMahalle.setText(mahalle)
-
-                        var list = ArrayList<SiparisData>()
-                        list = ArrayList()
-                        if (p0.child("siparisleri").hasChildren()) {
-
-                            var sut3ltSayisi = 0
-                            var sut5ltSayisi = 0
-                            var dokmeSayisi = 0
-                            var yumurtaSayisi = 0
-
-                            for (ds in p0.child("siparisleri").children) {
-                                var gelenData = ds.getValue(SiparisData::class.java)!!
-                                list.add(gelenData)
-
-                                sut3ltSayisi += gelenData.sut3lt!!.toInt()
-                                sut5ltSayisi += gelenData.sut5lt!!.toInt()
-                                dokmeSayisi += gelenData.dokme_sut!!.toInt()
-                                yumurtaSayisi += gelenData.yumurta!!.toInt()
-
-                            }
-
-                            list.sortByDescending { it.siparis_teslim_zamani }
-                            dialogView.tv3litre.text = "3lt: " + sut3ltSayisi.toString()
-                            dialogView.tv5litre.text = "5lt: " + sut5ltSayisi.toString()
-                            dialogView.tvDokme.text = "Dökme: " + dokmeSayisi.toString()
-                            dialogView.tvYumurta.text = "Yumurta: " + yumurtaSayisi.toString()
-                            dialogView.tvFiyatGenel.visibility = View.GONE
-                            //  dialogView.tvFiyatGenel.text = ((sut3ltSayisi * 16) + (sut5ltSayisi * 22) + yumurtaSayisi).toString() + " tl"
-
-
-                            dialogView.rcSiparisGidilen.layoutManager = LinearLayoutManager(myContext, LinearLayoutManager.VERTICAL, false)
-                            //dialogView.rcSiparisGidilen.layoutManager = StaggeredGridLayoutManager(myContext, LinearLayoutManager.VERTICAL, 2)
-                            val Adapter = MusteriSiparisleriAdapter(myContext, list)
-                            dialogView.rcSiparisGidilen.adapter = Adapter
-                            dialogView.rcSiparisGidilen.setHasFixedSize(true)
-
-
-                        }
-                    }
-
-
-                })
-                dialogMsDznle.setCancelable(false)
-                dialogMsDznle.show()
-            }
 
             if (!siparisData.siparisi_giren.isNullOrEmpty()) {
                 siparisGiren.text = siparisData.siparisi_giren.toString()

@@ -8,10 +8,12 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import androidx.core.app.ActivityCompat
+import com.creativeoffice.cobansut.EnYeni.CustomerActivity
 import com.creativeoffice.cobansut.MusterilerActivity
 import com.creativeoffice.cobansut.R
 import com.creativeoffice.cobansut.cerkez.MusterilerActivityCerkez
 import com.creativeoffice.cobansut.utils.BottomNavigationViewHelperCorlu
+import com.creativeoffice.cobansut.utils.Utils
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -31,6 +33,7 @@ class AdresBulmaMapsCorluActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var yer: String
 
     var ref = FirebaseDatabase.getInstance().reference
+    var refBolge = FirebaseDatabase.getInstance().reference.child(Utils.secilenBolge)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_adres_bulma_maps_corlu)
@@ -97,19 +100,19 @@ class AdresBulmaMapsCorluActivity : AppCompatActivity(), OnMapReadyCallback {
                 ref.child(yer).child("Musteriler").child(musteriAdi.toString()).child("musteri_zkonum").setValue(true)
                 ref.child(yer).child("Musteriler").child(musteriAdi.toString()).child("musteri_zlat").setValue(latLng.latitude)
                 ref.child(yer).child("Musteriler").child(musteriAdi.toString()).child("musteri_zlong").setValue(latLng.longitude)
-                var intent = Intent(this, MusterilerCorluActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                var intent = Intent(this, CustomerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 startActivity(intent)
             } else if (yer == "Cerkez") {
                 ref.child(yer).child("Musteriler").child(musteriAdi.toString()).child("musteri_zkonum").setValue(true)
                 ref.child(yer).child("Musteriler").child(musteriAdi.toString()).child("musteri_zlat").setValue(latLng.latitude)
                 ref.child(yer).child("Musteriler").child(musteriAdi.toString()).child("musteri_zlong").setValue(latLng.longitude)
-                var intent = Intent(this, MusterilerActivityCerkez::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                var intent = Intent(this, CustomerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 startActivity(intent)
             } else if (yer == "Burgaz") {
                 ref.child(yer).child("Musteriler").child(musteriAdi.toString()).child("musteri_zkonum").setValue(true)
                 ref.child(yer).child("Musteriler").child(musteriAdi.toString()).child("musteri_zlat").setValue(latLng.latitude)
                 ref.child(yer).child("Musteriler").child(musteriAdi.toString()).child("musteri_zlong").setValue(latLng.longitude)
-                var intent = Intent(this, MusterilerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                var intent = Intent(this, CustomerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 startActivity(intent)
             }
             finish()

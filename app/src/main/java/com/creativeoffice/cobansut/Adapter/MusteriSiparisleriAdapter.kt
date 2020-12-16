@@ -11,13 +11,14 @@ import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.R
 import com.creativeoffice.cobansut.TimeAgo
 import com.google.firebase.database.FirebaseDatabase
+import com.simplecityapps.recyclerview_fastscroll.utils.Utils
 import kotlinx.android.synthetic.main.item_siparisler.view.*
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MusteriSiparisleriAdapter(val myContext: Context, val siparisler: ArrayList<SiparisData>) : RecyclerView.Adapter<MusteriSiparisleriAdapter.SiparisMusteriHolder>() {
+class MusteriSiparisleriAdapter(val myContext: Context, val siparisler: ArrayList<SiparisData>, var bolge: String) : RecyclerView.Adapter<MusteriSiparisleriAdapter.SiparisMusteriHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusteriSiparisleriAdapter.SiparisMusteriHolder {
         val view = LayoutInflater.from(myContext).inflate(R.layout.item_siparisler, parent, false)
 
@@ -116,24 +117,42 @@ class MusteriSiparisleriAdapter(val myContext: Context, val siparisler: ArrayLis
             }
 
 
-                if (!siparisData.sut3lt_fiyat.toString().isNullOrEmpty() && !siparisData.sut5lt_fiyat.toString().isNullOrEmpty() &&
-                    !siparisData.yumurta_fiyat.toString().isNullOrEmpty() && !siparisData.dokme_sut_fiyat.toString().isNullOrEmpty()) {
-                    tv3ltFiyat.text = siparisData.sut3lt_fiyat.toString()
-                    tv5ltFiyat.text = siparisData.sut5lt_fiyat.toString()
-                    tvYumurtaFiyat.text = siparisData.yumurta_fiyat.toString()
-                    tvDokmeFiyat.text = siparisData.dokme_sut_fiyat.toString()
-                    //        sut3ltFiyat = siparisData.sut3lt_fiyat.toString().toDouble()
-                    //        sut5ltFiyat = siparisData.sut5lt_fiyat.toString().toDouble()
-                    // yumurtaFiyat = siparisData.yumurta_fiyat.toString().toDouble()
+            if (!siparisData.sut3lt_fiyat.toString().isNullOrEmpty() && !siparisData.sut5lt_fiyat.toString().isNullOrEmpty() &&
+                !siparisData.yumurta_fiyat.toString().isNullOrEmpty() && !siparisData.dokme_sut_fiyat.toString().isNullOrEmpty()
+            ) {
+                tv3ltFiyat.text = siparisData.sut3lt_fiyat.toString()
+                tv5ltFiyat.text = siparisData.sut5lt_fiyat.toString()
+                tvYumurtaFiyat.text = siparisData.yumurta_fiyat.toString()
+                tvDokmeFiyat.text = siparisData.dokme_sut_fiyat.toString()
+                //        sut3ltFiyat = siparisData.sut3lt_fiyat.toString().toDouble()
+                //        sut5ltFiyat = siparisData.sut5lt_fiyat.toString().toDouble()
+                // yumurtaFiyat = siparisData.yumurta_fiyat.toString().toDouble()
 
-                    //     var toplamFiyat = (sut3ltAdet * sut3ltFiyat!!) + (sut5ltAdet * sut5ltFiyat!!) + (yumurtaAdet * yumurtaFiyat!!)
-                    //      FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisData.siparis_key.toString()).child("toplam_fiyat").setValue(toplamFiyat)
-                    //    tvFiyat.text = ((sut3ltAdet * sut3ltFiyat!!) + (sut5ltAdet * sut5ltFiyat!!) + (yumurtaAdet * yumurtaFiyat!!)).toString() + " tl"
-
-
-                }
+                //     var toplamFiyat = (sut3ltAdet * sut3ltFiyat!!) + (sut5ltAdet * sut5ltFiyat!!) + (yumurtaAdet * yumurtaFiyat!!)
+                //      FirebaseDatabase.getInstance().reference.child("Siparisler").child(siparisData.siparis_key.toString()).child("toplam_fiyat").setValue(toplamFiyat)
+                //    tvFiyat.text = ((sut3ltAdet * sut3ltFiyat!!) + (sut5ltAdet * sut5ltFiyat!!) + (yumurtaAdet * yumurtaFiyat!!)).toString() + " tl"
 
 
+            }
+            /*
+            var refBolge = FirebaseDatabase.getInstance().reference.child(bolge)
+            if (siparisData.dokme_sut_fiyat == null) {
+               refBolge.child("Musteriler/${siparisData.siparis_veren}").child("siparisleri").child(siparisData.siparis_key.toString())
+                   .child("dokme_sut_fiyat").setValue(3.5)
+                refBolge.child("Musteriler/${siparisData.siparis_veren}").child("siparisleri").child(siparisData.siparis_key.toString())
+                   .child("dokme_sut").setValue("0")
+            }
+            if (siparisData.sut3lt_fiyat == null) {
+               refBolge.child("Musteriler/${siparisData.siparis_veren}").child("siparisleri").child(siparisData.siparis_key.toString())
+                   .child("sut3lt_fiyat").setValue(16)
+                refBolge.child("Musteriler/${siparisData.siparis_veren}").child("siparisleri").child(siparisData.siparis_key.toString())
+                   .child("sut5lt_fiyat").setValue(22)
+                refBolge.child("Musteriler/${siparisData.siparis_veren}").child("siparisleri").child(siparisData.siparis_key.toString())
+                   .child("toplam_fiyat").setValue(0)
+                refBolge.child("Musteriler/${siparisData.siparis_veren}").child("siparisleri").child(siparisData.siparis_key.toString())
+                   .child("yumurta_fiyat").setValue(1)
+            }
+*/
 
         }
 

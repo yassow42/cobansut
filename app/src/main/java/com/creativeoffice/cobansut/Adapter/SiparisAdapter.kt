@@ -21,6 +21,7 @@ import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.R
 import com.creativeoffice.cobansut.EnYeni.SiparisActivity
 import com.creativeoffice.cobansut.TimeAgo
+import com.creativeoffice.cobansut.utils.MusteriDetayAcma
 import com.creativeoffice.cobansut.utils.Utils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -256,7 +257,6 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
 
                             dialog.show()
                         }
-
                         R.id.popSil -> {
 
 
@@ -297,101 +297,11 @@ class SiparisAdapter(val myContext: Context, val siparisler: ArrayList<SiparisDa
                 return@setOnLongClickListener true
             }
             holder.siparisVeren.setOnClickListener {
-
-                var dialogMsDznle: Dialog
-
-                var musteriAdi = item.siparis_veren.toString()
-                var builder = AlertDialog.Builder(myContext)
-
-                var dialogView: View = View.inflate(myContext, R.layout.dialog_gidilen_musteri, null)
-                builder.setView(dialogView)
-
-
-                dialogMsDznle = builder.create()
-
-                dialogView.imgMaps.visibility = View.GONE
-
-
-                dialogView.swKonumKaydet.visibility = View.GONE
-
-                dialogView.imgCheck.visibility = View.GONE
-
-                dialogView.imgBack.setOnClickListener {
-                    dialogMsDznle.dismiss()
-                }
-
-                dialogView.tvAdSoyad.visibility = View.GONE//.text =  item.siparis_veren.toString()
-                dialogView.tvMahalle.visibility = View.GONE//.setText( item.siparis_mah.toString())
-                dialogView.etApartman.visibility = View.GONE//.setText( item.siparis_apartman.toString())
-                dialogView.etAdresGidilen.visibility = View.GONE
-                dialogView.etTelefonGidilen.visibility = View.GONE
-
-                refBolge.child("Musteriler").child(musteriAdi).addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onCancelled(p0: DatabaseError) {
-
-                    }
-
-                    override fun onDataChange(p0: DataSnapshot) {
-                        var adres = p0.child("musteri_adres").value.toString()
-                        var telefon = p0.child("musteri_tel").value.toString()
-                        var konum = p0.child("musteri_zkonum").value.toString().toBoolean()
-
-                        dialogView.swKonumKaydet.isChecked = konum
-                        dialogView.etAdresGidilen.setText(adres)
-                        dialogView.etTelefonGidilen.setText(telefon)
-
-                        var list = ArrayList<SiparisData>()
-                        list = ArrayList()
-                        if (p0.child("siparisleri").hasChildren()) {
-
-                            var sut3ltSayisi = 0
-                            var sut5ltSayisi = 0
-                            var dokmeSayisi = 0
-                            var yumurtaSayisi = 0
-
-                            for (ds in p0.child("siparisleri").children) {
-                                var gelenData = ds.getValue(SiparisData::class.java)!!
-                                list.add(gelenData)
-
-                                sut3ltSayisi += gelenData.sut3lt!!.toInt()
-                                sut5ltSayisi += gelenData.sut5lt!!.toInt()
-
-                                yumurtaSayisi += gelenData.yumurta!!.toInt()
-
-                                if (gelenData.dokme_sut != null) {
-                                    dokmeSayisi += gelenData.dokme_sut!!.toInt()
-
-                                }
-
-                            }
-
-                            list.sortByDescending { it.siparis_teslim_zamani }
-
-                            dialogView.tv3litre.text = "3lt: " + sut3ltSayisi.toString()
-                            dialogView.tv5litre.text = "5lt: " + sut5ltSayisi.toString()
-                            dialogView.tvDokme.text = "Dökme: " + dokmeSayisi.toString()
-                            dialogView.tvYumurta.text = "Yumurta: " + yumurtaSayisi.toString()
-                            dialogView.tvFiyatGenel.visibility = View.GONE
-
-
-                            dialogView.rcSiparisGidilen.layoutManager = LinearLayoutManager(myContext, LinearLayoutManager.VERTICAL, false)
-                            //dialogView.rcSiparisGidilen.layoutManager = StaggeredGridLayoutManager(myContext, LinearLayoutManager.VERTICAL, 2)
-                            val Adapter = MusteriSiparisleriAdapter(myContext, list)
-                            dialogView.rcSiparisGidilen.adapter = Adapter
-                            dialogView.rcSiparisGidilen.setHasFixedSize(true)
-
-
-                        }
-                    }
-
-
-                })
-                dialogMsDznle.setCancelable(false)
-                dialogMsDznle.show()
-
+                MusteriDetayAcma(myContext,holder.siparisVeren,item.siparis_veren.toString()).siparisVerenSiparisDetaylari()
             }
+
         } catch (e: IOException) {
-            refBolge.child("Hatalar/Siparis adapter/277.satır hatası").setValue(e.message.toString())
+            refBolge.child("Hatalar/SiparisAdapter/277.satır hatası").setValue(e.message.toString())
 
         }
 

@@ -1,6 +1,7 @@
 package com.creativeoffice.cobansut.EnYeni
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -78,14 +79,23 @@ class SiparisTeslimActivity : AppCompatActivity() {
                         if (Utils.zaman - 86400000 < gelenData.siparis_teslim_zamani!!.toLong() && gelenData.siparis_teslim_zamani!!.toLong() < Utils.zaman
                         ) {
                             suankiTeslimList.add(gelenData)
-                            sut3ltSayisi = gelenData.sut3lt!!.toInt() + sut3ltSayisi
-                            sut5ltSayisi = gelenData.sut5lt!!.toInt() + sut5ltSayisi
-                            yumurtaSayisi = gelenData.yumurta!!.toInt() + yumurtaSayisi
-                            dokumSutSayisi = gelenData.dokme_sut!!.toInt() + dokumSutSayisi
-                            toplamFiyatlar = gelenData.toplam_fiyat!!.toDouble() + toplamFiyatlar
+                            sut3ltSayisi += gelenData.sut3lt!!.toInt()
+                            sut5ltSayisi += gelenData.sut5lt!!.toInt()
+                            yumurtaSayisi += gelenData.yumurta!!.toInt()
+                            dokumSutSayisi += gelenData.dokme_sut!!.toInt()
+                            toplamFiyatlar += gelenData.toplam_fiyat!!.toDouble()
 
                         }
 
+/*
+                            refBolge.child("Musteriler/${gelenData.siparis_veren.toString()}/siparisleri").child(gelenData.siparis_key.toString())
+                                .child("dokum_sut").setValue("0")
+                            refBolge.child("Musteriler/${gelenData.siparis_veren.toString()}/siparisleri").child(gelenData.siparis_key.toString())
+                                .child("dokum_sut_fiyat").setValue(3.5)
+
+                        refBolge.child("Musteriler/${gelenData.siparis_veren.toString()}/siparisleri").child(gelenData.siparis_key.toString())
+                            .setValue(gelenData)
+*/
                       /*  if (gelenData.siparisi_giren.toString()=="null"){
                             Log.e("sad",gelenData.siparis_veren.toString())
                             refBolge.child("Teslim_siparisler").child(gelenData.siparis_key.toString()).child("siparisi_giren").setValue("Corlumurat")
@@ -157,10 +167,10 @@ class SiparisTeslimActivity : AppCompatActivity() {
             tvZamandan.text = sdf.format(calZamandan.time)
         }
 
-        /*     val timeSetListenerZamandan = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+             val timeSetListenerZamandan = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
                  calZamandan.set(Calendar.HOUR_OF_DAY, hourOfDay)
                  calZamandan.set(Calendar.MINUTE, minute)
-             }*/
+             }
 
         var calZamana = Calendar.getInstance()
         val dateSetListenerZamana = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
@@ -174,21 +184,21 @@ class SiparisTeslimActivity : AppCompatActivity() {
             tvZamana.text = sdf.format(calZamana.time)
         }
 
-        /* val timeSetListenerZamana = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+         val timeSetListenerZamana = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
              calZamana.set(Calendar.HOUR_OF_DAY, hourOfDay)
              calZamana.set(Calendar.MINUTE, minute)
-         }*/
+         }
 
 
 
         tvZamandan.setOnClickListener {
             DatePickerDialog(this, dateSetListenerZamandan, calZamandan.get(Calendar.YEAR), calZamandan.get(Calendar.MONTH), calZamandan.get(Calendar.DAY_OF_MONTH)).show()
-            //  TimePickerDialog(this, timeSetListenerZamandan, calZamandan.get(Calendar.HOUR_OF_DAY), calZamandan.get(Calendar.MINUTE), true).show()
+             TimePickerDialog(this, timeSetListenerZamandan, calZamandan.get(Calendar.HOUR_OF_DAY), calZamandan.get(Calendar.MINUTE), true).show()
 
         }
         tvZamana.setOnClickListener {
             DatePickerDialog(this, dateSetListenerZamana, calZamana.get(Calendar.YEAR), calZamana.get(Calendar.MONTH), calZamana.get(Calendar.DAY_OF_MONTH)).show()
-            // TimePickerDialog(this, timeSetListenerZamana, calZamana.get(Calendar.HOUR_OF_DAY), calZamana.get(Calendar.MINUTE), true).show()
+            TimePickerDialog(this, timeSetListenerZamana, calZamana.get(Calendar.HOUR_OF_DAY), calZamana.get(Calendar.MINUTE), true).show()
         }
 
 

@@ -6,6 +6,7 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.inflate
@@ -21,6 +22,7 @@ import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.R
 import com.creativeoffice.cobansut.TimeAgo
 import com.google.firebase.database.*
+import com.simplecityapps.recyclerview_fastscroll.utils.Utils
 import kotlinx.android.synthetic.main.activity_siparisler.*
 import kotlinx.android.synthetic.main.dialog_gidilen_musteri.view.*
 import kotlinx.android.synthetic.main.dialog_gidilen_musteri.view.etAdresGidilen
@@ -39,13 +41,14 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriData>, val kullaniciAdi: String?, var bolge:String?) : RecyclerView.Adapter<MusteriAdapter.MusteriHolder>() {
+class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriData>, val kullaniciAdi: String?, var bolge: String?) : RecyclerView.Adapter<MusteriAdapter.MusteriHolder>() {
 
     lateinit var dialogViewSp: View
     lateinit var dialogMsDznle: Dialog
 
 
     var genelFiyat = 0
+
     //var ref = FirebaseDatabase.getInstance().reference
     var refBolge = FirebaseDatabase.getInstance().reference.child(bolge.toString())
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusteriAdapter.MusteriHolder {
@@ -149,7 +152,7 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                         var siparisData = SiparisData(
                             System.currentTimeMillis(), System.currentTimeMillis(), cal.timeInMillis, musteriler[position].musteri_adres, musteriler[position].musteri_apartman,
                             musteriler[position].musteri_tel, musteriler[position].musteri_ad_soyad, musteriler[position].musteri_mah, siparisNotu, siparisKey, yumurtaAdet, yumurtaFiyat, sut3ltAdet, sut3ltFiyat,
-                            sut5ltAdet, sut5ltFiyat,dokmeSutAdet,dokmeSutFiyat, toplamFiyat, musteriler[position].musteri_zkonum, musteriler[position].promosyon_verildimi, musteriler[position].musteri_zlat,
+                            sut5ltAdet, sut5ltFiyat, dokmeSutAdet, dokmeSutFiyat, toplamFiyat, musteriler[position].musteri_zkonum, musteriler[position].promosyon_verildimi, musteriler[position].musteri_zlat,
                             musteriler[position].musteri_zlong, kullaniciAdi
                         )
 
@@ -179,6 +182,95 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                 popup.inflate(R.menu.popup_menu_musteri)
                 popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener {
                     when (it.itemId) {
+                        R.id.hizliSiparis -> {
+
+                            var builder: AlertDialog.Builder = AlertDialog.Builder(this.myContext)
+                            dialogViewSp = inflate(myContext, R.layout.dialog_siparis_ekle, null)
+
+
+                            builder.setNegativeButton("İptal", object : DialogInterface.OnClickListener {
+                                override fun onClick(dialog: DialogInterface?, which: Int) {
+                                    dialog!!.dismiss()
+                                }
+
+                            })
+                            builder.setPositiveButton("Hızlı Sipariş Ekle", object : DialogInterface.OnClickListener {
+                                override fun onClick(dialog: DialogInterface?, which: Int) {
+
+
+                                    var sut3ltAdet = "0"
+                                    if (dialogViewSp.et3lt.text.toString().isNotEmpty()) {
+                                        sut3ltAdet = dialogViewSp.et3lt.text.toString()
+                                    }
+
+                                    var sut5ltAdet = "0"
+                                    if (dialogViewSp.et5lt.text.toString().isNotEmpty()) {
+                                        sut5ltAdet = dialogViewSp.et5lt.text.toString()
+                                    }
+
+                                    var yumurtaAdet = "0"
+                                    if (dialogViewSp.etYumurta.text.toString().isNotEmpty()) {
+                                        yumurtaAdet = dialogViewSp.etYumurta.text.toString()
+                                    }
+                                    var dokmeSutAdet = "0"
+                                    if (dialogViewSp.etDokmeSut.text.toString().isNotEmpty()) {
+                                        dokmeSutAdet = dialogViewSp.etDokmeSut.text.toString()
+                                    }
+
+                                    var sut3ltFiyat = dialogViewSp.et3ltFiyat.text.toString().toDouble()
+                                    var sut5ltFiyat = dialogViewSp.et5ltFiyat.text.toString().toDouble()
+                                    var yumurtaFiyat = dialogViewSp.etYumurtaFiyat.text.toString().toDouble()
+                                    var dokmeSutFiyat = dialogViewSp.etDokmeSutFiyat.text.toString().toDouble()
+
+                                    var siparisNotu = dialogViewSp.etSiparisNotu.text.toString()
+                                    var siparisKey = refBolge.child("Teslim_siparisler").push().key.toString()
+
+                                    var toplamFiyat = (sut3ltAdet.toDouble() * sut3ltFiyat) + (sut5ltAdet.toDouble() * sut5ltFiyat) + (yumurtaAdet.toDouble() * yumurtaFiyat) + (dokmeSutAdet.toDouble() * dokmeSutFiyat)
+
+                                    var siparisData = SiparisData(
+                                        System.currentTimeMillis(),
+                                        System.currentTimeMillis(),
+                                        System.currentTimeMillis(),
+                                        musteriler[position].musteri_adres,
+                                        musteriler[position].musteri_apartman,
+                                        musteriler[position].musteri_tel,
+                                        musteriler[position].musteri_ad_soyad,
+                                        musteriler[position].musteri_mah,
+                                        siparisNotu,
+                                        siparisKey,
+                                        yumurtaAdet,
+                                        yumurtaFiyat,
+                                        sut3ltAdet,
+                                        sut3ltFiyat,
+                                        sut5ltAdet,
+                                        sut5ltFiyat,
+                                        dokmeSutAdet,
+                                        dokmeSutFiyat,
+                                        toplamFiyat,
+                                        musteriler[position].musteri_zkonum,
+                                        musteriler[position].promosyon_verildimi,
+                                        musteriler[position].musteri_zlat,
+                                        musteriler[position].musteri_zlong,
+                                        kullaniciAdi
+                                    )
+
+
+                                    var referans = refBolge.child("Teslim_siparisler").child(siparisKey)
+                                    referans.setValue(siparisData)
+                                    refBolge.child("Musteriler").child(siparisData.siparis_veren.toString()).child("siparisleri").child(siparisKey).setValue(siparisData)
+
+
+                                }
+                            })
+
+                            builder.setTitle(musteriler[position].musteri_ad_soyad)
+                            builder.setIcon(R.drawable.cow)
+
+                            builder.setView(dialogViewSp)
+                            var dialog: Dialog = builder.create()
+                            dialog.show()
+
+                        }
                         R.id.popDüzenle -> {
 
                             var musteriAdi = musteriler[position].musteri_ad_soyad.toString()
@@ -244,7 +336,7 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                             }
 
                             dialogView.tvAdSoyad.text = musteriler[position].musteri_ad_soyad.toString()
-                            dialogView.tvMahalle.setText( musteriler[position].musteri_mah.toString())
+                            dialogView.tvMahalle.setText(musteriler[position].musteri_mah.toString())
                             dialogView.etApartman.setText(musteriler[position].musteri_apartman.toString())
 
                             refBolge.child("Musteriler").child(musteriAdi).addListenerForSingleValueEvent(object : ValueEventListener {
@@ -289,7 +381,7 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
 
                                         dialogView.rcSiparisGidilen.layoutManager = LinearLayoutManager(myContext, LinearLayoutManager.VERTICAL, false)
                                         //        dialogView.rcSiparisGidilen.layoutManager = StaggeredGridLayoutManager(myContext, LinearLayoutManager.VERTICAL, 2)
-                                        val Adapter = MusteriSiparisleriAdapter(myContext, list)
+                                        val Adapter = MusteriSiparisleriAdapter(myContext, list,"")
                                         dialogView.rcSiparisGidilen.adapter = Adapter
                                         dialogView.rcSiparisGidilen.setHasFixedSize(true)
 
@@ -335,7 +427,7 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
             }
 
         } catch (e: Exception) {
-           // Toast.makeText(myContext, "332. satır hatasıMusteriAdapter ${e.message}", Toast.LENGTH_LONG).show()
+            // Toast.makeText(myContext, "332. satır hatasıMusteriAdapter ${e.message}", Toast.LENGTH_LONG).show()
 
 
         }
@@ -350,12 +442,16 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
         var sonSiparisZamani = itemView.tvMusteriSonZaman
         var swKonumKaydet = itemView.swKonumKaydet
 
-        var musteriAdiGnl = ""
+
         fun setData(musteriData: MusteriData) {
-            musteriAdiGnl = musteriData.musteri_ad_soyad.toString()
             musteriAdi.text = musteriData.musteri_ad_soyad
             sonSiparisZamani.text = TimeAgo.getTimeAgo(musteriData.siparis_son_zaman!!).toString()
+
+            if (musteriData.musteri_ad_soyad.toString()=="null"){
+                Log.e("saddd","musteri ismi yok")
+            }
         }
+
 
 /*
         var locationManager = myContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
