@@ -38,30 +38,15 @@
         <activity android:name=".EnYeni.SiparisActivity" />
         <activity android:name=".Activity.HesapActivity" />
         <activity
-            android:name=".cerkez.MapsActivityCerkez"
-            android:label="@string/title_activity_maps_cerkez" />
-        <activity android:name=".cerkez.TeslimEdilenlerActivityCerkez" />
-        <activity android:name=".cerkez.MusterilerActivityCerkez" />
-        <activity android:name=".cerkez.SiparisActivityCerkez" />
-        <activity
-            android:name=".CorluActivity.AdresBulmaMapsCorluActivity"
+            android:name=".EnYeni.SaveAddressMapsActivity"
             android:label="@string/title_activity_adres_bulma_maps_corlu" />
-        <activity
-            android:name=".CorluActivity.MapsCorluActivity"
-            android:label="@string/title_activity_maps_corlu" />
-        <activity android:name=".CorluActivity.MusterilerCorluActivity" />
-        <activity android:name=".CorluActivity.TeslimCorluActivity" />
-        <activity android:name=".genel.BolgeSecimActivity" />
-        <activity android:name=".CorluActivity.SiparislerCorluActivity" />
-        <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
-        <activity android:name=".Activity.GidilenMusteriActivity" />
-        <activity android:name=".MusterilerActivity" />
-        <activity android:name=".Activity.TeslimActivity" />
-        <activity android:name=".Activity.SiparislerActivity" />
-        <activity android:name=".genel.LoginActivity" />
-        <activity android:name=".genel.SplashScreenActivity">
+
+        <activity android:name=".DigerActivityler.BolgeSecimActivity" />
+
+
+
+        <activity android:name=".DigerActivityler.LoginActivity" />
+        <activity android:name=".DigerActivityler.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

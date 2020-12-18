@@ -11,18 +11,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.inflate
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.creativeoffice.cobansut.CorluActivity.AdresBulmaMapsCorluActivity
+import com.creativeoffice.cobansut.EnYeni.SaveAddressMapsActivity
 import com.creativeoffice.cobansut.Datalar.MusteriData
 import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.R
 import com.creativeoffice.cobansut.TimeAgo
+import com.creativeoffice.cobansut.utils.Datalar
 import com.google.firebase.database.*
-import com.simplecityapps.recyclerview_fastscroll.utils.Utils
+import kotlinx.android.synthetic.main.activity_customer.*
 import kotlinx.android.synthetic.main.activity_siparisler.*
 import kotlinx.android.synthetic.main.dialog_gidilen_musteri.view.*
 import kotlinx.android.synthetic.main.dialog_gidilen_musteri.view.etAdresGidilen
@@ -281,9 +283,10 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
 
 
                             dialogMsDznle = builder.create()
-
+                            var adapterSearch = ArrayAdapter<String>(myContext, android.R.layout.simple_expandable_list_item_1, Datalar().mahalle())
+                            dialogView.tvMahalle.setAdapter(adapterSearch)
                             dialogView.imgMaps.setOnClickListener {
-                                var intent = Intent(myContext, AdresBulmaMapsCorluActivity::class.java)
+                                var intent = Intent(myContext, SaveAddressMapsActivity::class.java)
                                 intent.putExtra("musteri_konumu", bolge)
                                 intent.putExtra("musteriAdi", musteriler[position].musteri_ad_soyad)
                                 myContext.startActivity(intent)
@@ -318,9 +321,7 @@ class MusteriAdapter(val myContext: Context, val musteriler: ArrayList<MusteriDa
                                     refBolge.child("Musteriler").child(musteriAdi).child("musteri_adres").setValue(adres)
                                     refBolge.child("Musteriler").child(musteriAdi).child("musteri_apartman").setValue(apartman)
                                     refBolge.child("Musteriler").child(musteriAdi).child("musteri_tel").setValue(telefon).addOnCompleteListener {
-///locationsu durduruyruz
-                                        //    holder.locationManager.removeUpdates(holder.myLocationListener)
-///
+                                    ///locationsu durduruyruz holder.locationManager.removeUpdates(holder.myLocationListener)
                                         dialogMsDznle.dismiss()
 
                                         Toast.makeText(myContext, "Müşteri Bilgileri Güncellendi", Toast.LENGTH_LONG).show()

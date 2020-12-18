@@ -1,17 +1,13 @@
-package com.creativeoffice.cobansut.genel
+package com.creativeoffice.cobansut.DigerActivityler
 
-import android.app.ActivityManager
 import android.app.ProgressDialog
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.os.Handler
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.creativeoffice.cobansut.Activity.HesapActivity
 import com.creativeoffice.cobansut.BuildConfig
-import com.creativeoffice.cobansut.Datalar.SiparisData
 import com.creativeoffice.cobansut.EnYeni.SiparisActivity
 import com.creativeoffice.cobansut.R
 import com.creativeoffice.cobansut.utils.Utils

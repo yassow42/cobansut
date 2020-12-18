@@ -1,4 +1,4 @@
-package com.creativeoffice.cobansut.genel
+package com.creativeoffice.cobansut.DigerActivityler
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,7 +7,6 @@ import android.os.Handler
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import com.creativeoffice.cobansut.R
-import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_splash_screen.*
 
 class SplashScreenActivity : AppCompatActivity() {

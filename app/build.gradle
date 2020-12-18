@@ -11,8 +11,8 @@ android {
         applicationId "com.creativeoffice.cobansut"
         minSdkVersion 20
         targetSdkVersion 30
-        versionCode 20
-        versionName "20"
+        versionCode 21
+        versionName "21"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -37,6 +37,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.firebase:firebase-messaging:21.0.0'
     implementation 'com.google.firebase:firebase-auth:20.0.1'
+    implementation"org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2"
+
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

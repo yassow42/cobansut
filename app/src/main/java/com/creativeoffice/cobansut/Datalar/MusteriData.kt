@@ -1,11 +1,11 @@
 package com.creativeoffice.cobansut.Datalar
 
 class MusteriData(
-    var musteri_ad_soyad: String? = null,
+    var musteri_ad_soyad: String? = "Müşteri Adı",
     var musteri_mah: String? = null,
     var musteri_adres: String? = null,
     var musteri_apartman: String? = null,
-    var musteri_tel: String? = null,
+    var musteri_tel: String? = "Müşteri Telefonu Yok",
     var siparis_son_zaman: Long? = null,
     var musteri_zkonum: Boolean? = null,
     var promosyon_verildimi: Boolean? = null,

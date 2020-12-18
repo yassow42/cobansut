@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ProjectPlainTextFileTypeManager">
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/creativeoffice/cobansut/Activity/GidilenMusteriActivity.kt" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/creativeoffice/cobansut/cerkez/SiparisActivityCerkez.kt" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/creativeoffice/cobansut/CorluActivity/MapsCorluActivity.kt" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/creativeoffice/cobansut/CorluActivity/MusterilerCorluActivity.kt" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/creativeoffice/cobansut/CorluActivity/SiparislerCorluActivity.kt" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/creativeoffice/cobansut/CorluActivity/TeslimCorluActivity.kt" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/creativeoffice/cobansut/utils/BottomNavigationViewHelper.kt" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/creativeoffice/cobansut/utils/BottomNavigationViewHelperCerkez.kt" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/creativeoffice/cobansut/utils/BottomNavigationViewHelperCorlu.kt" />
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

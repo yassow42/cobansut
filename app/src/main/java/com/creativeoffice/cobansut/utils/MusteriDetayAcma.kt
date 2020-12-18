@@ -24,7 +24,7 @@ class MusteriDetayAcma(var myContext: Context, var text:TextView, var musteriAdi
       var refBolge = FirebaseDatabase.getInstance().reference.child(Utils.secilenBolge)
 
       text.setOnClickListener {
-          Log.e("sadd",musteriAdi)
+
 
           var dialogMsDznle: Dialog
           var builder: androidx.appcompat.app.AlertDialog.Builder = androidx.appcompat.app.AlertDialog.Builder(myContext)
@@ -36,26 +36,7 @@ class MusteriDetayAcma(var myContext: Context, var text:TextView, var musteriAdi
 
           dialogView.imgCheck.visibility = View.GONE
 
-          /*   .setOnClickListener {
 
-             if (dialogView.etAdresGidilen.text.toString().isNotEmpty() && dialogView.etTelefonGidilen.text.toString().isNotEmpty()) {
-                 var mahalle = dialogView.tvMahalle.text.toString()
-                 var adres = dialogView.etAdresGidilen.text.toString()
-                 var telefon = dialogView.etTelefonGidilen.text.toString()
-                 var apartman = dialogView.etApartman.text.toString()
-
-
-                 ref.child("Musteriler").child(musteriAdi).child("musteri_mah").setValue(mahalle)
-                 ref.child("Musteriler").child(musteriAdi).child("musteri_adres").setValue(adres)
-                 ref.child("Musteriler").child(musteriAdi).child("musteri_apartman").setValue(apartman)
-                 ref.child("Musteriler").child(musteriAdi).child("musteri_tel").setValue(telefon).addOnCompleteListener {
-                     dialogMsDznle.dismiss()
-                     Toast.makeText(myContext, "Müşteri Bilgileri Güncellendi", Toast.LENGTH_LONG).show()
-                 }.addOnFailureListener { Toast.makeText(myContext, "Müşteri Bilgileri Güncellenemedi", Toast.LENGTH_LONG).show() }
-             } else {
-                 Toast.makeText(myContext, "Bilgilerde boşluklar var", Toast.LENGTH_LONG).show()
-             }
-         }*/
 
           dialogView.imgBack.setOnClickListener {
               dialogMsDznle.dismiss()

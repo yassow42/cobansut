@@ -1,4 +1,4 @@
-package com.creativeoffice.cobansut.genel
+package com.creativeoffice.cobansut.DigerActivityler
 
 import android.app.Activity
 import android.app.Dialog
@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
